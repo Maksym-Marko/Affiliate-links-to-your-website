@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Affiliate links to your website
-Plugin URI: https://github.com/Maxim-us/affiliate-links
+Plugin URI: https://github.com/Maxim-us/Affiliate-links-to-your-website
 Description: Brief description
 Author: Marko Maksym
 Version: 1.0

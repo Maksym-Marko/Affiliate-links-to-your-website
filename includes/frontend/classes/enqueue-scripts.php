@@ -36,11 +36,11 @@ class MXALTYW_Enqueue_Scripts_Frontend
 			
 			wp_enqueue_script( 'mxaltyw_script', MXALTYW_PLUGIN_URL . 'includes/frontend/assets/js/script.js', array( 'jquery', 'mxaltyw_cookies' ), MXALTYW_PLUGIN_VERSION, false );
 
-			// wp_localize_script( 'mxaltyw_admin_script', 'mxaltyw_admin_localize', array(
+			wp_localize_script( 'mxaltyw_script', 'mxaltyw_frontend_script_localize', array(
 
-			// 	'mx_sequre' 		=> wp_create_nonce('mxmph_nonce_builder_switcher')
+				'ajaxurl' 		=> admin_url( 'admin-ajax.php' )
 
-			// ) );
+			) );
 		
 		}
 

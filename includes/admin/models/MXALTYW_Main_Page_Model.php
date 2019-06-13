@@ -32,7 +32,7 @@ class MXALTYW_Main_Page_Model extends MXALTYW_Model
 		if( wp_verify_nonce( $_POST['nonce'], 'mxaltyw_nonce_request' ) ){
 
 			// Update data
-			self::update_options( $_POST );		
+			self::update_options( $_POST );
 
 		}
 

@@ -30,6 +30,11 @@ class MXALTYW_FrontEnd_Main
 
 		MXALTYW_Shortcode::create_shortcode();
 
+		// generate user token
+		mxaltyw_require_class_file_frontend( 'generate-user-token.php' );
+
+		MXALTYW_Generate_User_Token::mxaltyw_wp_frontend_ajax();
+
 	}
 
 }

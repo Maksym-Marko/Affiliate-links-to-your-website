@@ -22,31 +22,27 @@ class MXALTYW_Woocommerce_Hook
 	{
 
 		// add affiliate field
-		add_filter( 'woocommerce_checkout_fields', array( $this, 'cloudways_custom_checkout_fields' ) );
+		add_filter( 'woocommerce_checkout_fields', array( $this, 'mxaltyw_checkout_affiliate_field' ) );
 
-		add_action( 'woocommerce_checkout_after_customer_details', array( $this, 'cloudways_extra_checkout_fields' ) );
+		add_action( 'woocommerce_checkout_after_customer_details', array( $this, 'mxaltyw_checkout_extra_affiliate_field' ) );
 
 		// save data
-		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'cloudways_save_extra_checkout_fields' ), 10, 2 );
-
-		// display data
-		add_action( 'woocommerce_thankyou', array( $this, 'cloudways_display_order_data' ), 20 );
-		add_action( 'woocommerce_view_order', array( $this, 'cloudways_display_order_data' ), 20 );
-
+		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'mxaltyw_checkout_save_affiliate_field' ), 10, 2 );
+		
 		// show data for admin
-		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'cloudways_display_order_data_in_admin' ) );
+		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'mxaltyw_display_order_data_in_admin' ) );
 
 	}
 
 		// 
-		public function cloudways_custom_checkout_fields($fields){
-		    $fields['cloudways_extra_fields'] = array(
+		public function mxaltyw_checkout_affiliate_field($fields){
+		    $fields['mxaltyw_extra_fields'] = array(
 
-		            'cloudways_text_field' => array(
-		                'type' => 'text',
-		                'required'      => true,
-		                'label' => __( 'Input Text Field' ),
-		                'value' => 'dsdsds'
+		            'mxaltyw_text_field' => array(
+		                'type' 			=> 'text',
+		                'required'  	=> true,
+		                'label' 		=> '',
+		                'input_class' 	=> array( 'mx-affiliate-link-checkout-input' )
 		            )
 
 		    );
@@ -55,48 +51,37 @@ class MXALTYW_Woocommerce_Hook
 		}
 
 		// 
-		public function cloudways_extra_checkout_fields(){
+		public function mxaltyw_checkout_extra_affiliate_field(){
+
 		    $checkout = WC()->checkout(); ?>
-		    <div class="extra-fields">
-		    <h3><?php _e( 'Additional Fields' ); ?></h3>
+
 		    <?php
-		       foreach ( $checkout->checkout_fields['cloudways_extra_fields'] as $key => $field ) : ?>
+		       foreach ( $checkout->checkout_fields['mxaltyw_extra_fields'] as $key => $field ) : ?>
+
 		            <?php woocommerce_form_field( $key, $field, '43432' ); ?>
-		        <?php endforeach; ?>
-		    </div>
+
+		    <?php endforeach; ?>
+
 		<?php }
 
 		// save data
-		public function cloudways_save_extra_checkout_fields( $order_id, $posted ){
-		    // don't forget appropriate sanitization if you are using a different field type
-		    if( isset( $posted['cloudways_text_field'] ) ) {
-		        update_post_meta( $order_id, '_cloudways_text_field', sanitize_text_field( $posted['cloudways_text_field'] ) );
+		public function mxaltyw_checkout_save_affiliate_field( $order_id, $posted ){
+
+			if( isset( $posted['mxaltyw_text_field'] ) ) {
+
+		        update_post_meta( $order_id, '_mxaltyw_text_field', sanitize_text_field( $posted['mxaltyw_text_field'] ) );
+
 		    }
+
 		}
 
-		// show for user
-		public function cloudways_display_order_data( $order_id ){  ?>
-		    <h2><?php _e( 'Extra Information' ); ?></h2>
-		    <table class="shop_table shop_table_responsive additional_info">
-		        <tbody>
-		            <tr>
-		                <th><?php _e( 'Input Text Field:' ); ?></th>
-		                <td><?php echo get_post_meta( $order_id, '_cloudways_text_field', true ); ?></td>
-		            </tr>
-		        </tbody>
-		    </table>
-		<?php }
-
 		// show for admin
-		public function cloudways_display_order_data_in_admin( $order ){  ?>
+		public function mxaltyw_display_order_data_in_admin( $order ){  ?>
 		    <div class="order_data_column">
-		        <h4><?php _e( 'Additional Information', 'woocommerce' ); ?><a href="#" class="edit_address"><?php _e( 'Edit', 'woocommerce' ); ?></a></h4>
-		        <div class="address">
+		        <h4><?php _e( 'Additional Information', 'woocommerce' ); ?></h4>
+		        <div class="mx-affiliate-link">
 		        <?php
-		            echo '<p><strong>' . __( 'Text Field' ) . ':</strong>' . get_post_meta( $order->id, '_cloudways_text_field', true ) . '</p>';?>
-		        </div>
-		        <div class="edit_address">
-		            <?php woocommerce_wp_text_input( array( 'id' => '_cloudways_text_field', 'label' => __( 'Some field' ), 'wrapper_class' => '_billing_company_field' ) ); ?>
+		            echo '<p><strong>' . __( 'The affiliate link by' ) . ': </strong>' . get_post_meta( $order->id, '_mxaltyw_text_field', true ) . '</p>';?>
 		        </div>
 		    </div>
 		<?php }

@@ -18,7 +18,6 @@ jQuery( document ).ready( function( $ ) {
 
 		jQuery.post( ajaxurl, data, function( response ){
 
-			console.log( response );
 			alert( 'Value updated.' );
 
 		} );
