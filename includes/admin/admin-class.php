@@ -73,8 +73,9 @@ class MXALTYW_Admin_Main
 
 		// main menu item
 		MXALTYW_Route::mxaltyw_get( 'MXALTYW_Main_Page_Controller', 'index', '', [
-			'page_title' => 'Affiliate links Settins',
-			'menu_title' => 'Affiliate links'
+			'page_title' => 'Affiliate links Settings',
+			'menu_title' => 'Affiliate links',
+			'dashicons' => 'dashicons-rest-api'
 		] );
 
 	}

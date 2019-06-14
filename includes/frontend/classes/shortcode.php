@@ -97,6 +97,9 @@ class MXALTYW_Shortcode
 					<b><?php
 						echo __( 'You must be logged in to create an affiliate link. Please, log in or registration.', 'mxaltyw-domain' );
 					?></b>
+					<a href="<?php echo get_site_url(); ?>/wp-login.php?action=register"><?php echo __( 'Register For This Site', 'mxaltyw-domain' ); ?></a> 
+					<?php echo __( 'or', 'mxaltyw-domain' ); ?> 
+					<a href="<?php echo get_site_url(); ?>/wp-login.php"><?php echo __( 'Log In', 'mxaltyw-domain' ); ?></a>
 				</p>				
 
 			<?php endif;

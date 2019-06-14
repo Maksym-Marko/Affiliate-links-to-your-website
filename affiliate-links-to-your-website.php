@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Affiliate links to your website
+Plugin Name: Affiliate Links WooCommerce
 Plugin URI: https://github.com/Maxim-us/Affiliate-links-to-your-website
-Description: Brief description
+Description: This plugin allows users to create affiliate links. When someone will buy a product on your site, you will know who's showed your store to this customer.
 Author: Marko Maksym
 Version: 1.0
 Author URI: https://github.com/Maxim-us
@@ -74,7 +74,7 @@ if ( ! defined( 'MXALTYW_PLUGIN_ABS_PATH' ) ) {
 if ( ! defined( 'MXALTYW_PLUGIN_VERSION' ) ) {
 
 	// version
-	define( 'MXALTYW_PLUGIN_VERSION', time() ); // Must be replaced before production on for example '1.0'
+	define( 'MXALTYW_PLUGIN_VERSION', '1.0' ); // Must be replaced before production on for example '1.0'
 
 }
 

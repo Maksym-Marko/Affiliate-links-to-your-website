@@ -40,7 +40,7 @@ class MXALTYW_Woocommerce_Hook
 
 		            'mxaltyw_text_field' => array(
 		                'type' 			=> 'text',
-		                'required'  	=> true,
+		                'required'  	=> false,
 		                'label' 		=> '',
 		                'input_class' 	=> array( 'mx-affiliate-link-checkout-input' )
 		            )
@@ -58,7 +58,7 @@ class MXALTYW_Woocommerce_Hook
 		    <?php
 		       foreach ( $checkout->checkout_fields['mxaltyw_extra_fields'] as $key => $field ) : ?>
 
-		            <?php woocommerce_form_field( $key, $field, '43432' ); ?>
+		            <?php woocommerce_form_field( $key, $field, '' ); ?>
 
 		    <?php endforeach; ?>
 
@@ -76,15 +76,31 @@ class MXALTYW_Woocommerce_Hook
 		}
 
 		// show for admin
-		public function mxaltyw_display_order_data_in_admin( $order ){  ?>
-		    <div class="order_data_column">
-		        <h4><?php _e( 'Additional Information', 'woocommerce' ); ?></h4>
-		        <div class="mx-affiliate-link">
-		        <?php
-		            echo '<p><strong>' . __( 'The affiliate link by' ) . ': </strong>' . get_post_meta( $order->id, '_mxaltyw_text_field', true ) . '</p>';?>
-		        </div>
-		    </div>
-		<?php }
+		public function mxaltyw_display_order_data_in_admin( $order ){  
 
+			if( get_post_meta( $order->id, '_mxaltyw_text_field', true ) !== '' ) :
+
+				if( ( mxaltyw_get_user_by_meta_data( 'mxaltyw_token_key', get_post_meta( $order->id, '_mxaltyw_text_field', true ) ) !== NULL ) ) :
+
+				?>
+
+				    <div class="order_data_column">
+				        <h4>
+				        	<?php _e( 'The affiliate link by ', 'woocommerce' ); ?>
+				        	<?php
+				        		echo '<a href="' . get_admin_url() . 'profile.php?' . mxaltyw_get_user_by_meta_data( 'mxaltyw_token_key', get_post_meta( $order->id, '_mxaltyw_text_field', true ) )->user_nicename . '" target="_blank">' . mxaltyw_get_user_by_meta_data( 'mxaltyw_token_key', get_post_meta( $order->id, '_mxaltyw_text_field', true ) )->display_name . '</a>';
+				        	?>
+				        </h4>
+				        <div class="mx-affiliate-link">
+				        <?php
+				            // echo '<p><strong>' . __( 'The affiliate link by' ) . ': </strong>' . get_post_meta( $order->id, '_mxaltyw_text_field', true ) . '</p>';
+				        ?>
+				        </div>
+				    </div>
+
+				<?php endif;
+				
+			endif;
+		}
 
 }

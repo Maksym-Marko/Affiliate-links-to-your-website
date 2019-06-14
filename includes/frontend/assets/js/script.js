@@ -15,18 +15,24 @@ jQuery( document ).ready( function( $ ){
 
 	}
 
+	// set cookies
 	if( $_GET['mxpartnerlink'] !== undefined && $_GET['mxpartnerlink'] === 'true' && $_GET['usertoken'] !== undefined ) {
 
 		// if there is affiliate link
-		if( Cookies.get( 'mx_affiliate_link_user_token' ) === undefined ) {
+		if( Cookies.get( 'mx_affiliate_link_user_token' ) === undefined || Cookies.get( 'mx_affiliate_link_user_token' ) === '' ) {
 
 			mx_affiliate_link_user_token = Cookies.set( 'mx_affiliate_link_user_token', $_GET['usertoken'] );
 
-		}
-
-		console.log( mx_affiliate_link_user_token );
+		}		
 
 	}
+
+	// set user token to the input
+	$( '#mxaltyw_text_field' ).val( Cookies.get( 'mx_affiliate_link_user_token' ) );
+
+	// Cookies.remove('mx_affiliate_link_user_token');
+
+	console.log( Cookies.get('mx_affiliate_link_user_token') );
 
 	// crate token
 	if( $( '#mx_create_affiliate_link_input' ).length ) {
