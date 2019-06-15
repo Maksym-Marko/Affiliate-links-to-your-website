@@ -10,7 +10,7 @@
 
 			<p><?php echo __( 'Set the link to particular page.', 'mxaltyw-domain' ); ?></p>
 
-			<input name="mxaltyw_link_root" id="mxaltyw_link_root" value="<?php echo $data['link_root']; ?>" />
+			<input name="mxaltyw_link_root" id="mxaltyw_link_root" value="<?php echo esc_url( $data['link_root'] ); ?>" />
 
 			<p>
 				<?php echo __( 'Copy this short code and place it on the page where the user can create his own affiliate link:', 'mxaltyw-domain' ); ?> <br>

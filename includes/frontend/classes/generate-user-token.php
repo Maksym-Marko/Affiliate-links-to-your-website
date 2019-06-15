@@ -58,7 +58,7 @@ class MXALTYW_Generate_User_Token
 		if( wp_verify_nonce( $_POST['nonce'], 'mxaltyw_nonce_user_token' ) ){
 
 			// save token
-			$_update_user_meta = update_user_meta( get_current_user_id(), 'mxaltyw_token_key', $_POST['token'] );
+			$_update_user_meta = update_user_meta( get_current_user_id(), 'mxaltyw_token_key', sanitize_text_field( $_POST['token'] ) );
 
 		}
 

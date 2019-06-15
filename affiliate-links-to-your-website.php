@@ -74,7 +74,7 @@ if ( ! defined( 'MXALTYW_PLUGIN_ABS_PATH' ) ) {
 if ( ! defined( 'MXALTYW_PLUGIN_VERSION' ) ) {
 
 	// version
-	define( 'MXALTYW_PLUGIN_VERSION', '1.0' ); // Must be replaced before production on for example '1.0'
+	define( 'MXALTYW_PLUGIN_VERSION', '15.06.19' ); // Must be replaced before production on for example '1.0'
 
 }
 

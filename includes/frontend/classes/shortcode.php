@@ -55,7 +55,7 @@ class MXALTYW_Shortcode
 								</p>
 
 								<p class="mx_create_affiliate_link_show_to_user" style="display: none;">
-									<?php echo $options['link_root']; ?>?<?php echo $options['link_slug']; ?>=true&usertoken=<span>USER_TOKEN</span>
+									<?php echo esc_url( $options['link_root'] ); ?>?<?php echo $options['link_slug']; ?>=true&usertoken=<span>USER_TOKEN</span>
 								</p>					
 
 								<input type="hidden" id="mx_create_affiliate_link_input" />

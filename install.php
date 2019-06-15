@@ -19,9 +19,7 @@ class MXALTYW_Basis_Plugin_Class
 
 		);
 
-		$serialize_option = maybe_serialize( $options );
-
-		update_option( 'mxaltyw_affiliate_links', $serialize_option );
+		update_option( 'mxaltyw_affiliate_links', $options );
 
 	}
 

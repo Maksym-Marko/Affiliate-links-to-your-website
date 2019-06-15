@@ -32,7 +32,7 @@ class MXALTYW_Main_Page_Model extends MXALTYW_Model
 		if( wp_verify_nonce( $_POST['nonce'], 'mxaltyw_nonce_request' ) ){
 
 			// Update data
-			self::update_options( $_POST );
+			self::_update_options( $_POST );
 
 		}
 
@@ -41,21 +41,19 @@ class MXALTYW_Main_Page_Model extends MXALTYW_Model
 	}
 
 		// Update data
-		public static function update_options( $_post )
+		public static function _update_options( $post )
 		{
-
+			
 			$options = array(
 
-				'link_root' => $_post['mxaltyw_link_root'],
+				'link_root' => sanitize_text_field( $post['mxaltyw_link_root'] ),
 
 				'link_slug' => 'mxpartnerlink',
 
 
 			);
 
-			$serialize_option = maybe_serialize( $options );
-
-			update_option( 'mxaltyw_affiliate_links', $serialize_option );
+			update_option( 'mxaltyw_affiliate_links', $options );
 
 		}
 

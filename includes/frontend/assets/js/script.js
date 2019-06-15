@@ -32,7 +32,7 @@ jQuery( document ).ready( function( $ ){
 
 	// Cookies.remove('mx_affiliate_link_user_token');
 
-	console.log( Cookies.get('mx_affiliate_link_user_token') );
+	// console.log( Cookies.get('mx_affiliate_link_user_token') );
 
 	// crate token
 	if( $( '#mx_create_affiliate_link_input' ).length ) {
