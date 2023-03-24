@@ -1,195 +1,236 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
-class MXALTYW_Route_Registrar
+class MXALFWPRouteRegistrar
 {
-	
-	/**
-	* set controller
-	*/
-	public $controller = '';
 
-	/**
-	* set action
-	*/
-	public $action = '';
+    /**
+    * set controller
+    */
+    public $controller = '';
 
-	/**
-	* set slug or parent menu slug
-	*/
-	public $slug = MXALTYW_MAIN_MENU_SLUG;
+    /**
+    * set action
+    */
+    public $action     = '';
 
-	/**
-	* catch class error
-	*/
-	public $class_attributes_error = NULL;
+    /**
+    * set slug or parent menu slug
+    */
+    public $slug = MXALFWP_MAIN_MENU_SLUG;
 
-	/**
-	* set properties
-	*/
-	public $properties = [
-		'page_title' 	=> 'Title of the page',
-		'menu_title' 	=> 'Link Name',
-		'capability' 	=> 'manage_options',
-		'menu_slug' 	=> MXALTYW_MAIN_MENU_SLUG,
-		'dashicons' 	=> 'dashicons-image-filter',
-		'position' 		=> 111
-	];
+    /**
+    * catch class error
+    */
+    public $classAttributesError = NULL;
 
-	/**
-	* set slug of sub menu
-	*/
-	public $sub_menu_slug = false;
+    /**
+    * set properties
+    */
+    public $properties = [
+        'page_title' => 'Title of the page',
+        'menu_title' => 'Link Name',
+        'capability' => 'manage_options',
+        'menu_slug'  => MXALFWP_MAIN_MENU_SLUG,
+        'dashicons'  => 'dashicons-image-filter',
+        'position'   => 111
+    ];
 
-	/**
-	* MXALTYW_Route_Registrar constructor
-	*/
-	public function __construct( ...$args )
-	{
+    /**
+    * set slug of sub menu
+    */
+    public $subMenuSlug = false;
 
-		// set data
-		$this->mxaltyw_set_data( ...$args );
+    /**
+    * set plugin name
+    */
+    public $pluginName;
 
-	}
+    /**
+    * MXALFWPRouteRegistrar constructor
+    */
+    public function __construct( ...$args )
+    {
 
-	/**
-	* require class
-	*/
-	public function mxaltyw_require_controller( $controller )
-	{
+        $this->pluginName = MXALFWP_PLUGN_BASE_NAME;
 
-		if( file_exists( MXALTYW_PLUGIN_ABS_PATH . "includes/admin/controllers/{$controller}.php" ) ) {
+        // set data
+        $this->mxalfwpSetData( ...$args );
 
-			require_once MXALTYW_PLUGIN_ABS_PATH . "includes/admin/controllers/{$controller}.php";
+    }
 
-		}
+    /**
+    * require class
+    */
+    public function requireController( $controller )
+    {
 
-	}
+        if (file_exists(MXALFWP_PLUGIN_ABS_PATH . "includes/admin/controllers/{$controller}.php")) {
+            require_once MXALFWP_PLUGIN_ABS_PATH . "includes/admin/controllers/{$controller}.php";
+        }
 
-	/**
-	* $controller 		- Controller
-	*
-	* $action 			- Action
-	*
-	* $slug 			- if NULL - menu item will investment into
-	*						MXALTYW_MAIN_MENU_SLUG menu item
-	*
-	* $menu_properties 	- menu properties
-	*
-	* $sub_menu_slug 	- slug of sub menu
-	*
-	*/
-	public function mxaltyw_set_data( $controller, $action, $slug = MXALTYW_MAIN_MENU_SLUG, array $menu_properties, $sub_menu_slug = false )
-	{
+    }
 
-		// set controller
-		$this->controller = $controller;
+    /**
+    * $controller     - Controller
+    *
+    * $action         - Action
+    *
+    * $slug           - if NULL - menu item will investment into
+    *                        MXALFWP_MAIN_MENU_SLUG menu item
+    *
+    * $menuProperties - menu properties
+    *
+    * $subMenuSlug    - slug of sub menu
+    *
+    * $settingsArea   - place item to settings area (core WP Settings menu item)
+    *
+    */
+    public function mxalfwpSetData( $controller, $action, $slug = MXALFWP_MAIN_MENU_SLUG, array $menuProperties = [], $subMenuSlug = false, $settingsArea = false )
+    {
 
-		// set action
-		$this->action = $action;
+        // set controller
+        $this->controller = $controller;
 
-		// set slug
-		if( $slug == NULL ) {
+        // set action
+        $this->action     = $action;
 
-			$this->slug = MXALTYW_MAIN_MENU_SLUG;
+        // set slug
+        if ($slug == NULL) {
 
-		} else {
+            $this->slug = MXALFWP_MAIN_MENU_SLUG;
 
-			$this->slug = $slug;
+        } else {
 
-		}
+            $this->slug = $slug;
 
-		// set properties
-		foreach ( $menu_properties as $key => $value ) {
-			
-			$this->properties[$key] = $value;
+        }
 
-		}
+        // set properties
+        foreach ($menuProperties as $key => $value) {
+            $this->properties[$key] = $value;
+        }
 
-		// callback function
-		$mxaltyw_callback_function_menu = 'mxaltyw_create_admin_main_menu';
+        // callback function
+        $mxalfwpCallbackFunctionMenu = 'createAdminMainMenu';
 
-		/*
-		* check if it's submenu
-		* set sub_menu_slug
-		*/
-		if( $sub_menu_slug !== false ) {
+        /*
+        * check if it's submenu
+        * set subMenuSlug
+        */
+        if ($subMenuSlug !== false) {
 
-			$this->sub_menu_slug = $sub_menu_slug;
+            $this->subMenuSlug = $subMenuSlug;
 
-			$mxaltyw_callback_function_menu = 'mxaltyw_create_admin_sub_menu';
-			
-		}
+            $mxalfwpCallbackFunctionMenu = 'createAdminSubMenu';
+            
+        }
 
-		/**
-		* require controller
-		*/
-		$this->mxaltyw_require_controller( $this->controller );
+        /*
+        * check if it's settings menu item
+        */
+        if ($settingsArea !== false) {
 
-		/**
-		* catching errors of class attrs
-		*/
-		$is_error_class_atr = MXALTYW_Catching_Errors::mxaltyw_catch_class_attributes_error( $this->controller, $this->action );
-		
-		// catch error class attr
-		if( $is_error_class_atr !== NULL ) {
+            $mxalfwpCallbackFunctionMenu = 'settingsAreaMenuItem';
 
-			$this->class_attributes_error = $is_error_class_atr;
+            // add link Settings under the name of the plugin
+            add_filter( "plugin_action_links_$this->pluginName", [$this, 'createSettingsLink'] );
+            
+        }
 
-		}
+        /**
+        * require controller
+        */
+        $this->requireController( $this->controller );
 
-		// register admin menu
-		add_action( 'admin_menu', array( $this, $mxaltyw_callback_function_menu ) );
+        /**
+        * catching errors of class attrs
+        */
+        $isErrorClassAtr = MXALFWPCatchingErrors::catchClassAttributesError( $this->controller, $this->action );
+        
+        // catch error class attr
+        if ($isErrorClassAtr !== NULL) {
+            $this->classAttributesError = $isErrorClassAtr;
+        }
 
-	}
+        // register admin menu
+        add_action( 'admin_menu', [$this, $mxalfwpCallbackFunctionMenu] );
 
-	/**
-	* Create Main menu
-	*/
-	public function mxaltyw_create_admin_main_menu()
-	{
+    }
 
-		add_menu_page( __( $this->properties['page_title'], 'mxaltyw-domain' ),
-			 __( $this->properties['menu_title'], 'mxaltyw-domain' ),
-			 $this->properties['capability'],
-			 $this->slug,
-			 array( $this, 'mxaltyw_view_connector' ),
-			 $this->properties['dashicons'], // icons https://developer.wordpress.org/resource/dashicons/#id
-			 $this->properties['position'] );
+    /**
+    * Create Main menu
+    */
+    public function createAdminMainMenu()
+    {
 
-	}
+        add_menu_page( __( $this->properties['page_title'], 'mxalfwp-domain' ),
+            __( $this->properties['menu_title'], 'mxalfwp-domain' ),
+            $this->properties['capability'],
+            $this->slug,
+            [ $this, 'viewConnector' ],
+            $this->properties['dashicons'], // icons https://developer.wordpress.org/resource/dashicons/#id
+            $this->properties['position'] );
+    }
 
-	/**
-	* Create Sub menu
-	*/
-	public function mxaltyw_create_admin_sub_menu()
-	{
-		
-		// create a menu
-		add_submenu_page( $this->slug,
-			 __( $this->properties['page_title'], 'mxaltyw-domain' ),
-			 __( $this->properties['menu_title'], 'mxaltyw-domain' ),
-			 $this->properties['capability'],
-			 $this->sub_menu_slug,
-			 array( $this, 'mxaltyw_view_connector' )
-		);
+    /**
+    * Create Sub menu
+    */
+    public function createAdminSubMenu()
+    {
+        
+        // create a sub menu
+        add_submenu_page( $this->slug,
+            __( $this->properties['page_title'], 'mxalfwp-domain' ),
+            __( $this->properties['menu_title'], 'mxalfwp-domain' ),
+            $this->properties['capability'],
+            $this->subMenuSlug,
+            [ $this, 'viewConnector' ]
+        );
 
-	}
+    }
 
-		// connect view
-		public function mxaltyw_view_connector()
-		{
+    /**
+    * Create Settings area menu item
+    */
+    public function settingsAreaMenuItem()
+    {
+        
+        // create a settings menu
+        add_options_page(
+            __( $this->properties['page_title'], 'mxalfwp-domain' ),
+            __( $this->properties['menu_title'], 'mxalfwp-domain' ),
+            $this->properties['capability'],
+            $this->subMenuSlug,
+            [ $this, 'viewConnector' ]
+        );
 
-			if( $this->class_attributes_error == NULL ) {
+    }
+        public function createSettingsLink( $links )
+        {
 
-				$class_inst = new $this->controller();
+            $settingsLink = '<a href="' . get_admin_url() . 'admin.php?page=' . $this->subMenuSlug . '">' . __( $this->properties['menu_title'], 'mxalfwp-domain' ) . '</a>'; // options-general.php
 
-				call_user_func( array( $class_inst, $this->action ) );
+            array_push( $links, $settingsLink );
 
-			}
-			
-		}
+            return $links;
+
+        }
+
+        // connect view
+        public function viewConnector()
+        {
+
+            if ($this->classAttributesError == NULL) {
+
+                $classInstance = new $this->controller();
+
+                call_user_func( [$classInstance, $this->action] );
+
+            }
+
+        }
 
 }

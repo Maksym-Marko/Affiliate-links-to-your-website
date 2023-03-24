@@ -1,21 +1,21 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 /*
 * Controllers class
 */
-abstract class MXALTYW_Controller
+abstract class MXALFWPController
 {
 
-	/**
-	* Catch missing methods on the controller
-	*/
-	public function __call( $name, $arguments ) {
+    /**
+    * Catch missing methods on the controller
+    */
+    public function __call( $name, $arguments ) {
 
-		echo 'Missing method "' . $name . '"!';
+        echo esc_attr( 'Missing method "' . $name . '"!' );
 
-	}
-	
+    }
+
 }

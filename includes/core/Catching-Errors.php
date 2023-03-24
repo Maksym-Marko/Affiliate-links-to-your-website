@@ -1,36 +1,34 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
-// require Display_Error.php
-require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/error_handle/Display-Error.php';
+// require Display-Error.php
+require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/error_handle/Display-Error.php';
 
 // handle error
-require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/error_handle/Error-Handle.php';
+require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/error_handle/Error-Handle.php';
 
 /*
 * Cathing errors calss
 */
-class MXALTYW_Catching_Errors
+class MXALFWPCatchingErrors
 {
 
 	/**
 	* Show notification missing class or methods
 	*/
-	public static function mxaltyw_catch_class_attributes_error( $class_name, $method )
+	public static function catchClassAttributesError( $className, $method )
 	{
 
-		$error_class_inst = new MXALTYW_Error_Handle();
+		$errorClassInstance = new MXALFWPErrorHandle();
 
-		$error_display = $error_class_inst->mxaltyw_class_attributes_error( $class_name, $method );
+		$errorDisplay = $errorClassInstance->classAttributesError( $className, $method );
 
 		$error = NULL;
 
-		if( $error_display !== true ) {
-
-			$error = $error_display;
-
+		if ($errorDisplay !== true) {
+			$error = $errorDisplay;
 		}		
 
 		return $error;

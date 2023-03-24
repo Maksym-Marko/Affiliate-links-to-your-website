@@ -1,24 +1,115 @@
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
 
-	$( '#mxaltyw_form_update' ).on( 'submit', function( e ){
+	// Bulk actions
+	$( '#mxalfwp_custom_talbe_form' ).on( 'submit', function ( e ) {
 
 		e.preventDefault();
 
-		var nonce = $( this ).find( '#mxaltyw_wpnonce' ).val();
+		var nonce = $( this ).find( '#_wpnonce' ).val();
 
-		var link_root = $( '#mxaltyw_link_root' ).val();
+		var bulk_action = $( this ).find( '#bulk-action-selector-top' ).val()
+
+		if( bulk_action !== '-1') {
+			
+			var ids = []
+			$( '.mxalfwp_bulk_input' ).each( function( index, element ) {
+				if( $( element ).is(':checked') ) {
+					ids.push( $( element ).val() )
+				}
+			} );
+
+			if( ids.length > 0 ) {
+
+				var data = {
+					'action': 'mxalfwp_bulk_actions',
+					'nonce': nonce,
+					'bulk_action': bulk_action,
+					'ids': ids
+				}
+	
+				jQuery.post( mxalfwp_admin_localize.ajaxurl, data, function( response ) {
+
+					location.reload()
+		
+				} );
+
+			}
+
+		}
+	
+	} );
+
+	// Create table item
+	$( '#mxalfwp_form_create_table_item' ).on( 'submit', function ( e ) {
+
+		e.preventDefault();
+
+		var nonce = $( this ).find( '#mxalfwp_wpnonce' ).val();
+
+		var title = $( '#mxalfwp_title' ).val();
+		var description = $( '#mxalfwp_mx_description' ).val();
 
 		var data = {
 
-			'action': 'mxaltyw_update_option',
+			'action': 'mxalfwp_create_item',
 			'nonce': nonce,
-			'mxaltyw_link_root': link_root
+			'title': title,
+			'description': description
 
 		};
 
-		jQuery.post( ajaxurl, data, function( response ){
+		if( title == '' || description == '' ) {
 
-			alert( 'Value updated.' );
+			alert( 'Fill in all fields' )
+
+			return;
+
+		}
+
+		jQuery.post( mxalfwp_admin_localize.ajaxurl, data, function( response ) {
+
+			if( response === '1' ) {
+				window.location.href = mxalfwp_admin_localize.main_page
+			}
+			alert( 'Created!' );
+
+		} );
+	
+	} );
+
+	// Edit table item
+	$( '#mxalfwp_form_update' ).on( 'submit', function ( e ) {
+
+		e.preventDefault();
+
+		var nonce = $( this ).find( '#mxalfwp_wpnonce' ).val();
+
+		var id = $( '#mxalfwp_id' ).val();
+		var title = $( '#mxalfwp_title' ).val();
+		var description = $( '#mxalfwp_mx_description' ).val();
+
+		var data = {
+
+			'action': 'mxalfwp_update',
+			'nonce': nonce,
+			'id': id,
+			'title': title,
+			'description': description
+
+		};
+
+		if( id == '' || title == '' || description == '' ) {
+
+			alert( 'Fill in all fields' )
+
+			return;
+
+		}
+
+		jQuery.post( mxalfwp_admin_localize.ajaxurl, data, function( response ) {
+
+			// console.log( response );
+			alert( 'Updated!' );
 
 		} );
 

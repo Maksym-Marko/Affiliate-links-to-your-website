@@ -1,46 +1,38 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
-class MXALTYW_FrontEnd_Main
+class MXALFWPFrontEndMain
 {
 
-	/*
-	* MXALTYW_FrontEnd_Main constructor
-	*/
-	public function __construct()
-	{
+    /*
+    * Additional classes
+    */
+    public function additionalClasses()
+    {
 
-	}
+        // enqueue_scripts class
+        mxalfwpRequireClassFileFrontend( 'enqueue-scripts.php' );
 
-	/*
-	* Additional classes
-	*/
-	public function mxaltyw_additional_classes()
-	{
+        MXALFWPEnqueueScriptsFrontend::registerScripts();
 
-		// enqueue_scripts class
-		mxaltyw_require_class_file_frontend( 'enqueue-scripts.php' );
+        // add cabinet shotrcode
+        mxalfwpRequireClassFileFrontend( 'shortcodes/cabinet.php' );
 
-		MXALTYW_Enqueue_Scripts_Frontend::mxaltyw_register();
+        MXALFWPShortcodeCabinet::add_shortcode();
 
-		// shortcode
-		mxaltyw_require_class_file_frontend( 'shortcode.php' );
+        // ajax
+        mxalfwpRequireClassFileFrontend( 'server.php' );
 
-		MXALTYW_Shortcode::create_shortcode();
+        MXALFWPServer::registerAjax();        
 
-		// generate user token
-		mxaltyw_require_class_file_frontend( 'generate-user-token.php' );
-
-		MXALTYW_Generate_User_Token::mxaltyw_wp_frontend_ajax();
-
-	}
+    }
 
 }
 
 // Initialize
-$initialize_admin_class = new MXALTYW_FrontEnd_Main();
+$initialize_frontend_class = new MXALFWPFrontEndMain();
 
 // include classes
-$initialize_admin_class->mxaltyw_additional_classes();
+$initialize_frontend_class->additionalClasses();

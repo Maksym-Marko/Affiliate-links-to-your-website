@@ -1,39 +1,39 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 /*
 * Error Handle calss
 */
-class MXALTYW_Display_Error
+class MXALFWPDisplayError
 {
 
-	/**
-	* Error notice
-	*/
-	public $mxaltyw_error_notice = '';
+    /**
+    * Error notice
+    */
+    public $errorNotice = '';
 
-	public function __construct( $mxaltyw_error_notice )
-	{
+    public function __construct( $errorNotice )
+    {
 
-		$this->mxaltyw_error_notice = $mxaltyw_error_notice;
+        $this->errorNotice = $errorNotice;
 
-	}
+    }
 
-	public function mxaltyw_show_error()
-	{
-		
-		add_action( 'admin_notices', function() { ?>
+    public function showError()
+    {
+        
+        add_action( 'admin_notices', function() { ?>
 
-			<div class="notice notice-error is-dismissible">
+            <div class="notice notice-error is-dismissible">
 
-			    <p><?php echo $this->mxaltyw_error_notice; ?></p>
-			    
-			</div>
-		    
-		<?php } );
+                <p><?php echo esc_attr( $this->errorNotice ); ?></p>
+                
+            </div>
+            
+        <?php } );
 
-	}
+    }
 
 }

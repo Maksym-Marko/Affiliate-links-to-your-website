@@ -1,70 +1,65 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 /*
 * Error Handle calss
 */
-class MXALTYW_Error_Handle
+class MXALFWPErrorHandle
 {
 
-	/**
-	* Error name
-	*/
-	// public $mxaltyw_error_name = '';	
+    /**
+    * Error name
+    */
+    // public $mxalfwp_error_name = '';    
 
-	/**
-	* has error
-	*/
-	public $mxaltyw_isnt_error = true;
+    /**
+    * has error
+    */
+    public $errorInstance = true;
+    
+    public function classAttributesError( $className, $method )
+    {
 
-	public function __construct()
-	{
+        // if class not exists display an error
+        if (class_exists($className)) {
 
-	}
-	
-	public function mxaltyw_class_attributes_error( $class_name, $method )
-	{
+            // check if method exists
+            $classInstance = new $className();
 
-		// if class not exists display an error
-		if( class_exists( $class_name ) ) {
+            // if method not exists display an error
+            if (!method_exists($classInstance, $method)) {
 
-			// check if method exists
-			$class_inst = new $class_name();
+                // notice of error
+                $errorNotice = "The <b>\"{$className}\"</b> class doesn't contain the <b>\"{$method}\"</b> method.";
 
-			// if method not exists display an error
-			if( !method_exists( $class_inst, $method ) ) {
+                // show an error
+                $errorMethodInstance = new MXALFWPDisplayError( $errorNotice );
 
-				// notice of error
-				$mxaltyw_error_notice = "The <b>\"{$class_name}\"</b> class doesn't contain the <b>\"{$method}\"</b> method.";
+                $errorMethodInstance->showError();
 
-				// show an error
-				$error_method_inst = new MXALTYW_Display_Error( $mxaltyw_error_notice );
+                $this->errorInstance = $errorNotice;
 
-				$error_method_inst->mxaltyw_show_error();
+            }
 
-				$this->mxaltyw_isnt_error = $mxaltyw_error_notice;
+        } else {
 
-			}
+            // notice of error
+            $errorNotice = "The <b>\"{$className}\"</b> class not exists.";
 
-		} else {
+            // show an error
+            $errorClassInstance = new MXALFWPDisplayError( $errorNotice );
 
-			// notice of error
-			$mxaltyw_error_notice = "The <b>\"{$class_name}\"</b> class not exists.";
+            $errorClassInstance->showError();
 
-			// show an error
-			$error_class_inst = new MXALTYW_Display_Error( $mxaltyw_error_notice );
+            $this->errorInstance = $errorNotice;
 
-			$error_class_inst->mxaltyw_show_error();
+        }
+    
+        // 
+        return $this->errorInstance;
 
-			$this->mxaltyw_isnt_error = $mxaltyw_error_notice;
-
-		}
-	
-		// 
-		return $this->mxaltyw_isnt_error;
-
-	}
-	
+    }
+    
 }

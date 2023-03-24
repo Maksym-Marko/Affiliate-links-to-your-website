@@ -1,79 +1,69 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
-final class MXALTYWAffiliateLinksToYourWebsite
+final class MXALFWPAffiliateLinksForWoocommercePluginWPPGenerator
 {
 
-	/*
-	* MXALTYWAffiliateLinksToYourWebsite constructor
-	*/
-	public function __construct()
-	{
+    /*
+    * Include required core files
+    */
+    public function includeCore()
+    {        
 
-		// ...
+        // helpers
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/helpers.php';
 
-	}
+        // cathing errors
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/Catching-Errors.php';
 
-	/*
-	* Include required core files
-	*/
-	public function mxaltyw_include()
-	{		
+        // Route
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/Route.php';
 
-		// helpers
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/helpers.php';
+        // Models
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/Model.php';
 
-		// cathing errors
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/Catching-Errors.php';
+        // Views
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/View.php';
 
-		// Route
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/Route.php';
+        // Controllers
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/Controller.php';
 
-		// Models
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/Model.php';
+    }
 
-		// Views
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/View.php';
+    /*
+    * Include Admin Path
+    */
+    public function includeAdminPath()
+    {
 
-		// Controllers
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/core/Controller.php';
+        // Part of the Administrator
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/admin/admin-main.php';
+    
+    }
 
-	}
+    /*
+    * Include Frontend Path
+    */
+    public function includeFrontendPath()
+    {
 
-	/*
-	* Include Admin Path
-	*/
-	public function mxaltyw_include_admin_path()
-	{
-
-		// Part of the Administrator
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/admin/admin-class.php';
-	
-	}
-
-	/*
-	* Include Frontend Path
-	*/
-	public function mxaltyw_include_frontend_path()
-	{
-
-		// Part of the Frontend
-		require_once MXALTYW_PLUGIN_ABS_PATH . 'includes/frontend/frontend-main.php';
-	
-	}
+        // Part of the Frontend
+        require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/frontend/frontend-main.php';
+    
+    }
 
 }
 
-// create a new instance of final class
-$final_class_instance = new MXALTYWAffiliateLinksToYourWebsite();
+// create an instance of final class
+$wppGenerator = new MXALFWPAffiliateLinksForWoocommercePluginWPPGenerator();
 
 // run core files
-$final_class_instance->mxaltyw_include();
+$wppGenerator->includeCore();
 
 // include admin parth
-$final_class_instance->mxaltyw_include_admin_path();
+$wppGenerator->includeAdminPath();
 
 // include frontend parth
-$final_class_instance->mxaltyw_include_frontend_path();
+$wppGenerator->includeFrontendPath();

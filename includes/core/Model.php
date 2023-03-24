@@ -1,84 +1,92 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 /*
 * Model class
 */
-class MXALTYW_Model
+class MXALFWPModel
 {
 
-	private $wpdb;
+    private $wpdb;
 
-	/**
-	* Table name
-	*/
-	protected $table = MXALTYW_TABLE_SLUG;
+    /**
+    * Table name
+    */
+    protected $table = MXALFWP_TABLE_SLUG;
 
-	/**
-	* fields
-	*/
-	protected $fields = '*';
+    /**
+    * fields
+    */
+    protected $fields = '*';
 
-	/*
-	* Model constructor
-	*/
-	public function __construct()
-	{
-		
-		global $wpdb;
+    /*
+    * Model constructor
+    */
+    public function __construct()
+    {
+        
+        global $wpdb;
 
-    	$this->wpdb = $wpdb;    	
+        $this->wpdb = $wpdb;
 
-	}	
+    }    
 
-	/**
-	* select row from the database
-	*/
-	public function mxaltyw_get_row( $table = NULL, $wher_name, $wher_value )
-	{
+    /**
+    * select row from the database
+    */
+    public function getRow( $table = NULL, $wherName = NULL, $wherValue = NULL )
+    {
 
-		$table_name = $this->wpdb->prefix . $this->table;
+        $tableName = $this->wpdb->prefix . $this->table;
 
-		if( $table !== NULL ) {
+        if ($table !== NULL) {
 
-			$table_name = $table;
+            $tableName = $table;
 
-		}
+        }
 
-		$get_row = $this->wpdb->get_row( "SELECT $this->fields FROM $table_name WHERE $wher_name = $wher_value" );
+        $where = '';
 
-		return $get_row;
-		
-	}
+        if ($wherName !== NULL && $wherValue !== NULL) {
 
-	/**
-	* get results from the database
-	*/
-	public function mxaltyw_get_results( $table = false, $wher_name = NULL, $wher_value = 1 )
-	{
+            $where = "WHERE $wherName = $wherValue";
 
-		$table_name = $this->wpdb->prefix . $this->table;
+        }
 
-		if( $table !== false ) {
+        $getRow = $this->wpdb->get_row( "SELECT $this->fields FROM $tableName {$where}" );
 
-			$table_name = $table;
+        return $getRow;
+        
+    }
 
-		}
+    /**
+    * get results from the database
+    */
+    public function getResults( $table = false, $wherName = NULL, $wherValue = 1 )
+    {
 
-		if( $wher_name !== NULL ) {
+        $tableName = $this->wpdb->prefix . $this->table;
 
-			$results = $this->wpdb->get_results( "SELECT $this->fields FROM $table_name WHERE $wher_name = $wher_value" );
+        if ($table !== false) {
 
-		} else {
+            $tableName = $table;
 
-			$results = $this->wpdb->get_results( "SELECT $this->fields FROM $table_name" );
+        }
 
-		}		
+        if ($wherName !== NULL) {
 
-		return $results;
-		
-	}
+            $results = $this->wpdb->get_results( "SELECT $this->fields FROM $tableName WHERE $wherName = $wherValue" );
+
+        } else {
+
+            $results = $this->wpdb->get_results( "SELECT $this->fields FROM $tableName" );
+
+        }        
+
+        return $results;
+        
+    }
 
 }

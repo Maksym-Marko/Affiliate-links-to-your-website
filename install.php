@@ -1,31 +1,79 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
+// create table class
+require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/create-table.php';
 
-class MXALTYW_Basis_Plugin_Class
+class MXALFWPBasisPluginClass
 {
 
-	public static function activate()
-	{
+    private static $tableSlug = MXALFWP_TABLE_SLUG;
+    
+    public static function activate()
+    {
 
-		$options = array(
+        // set option for rewrite rules CPT
+        self::createOptionForActivation();
 
-			'link_root' => get_site_url(),
+        // Create table
+        global $wpdb;
 
-			'link_slug' => 'mxpartnerlink'
+        // Table name
+        $tableName    = $wpdb->prefix . self::$tableSlug;
 
+        $productTable = new MXALFWPCreateTable( $tableName );
 
-		);
+        // add some column
+            // user_name
+            $productTable->varchar( 'user_name', 200, true, 'text' );
 
-		update_option( 'mxaltyw_affiliate_links', $options );
+            // user_id
+            $productTable->int( 'user_id' );
 
-	}
+            // link
+            $productTable->longtext( 'link' );
 
-	public static function deactivate()
-	{
+            // links_data
+            $productTable->longtext( 'link_data' );
 
-	}
+            // earned
+            $productTable->int( 'earned' );
+
+            // paied
+            $productTable->int( 'paied' );
+
+            // statue
+            $productTable->varchar( 'status', 20, true, 'active' ); // blocked
+
+            // created
+            $productTable->datetime( 'created_at' );
+
+        // create "id" column as AUTO_INCREMENT
+        $productTable->create_columns();
+
+        // create table
+        $tableCreated = $productTable->createTable();
+
+    }
+
+    public static function deactivate()
+    {
+
+        // Rewrite rules
+        flush_rewrite_rules();
+
+    }
+
+    /*
+    * This function sets the option in the table for CPT rewrite rules
+    */
+    public static function createOptionForActivation()
+    {
+
+        add_option( 'mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules' );
+
+    }
 
 }

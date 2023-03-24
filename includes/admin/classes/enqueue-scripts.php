@@ -1,39 +1,38 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
-class MXALTYW_Enqueue_Scripts
+class MXALFWPEnqueueScripts
 {
 
-	/*
-	* MXALTYW_Enqueue_Scripts
-	*/
-	public function __construct()
-	{
+    /*
+    * Registration of styles and scripts
+    */
+    public static function registerScripts()
+    {
 
-	}
+        // register scripts and styles
+        add_action( 'admin_enqueue_scripts', ['MXALFWPEnqueueScripts', 'enqueue'] );
 
-	/*
-	* Registration of styles and scripts
-	*/
-	public static function mxaltyw_register()
-	{
+    }
 
-		// register scripts and styles
-		add_action( 'admin_enqueue_scripts', array( 'MXALTYW_Enqueue_Scripts', 'mxaltyw_enqueue' ) );
+        public static function enqueue()
+        {
 
-	}
+            wp_enqueue_style( 'mxalfwp_font_awesome', MXALFWP_PLUGIN_URL . 'assets/font-awesome-4.6.3/css/font-awesome.min.css' );
 
-		public static function mxaltyw_enqueue()
-		{
+            wp_enqueue_style( 'mxalfwp_admin_style', MXALFWP_PLUGIN_URL . 'includes/admin/assets/css/style.css', [ 'mxalfwp_font_awesome' ], MXALFWP_PLUGIN_VERSION, 'all' );
 
-			wp_enqueue_style( 'mxaltyw_font_awesome', MXALTYW_PLUGIN_URL . 'assets/font-awesome-4.6.3/css/font-awesome.min.css' );
+            wp_enqueue_script( 'mxalfwp_admin_script', MXALFWP_PLUGIN_URL . 'includes/admin/assets/js/script.js', [ 'jquery' ], MXALFWP_PLUGIN_VERSION, false );
 
-			wp_enqueue_style( 'mxaltyw_admin_style', MXALTYW_PLUGIN_URL . 'includes/admin/assets/css/style.css', array( 'mxaltyw_font_awesome' ), MXALTYW_PLUGIN_VERSION, 'all' );
+            wp_localize_script( 'mxalfwp_admin_script', 'mxalfwp_admin_localize', [
 
-			wp_enqueue_script( 'mxaltyw_admin_script', MXALTYW_PLUGIN_URL . 'includes/admin/assets/js/script.js', array( 'jquery' ), MXALTYW_PLUGIN_VERSION, false );
-			
-		}
+                'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+                'main_page' => admin_url( 'admin.php?page=' . MXALFWP_MAIN_MENU_SLUG ),
+
+            ] );
+
+        }
 
 }

@@ -1,17 +1,29 @@
-=== Affiliate Links WooCommerce ===
+=== Affiliate Links Expert ===
 Contributors: markomaksym
-Tags: affiliate link, woocommerce, partner program, partner link
-Requires at least: 4.3
-Tested up to: 5.0
-Stable tag: 1.0
+Tags: create table, create CPT, add metaboxes
+Requires at least: 5.3
+Tested up to: 6.1
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+    WPP Generator Version:        5.2
+    WPP Generator Author:         Maksym Marko
+    WPP Generator Author Website: https://markomaksym.com.ua/
+    WPP Generator Video Guide:     https://www.youtube.com/watch?v=6PZbXBhxtN0&list=PLqb2a5jr0z4XRwroV3nA9nAe4596lPjxr
 
-Brief description
+This plugin allows users to create affiliate links. When someone will buy a product on your site, you will know who's showed your store to this customer.
 
 == Description ==
 
-Long description
+<p>
+	This plugin allows users to create affiliate links. When someone will buy a product on your site, you will know who’s showed your shop to the current customer.
+</p>
+
+<p>
+	<b>How does it work?</b>
+</p>
+
+<iframe width="600" height="320" src="https://www.youtube.com/embed/YGvj50agXGQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 == Installation ==
 
@@ -35,6 +47,9 @@ Long description
 4. You can see who's created the affiliate link and helped you sell your product
 
 == Changelog ==
+
+= 2.0 =
+* Improved functionality.
 
 = 1.0 =
 * Affiliate Links WooCommerce
