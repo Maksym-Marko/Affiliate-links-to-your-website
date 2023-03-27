@@ -77,3 +77,26 @@
     margin-top: 15px;
     padding: 0px 20px;
 }
+
+/*  */
+.mxalfwp_link_wrapper {
+    position: relative;
+}
+.mxalfwp_link_icon {
+    width: 20px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    right: 0;    
+    background-color: transparent;
+}
+#mxalfwp_copy_link {   
+    color: #007bff;
+    cursor: pointer;
+}
+#mxalfwp_copy_link:hover {
+    color: #0062cc;
+}
+.mxalfwp_copied {
+    color: #8ad480;
+}

@@ -16,6 +16,7 @@
 
     <mxalfwp_c_table
         :translation='translation'
+        :links='links'
     ></mxalfwp_c_table>
     
 </div>

@@ -10,7 +10,7 @@ class MXALFWPBasisPluginClass
 {
 
     private static $tableSlug = MXALFWP_TABLE_SLUG;
-    
+
     public static function activate()
     {
 
@@ -23,39 +23,48 @@ class MXALFWPBasisPluginClass
         // Table name
         $tableName    = $wpdb->prefix . self::$tableSlug;
 
-        $productTable = new MXALFWPCreateTable( $tableName );
+        $productTable = new MXALFWPCreateTable($tableName);
 
         // add some column
-            // user_name
-            $productTable->varchar( 'user_name', 200, true, 'text' );
+        // user_name
+        $productTable->varchar('user_name', 200, true, 'text');
 
-            // user_id
-            $productTable->int( 'user_id' );
+        // user_id
+        $productTable->int('user_id');
 
-            // link
-            $productTable->longtext( 'link' );
+        // link
+        $productTable->longtext('link');
 
-            // links_data
-            $productTable->longtext( 'link_data' );
+        // links_data
+        $linkData = [
+            'views' => 0
+        ];
 
-            // earned
-            $productTable->int( 'earned' );
+        $productTable->longtext('link_data', false, maybe_serialize($linkData));
 
-            // paied
-            $productTable->int( 'paied' );
+        // bought
+        $productTable->int('bought');
 
-            // statue
-            $productTable->varchar( 'status', 20, true, 'active' ); // blocked
+        // earned
+        $productTable->int('earned');
 
-            // created
-            $productTable->datetime( 'created_at' );
+        // paied
+        $productTable->int('paied');
+
+        // statue
+        $productTable->varchar('status', 20, true, 'active'); // blocked
+
+        // created
+        $productTable->datetime('created_at');
+
+        // updated
+        $productTable->datetime('updated_at');
 
         // create "id" column as AUTO_INCREMENT
         $productTable->create_columns();
 
         // create table
         $tableCreated = $productTable->createTable();
-
     }
 
     public static function deactivate()
@@ -63,7 +72,6 @@ class MXALFWPBasisPluginClass
 
         // Rewrite rules
         flush_rewrite_rules();
-
     }
 
     /*
@@ -72,8 +80,6 @@ class MXALFWPBasisPluginClass
     public static function createOptionForActivation()
     {
 
-        add_option( 'mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules' );
-
+        add_option('mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules');
     }
-
 }

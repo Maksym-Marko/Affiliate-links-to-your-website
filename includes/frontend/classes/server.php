@@ -12,7 +12,6 @@ class MXALFWPServer
 
         // Get current user's links
         add_action('wp_ajax_mxalfwp_get_links', ['MXALFWPServer', 'get_links']);
-
     }
 
     public static function get_links()
@@ -30,9 +29,9 @@ class MXALFWPServer
 
             $results = $wpdb->get_results(
 
-                $wpdb->prepare( 
+                $wpdb->prepare(
 
-                    "SELECT id, link, link_data 
+                    "SELECT id, link, link_data, user_id, earned, paied, bought 
                         FROM $tableName                         
                         WHERE user_id=%d
                         ORDER BY id DESC",
@@ -42,12 +41,22 @@ class MXALFWPServer
 
             );
 
-            var_dump( $results );
+            $improvedResult = [];
+
+            foreach ($results as $value) {
+
+                $tmp = $value;
+
+                $tmp->link_data = maybe_unserialize($value->link_data);
+
+                array_push($improvedResult, $tmp);
+            }
+            
+            echo json_encode( $improvedResult);
 
         }
 
         wp_die();
-
     }
 
     public static function link_generate()
@@ -96,19 +105,24 @@ class MXALFWPServer
             } else {
 
                 // insert link
+                $date = date('Y-m-d H:i:s');
                 $insert = $wpdb->insert(
 
                     $tableName,
 
                     [
-                        'link'      => $url,
-                        'user_id'   => $userId,
-                        'user_name' => $user->data->display_name
+                        'link'       => $url,
+                        'user_id'    => $userId,
+                        'user_name'  => $user->data->display_name,
+                        'created_at' => $date,
+                        'updated_at' => $date,
                     ],
 
                     [
                         '%s',
                         '%d',
+                        '%s',
+                        '%s',
                         '%s',
                     ]
 

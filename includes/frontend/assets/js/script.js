@@ -9,6 +9,10 @@ if (document.getElementById('mxalfwp_cabinet')) {
             translation: {
                 type: Object,
                 required: true
+            },
+            links: {
+                type: Array,
+                required: true
             }
         },
         template: `
@@ -30,21 +34,106 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 
                     </thead>
                 
-                    <tbody>
-                
+                    <tbody
+                        v-if="links.length===0"
+                    >
+
                         <tr>
-                            <th>http://affiliate-links-woocommerce.local/?mxpartnerlink=1</th>
-                            <td>23</td>
-                            <td>1</td>
-                            <td>$150</td>
-                            <td>$25</td>
+                            <td>
+                                <h2>No links yet.</h2>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+
+                    <tbody
+                        v-else
+                    >
+                        
+                        <tr
+                            v-for="link in links"
+                            :key="link.id"
+                        >
+                            <th>
+                                <div class="mxalfwp_link_wrapper">
+                                    <div class="mxalfwp_link_content">
+                                        {{link.link}}/?mxpartnerlink={{link.user_id}}
+                                    </div>
+                                    <i
+                                      class="fa fa-files-o mxalfwp_link_icon"
+                                      aria-hidden="true"
+                                      id="mxalfwp_copy_link"
+                                      @click.prevent="copyLink"
+                                      :data-index="link.id"
+                                      :data-link="link.link + '/?mxpartnerlink=' + link.user_id"
+                                      v-if="copiedLink!==link.id"
+                                    ></i>
+                                    <i
+                                      class="fa fa-check mxalfwp_copied mxalfwp_link_icon"
+                                      aria-hidden="true"
+                                      v-else
+                                    ></i>
+                                </div>
+                            </th>
+                            <td>{{link.link_data.views}}</td>
+                            <td>{{link.bought}}</td>
+                            <td>$ {{link.earned}}</td>
+                            <td>$ {{link.paied}}</td>
                         </tr>
                 
                     </tbody>
                 </table>
 
+
             </div>
-        `
+        `,
+        data() {
+            return {
+                copiedLink: 0,
+                intervalAmoun: 3,
+                intervalBody: null
+            }
+        },
+        methods: {
+            copyLink(e) {
+
+                let link = e.target.getAttribute('data-link');
+                let index = e.target.getAttribute('data-index');
+
+                let input = document.createElement('input');
+
+                document.body.appendChild(input);
+
+                input.value = link;
+
+                input.select()
+
+                document.execCommand('copy');
+
+                input.remove();
+
+                this.copiedLink = index
+
+                this.changeIcon();
+
+            },
+            changeIcon() {
+                const self = this
+                clearInterval(self.intervalBody);
+                this.intervalBody = setInterval(function () {
+
+                    if (self.intervalAmoun <= 0) {
+                        self.intervalAmoun = 3;
+                        self.copiedLink = 0;
+                        clearInterval(self.intervalBody);
+                        return;
+                    } else {
+                        self.intervalAmoun -= 1;
+                    }
+
+                }, 1000);
+            }
+        }
     });
 
     // Form
@@ -245,25 +334,16 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                 xmlhttp.onload = function () {
 
-                    console.log( this.response );
+                    if (this.status === 200) {
 
-                    // if (this.status === 200) {
+                        const links = JSON.parse(this.response);
 
-                    //     const res = JSON.parse(this.response);
+                        self.links = links;
 
-                    //     if (res.status === 'success') {
-                    //         alert(res.message);
-                    //         self.url = null;
-                    //         self.attempt = false;
-                    //     } else {
-                    //         self.errors.push(res.message);
-                    //     }
+                    } else {
+                        self.errors.push(translation.text_12);
+                    }
 
-                    // } else {
-                    //     self.errors.push(translation.text_12);
-                    // }
-
-                    // self.disableButton = false
                 }
 
                 const data = {
