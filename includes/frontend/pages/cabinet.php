@@ -12,6 +12,7 @@
         :translation='translation'
         :ajaxdata="ajaxdata"
         :toquerystring="toQueryString"
+        :getcurrentuserlinks="getCurrentUserLinks"
     ></mxalfwp_c_form>
 
     <mxalfwp_c_table

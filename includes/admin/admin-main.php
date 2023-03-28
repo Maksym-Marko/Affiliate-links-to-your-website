@@ -87,8 +87,8 @@ class MXALFWPAdminMain
 
         // sub menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', '', [
-            'page_title' => 'Sub Menu title',
-            'menu_title' => 'Sub menu'
+            'page_title' => 'Settings',
+            'menu_title' => 'Settings'
         ], 'sub_menu' );
 
         // hide menu item

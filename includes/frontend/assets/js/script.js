@@ -1,21 +1,25 @@
 if (document.getElementById('mxalfwp_cabinet')) {
 
-    /**
-     * Components 
-     * */
-    // Table
-    Vue.component('mxalfwp_c_table', {
-        props: {
-            translation: {
-                type: Object,
-                required: true
+    if (typeof Vue === 'undefined') {
+        console.warn(mxalfwp_frontend_localize.translation.text_13);
+    } else {
+
+        /**
+         * Components 
+         * */
+        // Table
+        Vue.component('mxalfwp_c_table', {
+            props: {
+                translation: {
+                    type: Object,
+                    required: true
+                },
+                links: {
+                    type: Array,
+                    required: true
+                }
             },
-            links: {
-                type: Array,
-                required: true
-            }
-        },
-        template: `
+            template: `
             <div>
 
                 <!-- List of my Affiliate Links -->
@@ -40,7 +44,12 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                         <tr>
                             <td>
-                                <h2>No links yet.</h2>
+                                <h2
+                                    v-if="!loading"
+                                >No links yet.</h2>
+                                <h2
+                                    v-else
+                                >Loading...</h2>
                             </td>
                         </tr>
                         
@@ -87,72 +96,91 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
             </div>
         `,
-        data() {
-            return {
-                copiedLink: 0,
-                intervalAmoun: 3,
-                intervalBody: null
-            }
-        },
-        methods: {
-            copyLink(e) {
-
-                let link = e.target.getAttribute('data-link');
-                let index = e.target.getAttribute('data-index');
-
-                let input = document.createElement('input');
-
-                document.body.appendChild(input);
-
-                input.value = link;
-
-                input.select()
-
-                document.execCommand('copy');
-
-                input.remove();
-
-                this.copiedLink = index
-
-                this.changeIcon();
-
+            data() {
+                return {
+                    copiedLink: 0,
+                    intervalAmoun: 3,
+                    intervalBody: null,
+                    loading: true,
+                    loadingTimeout: null
+                }
             },
-            changeIcon() {
-                const self = this
-                clearInterval(self.intervalBody);
-                this.intervalBody = setInterval(function () {
+            methods: {
+                copyLink(e) {
 
-                    if (self.intervalAmoun <= 0) {
-                        self.intervalAmoun = 3;
-                        self.copiedLink = 0;
-                        clearInterval(self.intervalBody);
-                        return;
-                    } else {
-                        self.intervalAmoun -= 1;
-                    }
+                    let link = e.target.getAttribute('data-link');
+                    let index = e.target.getAttribute('data-index');
 
-                }, 1000);
-            }
-        }
-    });
+                    let input = document.createElement('input');
 
-    // Form
-    Vue.component('mxalfwp_c_form', {
-        props: {
-            translation: {
-                type: Object,
-                required: true
+                    document.body.appendChild(input);
+
+                    input.value = link;
+
+                    input.select()
+
+                    document.execCommand('copy');
+
+                    input.remove();
+
+                    this.copiedLink = index
+
+                    this.changeIcon();
+
+                },
+                changeIcon() {
+                    const self = this
+                    clearInterval(self.intervalBody);
+                    this.intervalBody = setInterval(function () {
+
+                        if (self.intervalAmoun <= 0) {
+                            self.intervalAmoun = 3;
+                            self.copiedLink = 0;
+                            clearInterval(self.intervalBody);
+                            return;
+                        } else {
+                            self.intervalAmoun -= 1;
+                        }
+
+                    }, 1000);
+                },
+                loadingData() {
+                    const self = this
+                    clearTimeout(this.loadingTimeout)
+                    this.loading = true;
+                    this.loadingTimeout = setTimeout(function () {
+                        self.loading = false;
+                    }, 2000);
+                }
             },
-            ajaxdata: {
-                type: Object,
-                required: true
-            },
-            toquerystring: {
-                type: Function,
-                required: true
+            watch: {
+                links() {
+                    this.loadingData()
+                }
             }
-        },
-        template: `
+        });
+
+        // Form
+        Vue.component('mxalfwp_c_form', {
+            props: {
+                translation: {
+                    type: Object,
+                    required: true
+                },
+                ajaxdata: {
+                    type: Object,
+                    required: true
+                },
+                toquerystring: {
+                    type: Function,
+                    required: true
+                },
+                getcurrentuserlinks: {
+                    type: Function,
+                    required: true
+                }
+            },
+            template: `
             <div>
 
                 <!-- Generate Affiliate Link -->
@@ -201,70 +229,134 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
             </div>
         `,
-        data() {
-            return {
-                url: null,
-                errors: [],
-                attempt: false,
-                disableButton: false
-            }
-        },
-        methods: {
-            urlValidate(url) {
+            data() {
+                return {
+                    url: null,
+                    errors: [],
+                    attempt: false,
+                    disableButton: false
+                }
+            },
+            methods: {
+                urlValidate(url) {
 
-                try {
+                    try {
 
-                    new URL(url);
+                        new URL(url);
+                        return true;
+
+                    } catch (error) {
+
+                        return false;
+
+                    }
+
+
+                },
+                domainChecking(url) {
+
+                    this.errors = [];
+
+                    // URL checking
+                    if (!this.urlValidate(url)) {
+                        this.errors.push(this.translation.text_11);
+                        return false;
+                    }
+
+                    this.errors = [];
+
+                    // Domain checking
+                    const link = new URL(url);
+
+                    if (link.host !== window.location.host) {
+                        this.errors.push(this.translation.text_10);
+                        return false;
+                    }
+
+                    this.errors = [];
+
                     return true;
 
-                } catch (error) {
+                },
+                generateLink() {
 
-                    return false;
+                    const self = this;
+
+                    if (this.disableButton) {
+                        return;
+                    }
+
+                    this.attempt = true;
+
+                    if (this.domainChecking(this.url)) {
+
+                        this.disableButton = true;
+
+                        // Request
+                        const xmlhttp = new XMLHttpRequest();
+
+                        xmlhttp.open('POST', this.ajaxdata.ajax_url);
+
+                        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+
+                        xmlhttp.onload = function () {
+
+                            if (this.status === 200) {
+
+                                const res = JSON.parse(this.response);
+
+                                if (res.status === 'success') {
+                                    alert(res.message);
+                                    self.url = null;
+                                    self.attempt = false;
+                                    self.getcurrentuserlinks()
+                                } else {
+                                    self.errors.push(res.message);
+                                }
+
+                            } else {
+                                self.errors.push(translation.text_12);
+                            }
+
+                            self.disableButton = false
+                        }
+
+                        const data = {
+                            action: 'mxalfwp_link_generate',
+                            nonce: this.ajaxdata.nonce,
+                            url: this.url
+                        }
+
+                        xmlhttp.send(this.toquerystring(data));
+
+                    }
 
                 }
-
-
             },
-            domainChecking(url) {
-
-                this.errors = [];
-
-                // URL checking
-                if (!this.urlValidate(url)) {
-                    this.errors.push(this.translation.text_11);
-                    return false;
+            watch: {
+                url() {
+                    this.domainChecking(this.url);
                 }
+            }
+        });
 
-                this.errors = [];
-
-                // Domain checking
-                const link = new URL(url);
-
-                if (link.host !== window.location.host) {
-                    this.errors.push(this.translation.text_10);
-                    return false;
-                }
-
-                this.errors = [];
-
-                return true;
-
+        /**
+         *  Base object
+         * */
+        const app = new Vue({
+            el: '#mxalfwp_cabinet',
+            data: {
+                translation: {},
+                ajaxdata: {},
+                links: []
             },
-            generateLink() {
+            methods: {
+                getCurrentUserLinks() {
 
-                const self = this;
+                    this.links = [];
 
-                if (this.disableButton) {
-                    return;
-                }
+                    const self = this;
 
-                this.attempt = true;
-
-                if (this.domainChecking(this.url)) {
-
-                    this.disableButton = true;
-
-                    // Request
                     const xmlhttp = new XMLHttpRequest();
 
                     xmlhttp.open('POST', this.ajaxdata.ajax_url);
@@ -275,114 +367,55 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                         if (this.status === 200) {
 
-                            const res = JSON.parse(this.response);
+                            const links = JSON.parse(this.response);
 
-                            if (res.status === 'success') {
-                                alert(res.message);
-                                self.url = null;
-                                self.attempt = false;
-                            } else {
-                                self.errors.push(res.message);
-                            }
+                            self.links = links;
 
                         } else {
                             self.errors.push(translation.text_12);
                         }
 
-                        self.disableButton = false
                     }
 
                     const data = {
-                        action: 'mxalfwp_link_generate',
-                        nonce: this.ajaxdata.nonce,
-                        url: this.url
+                        action: 'mxalfwp_get_links',
+                        nonce: this.ajaxdata.nonce
                     }
 
-                    xmlhttp.send(this.toquerystring(data));
+                    xmlhttp.send(this.toQueryString(data));
 
+                },
+                toQueryString(obj) {
+                    var str = [];
+                    for (var p in obj)
+                        if (obj.hasOwnProperty(p)) {
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        }
+                    return str.join("&");
                 }
-
-            }
-        },
-        watch: {
-            url() {
-                this.domainChecking(this.url);
-            }
-        }
-    });
-
-    /**
-     *  Base object
-     * */
-    const app = new Vue({
-        el: '#mxalfwp_cabinet',
-        data: {
-            translation: {},
-            ajaxdata: {},
-            links: []
-        },
-        methods: {
-            getCurrentUserLinks() {
-
-                const self = this;
-
-                const xmlhttp = new XMLHttpRequest();
-
-                xmlhttp.open('POST', this.ajaxdata.ajax_url);
-
-                xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-
-                xmlhttp.onload = function () {
-
-                    if (this.status === 200) {
-
-                        const links = JSON.parse(this.response);
-
-                        self.links = links;
-
-                    } else {
-                        self.errors.push(translation.text_12);
-                    }
-
-                }
-
-                const data = {
-                    action: 'mxalfwp_get_links',
-                    nonce: this.ajaxdata.nonce
-                }
-
-                xmlhttp.send(this.toQueryString(data));
-
             },
-            toQueryString(obj) {
-                var str = [];
-                for (var p in obj)
-                    if (obj.hasOwnProperty(p)) {
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    }
-                return str.join("&");
+            mounted() {
+
+                // translation
+                if (mxalfwp_frontend_localize.translation) {
+                    this.translation = mxalfwp_frontend_localize.translation
+                }
+
+                // ajax url
+                if (mxalfwp_frontend_localize.ajax_url) {
+                    this.ajaxdata.ajax_url = mxalfwp_frontend_localize.ajax_url
+                }
+
+                // nonce
+                if (mxalfwp_frontend_localize.nonce) {
+                    this.ajaxdata.nonce = mxalfwp_frontend_localize.nonce
+                }
+
+                this.getCurrentUserLinks();
+
             }
-        },
-        mounted() {
+        });
 
-            // translation
-            if (mxalfwp_frontend_localize.translation) {
-                this.translation = mxalfwp_frontend_localize.translation
-            }
-
-            // ajax url
-            if (mxalfwp_frontend_localize.ajax_url) {
-                this.ajaxdata.ajax_url = mxalfwp_frontend_localize.ajax_url
-            }
-
-            // nonce
-            if (mxalfwp_frontend_localize.nonce) {
-                this.ajaxdata.nonce = mxalfwp_frontend_localize.nonce
-            }
-
-            this.getCurrentUserLinks();
-
-        }
-    });
+    }
 
 }

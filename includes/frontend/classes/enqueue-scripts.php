@@ -25,10 +25,10 @@ class MXALFWPEnqueueScriptsFrontend
 
         // include Vue.js
         // dev version
-        wp_enqueue_script('mxalfwp_vue2', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/add/vue/vue-dev.js', [], MXALFWP_PLUGIN_VERSION, true);
+        wp_enqueue_script('mxalfwp_vue2', MXALFWP_PLUGIN_URL . 'assets/add/vue/vue-dev.js', [], MXALFWP_PLUGIN_VERSION, true);
 
         // production version
-        // wp_enqueue_script( 'mxalfwp_vue2', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/add/vue/vue-prod.js', [], MXALFWP_PLUGIN_VERSION, true );
+        // wp_enqueue_script( 'mxalfwp_vue2', MXALFWP_PLUGIN_URL . 'assets/add/vue/vue-prod.js', [], MXALFWP_PLUGIN_VERSION, true );
 
         wp_enqueue_script('mxalfwp_script', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/js/script.js', ['mxalfwp_vue2'], MXALFWP_PLUGIN_VERSION, true);
 
@@ -50,6 +50,7 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_10' => __('You must use current website\'s pages to create affiliate link!', 'mxalfwp-domain'),
                 'text_11' => __('URL Incorrect!', 'mxalfwp-domain'),
                 'text_12' => __('Server Error!', 'mxalfwp-domain'),
+                'text_13' => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
                 
             ]
 

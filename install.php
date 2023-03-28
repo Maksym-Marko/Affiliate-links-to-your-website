@@ -79,7 +79,9 @@ class MXALFWPBasisPluginClass
     */
     public static function createOptionForActivation()
     {
-
-        add_option('mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules');
+        if (!get_option('mxalfwp_default_percent')) {
+            add_option('mxalfwp_default_percent', 5);
+        }
+        // add_option('mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules');
     }
 }

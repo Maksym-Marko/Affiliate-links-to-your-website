@@ -18,7 +18,46 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         add_action( 'wp_ajax_mxalfwp_update', ['MXALFWPMainAdminModel', 'prepareUpdateDatabaseColumn'], 10, 1 );
         add_action( 'wp_ajax_mxalfwp_create_item', ['MXALFWPMainAdminModel', 'prepareItemCreation'], 10, 1 );
         add_action( 'wp_ajax_mxalfwp_bulk_actions', ['MXALFWPMainAdminModel', 'prepareBulkActions'], 10, 1 );
+
+        // Settings page
+        add_action( 'wp_ajax_mxalfwp_save_settings', ['MXALFWPMainAdminModel', 'prepareSaveSettings'], 10, 1 );
         
+    }
+
+    /*
+    * Settings
+    */
+    public static function prepareSaveSettings()
+    {
+
+        // Checked POST nonce is not empty
+        if (empty($_POST['nonce'])) wp_die( '0' );
+
+        // Checked or nonce match
+        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
+
+            $updated = update_option('mxalfwp_default_percent',floatval($_POST['percent']));
+
+            $responce = [
+                'status' => 'success',
+                'message' => __('Settings updated!', 'mxalfwp-domain')
+            ];
+
+            if( ! $updated ) {
+
+                $responce = [
+                    'status' => 'failed',
+                    'message' => __('Something went wrong! Did you make changes?', 'mxalfwp-domain')
+                ];
+
+            }
+
+            echo json_encode($responce);
+
+        }
+
+        wp_die();
+
     }
 
     /*
