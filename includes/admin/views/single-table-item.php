@@ -13,15 +13,15 @@
             <h2>This form is connected to this plugin's DB table</h2>
 
             <div>
-                <label for="mxalfwp_title">Title</label>
+                <label for="mxalfwp_title">Link</label>
                 <br>
-                <input type="text" name="mxalfwp_title" id="mxalfwp_title" value="<?php echo $data->title; ?>" />
+                <input type="text" name="mxalfwp_title" id="mxalfwp_title" value="<?php echo $data->link; ?>" />
             </div>
             <br>
             <div>
                 <label for="mxalfwp_mx_description">Description</label>
                 <br>
-                <textarea name="mxalfwp_mx_description" id="mxalfwp_mx_description"><?php echo $data->description; ?></textarea>
+                <textarea name="mxalfwp_mx_description" id="mxalfwp_mx_description"></textarea>
             </div>
 
             <p class="mx-submit_button_wrap">

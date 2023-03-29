@@ -27,9 +27,10 @@ jQuery(document).ready(function ($) {
 					'ids': ids
 				}
 
-				jQuery.post(mxalfwp_admin_localize.ajaxurl, data, function (response) {
+				jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
 
 					location.reload()
+					// console.log(response)
 
 				});
 
@@ -66,7 +67,7 @@ jQuery(document).ready(function ($) {
 
 		}
 
-		jQuery.post(mxalfwp_admin_localize.ajaxurl, data, function (response) {
+		jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
 
 			if (response === '1') {
 				window.location.href = mxalfwp_admin_localize.main_page
@@ -106,7 +107,7 @@ jQuery(document).ready(function ($) {
 
 		}
 
-		jQuery.post(mxalfwp_admin_localize.ajaxurl, data, function (response) {
+		jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
 
 			// console.log( response );
 			alert('Updated!');

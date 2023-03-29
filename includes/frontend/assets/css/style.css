@@ -100,3 +100,6 @@
 .mxalfwp_copied {
     color: #8ad480;
 }
+.mxalfwp_inactive_link {
+    opacity: 0.3;
+}

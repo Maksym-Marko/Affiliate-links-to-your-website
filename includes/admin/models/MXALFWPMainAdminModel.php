@@ -17,10 +17,10 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         add_action( 'wp_ajax_mxalfwp_update', ['MXALFWPMainAdminModel', 'prepareUpdateDatabaseColumn'], 10, 1 );
         add_action( 'wp_ajax_mxalfwp_create_item', ['MXALFWPMainAdminModel', 'prepareItemCreation'], 10, 1 );
-        add_action( 'wp_ajax_mxalfwp_bulk_actions', ['MXALFWPMainAdminModel', 'prepareBulkActions'], 10, 1 );
+        add_action( 'wp_ajax_mxalfwp_bulk_actions', ['MXALFWPMainAdminModel', 'prepareBulkActions'], 10 );
 
         // Settings page
-        add_action( 'wp_ajax_mxalfwp_save_settings', ['MXALFWPMainAdminModel', 'prepareSaveSettings'], 10, 1 );
+        add_action( 'wp_ajax_mxalfwp_save_settings', ['MXALFWPMainAdminModel', 'prepareSaveSettings'], 10 );
         
     }
 
@@ -64,7 +64,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     * Prepare to bulk actions
     */
     public static function prepareBulkActions()
-    {        
+    {
         
         // Checked POST nonce is not empty
         if (empty($_POST['nonce'])) wp_die( '0' );
@@ -276,7 +276,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $tableName,
             [
-                'status' => 'publish',
+                'status' => 'active',
             ],
             [
                 'id'     => $id

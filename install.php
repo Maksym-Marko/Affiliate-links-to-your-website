@@ -37,7 +37,24 @@ class MXALFWPBasisPluginClass
 
         // links_data
         $linkData = [
-            'views' => 0
+            'data' => [
+                // 'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
+                //     [
+                //         'location' => 'Ukraine, Kyiv',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                //     [
+                //         'location' => 'Ukraine, Volyn',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                // ],
+                // 'http://affiliate-links-woocommerce.local/products/' => [
+                //     [
+                //         'location' => 'Ukraine, Kyiv',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                // ]
+            ]
         ];
 
         $productTable->longtext('link_data', false, maybe_serialize($linkData));
@@ -48,11 +65,14 @@ class MXALFWPBasisPluginClass
         // earned
         $productTable->int('earned');
 
-        // paied
-        $productTable->int('paied');
+        // paid
+        $productTable->int('paid');
+
+       // percent
+       $productTable->varchar('percent', 20, true, '0');
 
         // statue
-        $productTable->varchar('status', 20, true, 'active'); // blocked
+        $productTable->varchar('status', 20, true, 'active'); // trash
 
         // created
         $productTable->datetime('created_at');
@@ -80,7 +100,7 @@ class MXALFWPBasisPluginClass
     public static function createOptionForActivation()
     {
         if (!get_option('mxalfwp_default_percent')) {
-            add_option('mxalfwp_default_percent', 5);
+            add_option('mxalfwp_default_percent', '5.0');
         }
         // add_option('mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules');
     }

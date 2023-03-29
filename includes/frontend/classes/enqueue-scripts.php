@@ -46,12 +46,12 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_6'  => __('Views', 'mxalfwp-domain'),
                 'text_7'  => __('Bought', 'mxalfwp-domain'),
                 'text_8'  => __('Earned', 'mxalfwp-domain'),
-                'text_9'  => __('Paied', 'mxalfwp-domain'),
+                'text_9'  => __('Paid', 'mxalfwp-domain'),
                 'text_10' => __('You must use current website\'s pages to create affiliate link!', 'mxalfwp-domain'),
                 'text_11' => __('URL Incorrect!', 'mxalfwp-domain'),
                 'text_12' => __('Server Error!', 'mxalfwp-domain'),
                 'text_13' => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
-                
+                'text_14' => __('Visited pages', 'mxalfwp-domain'),                
             ]
 
         ]);

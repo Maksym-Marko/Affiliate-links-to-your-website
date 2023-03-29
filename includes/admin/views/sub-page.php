@@ -10,6 +10,11 @@
 
                 <div class="mxalfwp-d-md-flex">
                     <ol class="mxalfwp-breadcrumb mxalfwp-ms-auto">
+                        <li class="mxalfwp-big-text">
+                            <?php echo __('Use this short code to create a cabinet for your partners: ', 'mxalfwp-domain'); ?><b>[mxalfwp_partner_cabinet]</b>
+                        </li>
+                    </ol>
+                    <!-- <ol class="mxalfwp-breadcrumb mxalfwp-ms-auto">
                         <li><a href="#" class="mxalfwp-fw-normal">Dashboard</a></li>
                     </ol>
                     <a href="https://www.wrappixel.com/templates/ampleadmin/" target="_blank" class="
@@ -20,7 +25,7 @@
                     mxalfwp-hidden-xs mxalfwp-hidden-sm
                     mxalfwp-waves-effect mxalfwp-waves-light
                     mxalfwp-text-white
-                  ">Upgrade to Pro</a>
+                  ">Upgrade to Pro</a>  -->
                 </div>
 
             </div>

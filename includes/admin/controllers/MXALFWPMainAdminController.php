@@ -98,7 +98,7 @@ class MXALFWPMainAdminController extends MXALFWPController
         }
 
         // edit action
-        $item_id = isset( $_GET['edit-item'] ) ? trim( sanitize_text_field( $_GET['edit-item'] ) ) : 0;
+        $item_id = isset( $_GET['link-details'] ) ? trim( sanitize_text_field( $_GET['link-details'] ) ) : 0;
         
         $data = $this->modelInstance->getRow( NULL, 'id', intval( $item_id ) );
 

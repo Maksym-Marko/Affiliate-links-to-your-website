@@ -80,10 +80,10 @@ class MXALFWPAdminMain
                 'page_title' => 'Single Table Item',
             ], MXALFWP_SINGLE_TABLE_ITEM_MENU );
 
-            // single table item
-            MXALFWPRoute::get( 'MXALFWPMainAdminController', 'createTableItem', 'NULL', [
-                'page_title' => 'Create Table Item',
-            ], MXALFWP_CREATE_TABLE_ITEM_MENU );
+            // // single table item
+            // MXALFWPRoute::get( 'MXALFWPMainAdminController', 'createTableItem', 'NULL', [
+            //     'page_title' => 'Create Table Item',
+            // ], MXALFWP_CREATE_TABLE_ITEM_MENU );
 
         // sub menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', '', [
@@ -91,10 +91,10 @@ class MXALFWPAdminMain
             'menu_title' => 'Settings'
         ], 'sub_menu' );
 
-        // hide menu item
-        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'hidemenu', 'NULL', [
-            'page_title' => 'Hidden Menu title',
-        ], 'hide_menu' );
+        // // hide menu item
+        // MXALFWPRoute::get( 'MXALFWPMainAdminController', 'hidemenu', 'NULL', [
+        //     'page_title' => 'Hidden Menu title',
+        // ], 'hide_menu' );
 
         // sub settings menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'settingsMenuItemAction', 'NULL', [

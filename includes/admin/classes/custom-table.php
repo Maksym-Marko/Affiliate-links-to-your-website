@@ -53,7 +53,7 @@ class MXALFWPCustomTable extends WP_List_Table
         }
 
         // status
-        $itemStatus = isset( $_GET['user_status'] ) ? trim( $_GET['user_status'] ) : 'active';
+        $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
         $status = "AND status = '$itemStatus'";
         
         // get data
@@ -100,10 +100,13 @@ class MXALFWPCustomTable extends WP_List_Table
             'id'          => __( 'ID', 'mxalfwp-domain' ),
             'user_id'     => __( 'User ID', 'mxalfwp-domain' ),
             'user_name'   => __( 'User Name', 'mxalfwp-domain' ),
-            'link_data'  => __( 'Links Data', 'mxalfwp-domain' ),
+            'link_data'   => __( 'Links Data', 'mxalfwp-domain' ),
             'link'        => __( 'Link', 'mxalfwp-domain' ),
+            'pages'       => __( 'Pages', 'mxalfwp-domain' ),
+            'views'       => __( 'Views', 'mxalfwp-domain' ),
+            'bought'     => __( 'Bought', 'mxalfwp-domain' ),
             'earned'      => __( 'Earned', 'mxalfwp-domain' ),
-            'paied'       => __( 'Paied', 'mxalfwp-domain' ),
+            'paid'        => __( 'Paid', 'mxalfwp-domain' ),
             'status'      => __( 'Status', 'mxalfwp-domain' ),
             'created_at'  => __( 'Created', 'mxalfwp-domain' ),
         ];
@@ -175,28 +178,28 @@ class MXALFWPCustomTable extends WP_List_Table
 
         if ($can_edit) {
 
-            $output .= '<a href="' . esc_url( $url ) . '&user-details=' . $item['user_id'] . '">' . $item['user_name'] . '</a>';
+            $output .= '<a href="' . esc_url( $url ) . '&link-details=' . $item['id'] . '">' . $item['user_name'] . '</a>';
 
-            $actions['edit']  = '<a href="' . esc_url( $url ) . '&user-details=' . $item['user_id'] . '">' . __( 'Manage', 'mxalfwp-domain' ) . '</a>';
-            $actions['blocked'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Blocked', 'mxalfwp-domain' ) . '" href="' . esc_url(
+            $actions['edit']  = '<a href="' . esc_url( $url ) . '&link-details=' . $item['id'] . '">' . __( 'Manage', 'mxalfwp-domain' ) . '</a>';
+            $actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Trash', 'mxalfwp-domain' ) . '" href="' . esc_url(
                 wp_nonce_url(
                     add_query_arg(
                         [
-                            'blocked' => $item['user_id'],
+                            'trash' => $item['id'],
                         ],
                         $url
                     ),
-                    'blocked',
+                    'trash',
                     'mxalfwp_nonce'
                 )
-            ) . '">' . esc_html__( 'Blocked', 'mxalfwp-domain' ) . '</a>';
+            ) . '">' . esc_html__( 'Trash', 'mxalfwp-domain' ) . '</a>';
 
-            $itemStatus = isset( $_GET['user_status'] ) ? trim( $_GET['user_status'] ) : 'active';
+            $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
 
-            if ($itemStatus == 'blocked') {
+            if ($itemStatus == 'trash') {
 
                 unset( $actions['edit'] );
-                unset( $actions['blocked'] );
+                unset( $actions['trash'] );
 
                 $actions['restore'] = '<a aria-label="' . esc_attr__( 'Restore', 'mxalfwp-domain' ) . '" href="' . esc_url(
                     wp_nonce_url(
@@ -249,28 +252,59 @@ class MXALFWPCustomTable extends WP_List_Table
     public function column_link( $item )
     {
 
-        var_dump( $item['link'] );
+        echo $item['link'] . '/?mxpartnerlink=' . $item['user_id'];
 
     }
+
+    public function column_pages( $item )
+    {
+
+        $link_data = maybe_unserialize( $item['link_data'] );
+
+        echo count($link_data['data']);
+
+    }
+
+    public function column_views( $item )
+    {
+
+        $link_data = maybe_unserialize( $item['link_data'] );
+
+        $views = 0;
+
+        foreach ($link_data['data'] as $key => $value) {
+            $views += count( $value );
+        }
+
+        echo $views;
+
+    }
+
+    public function column_bought( $item )
+    {
+
+        echo $item['bought'];
+
+    }    
 
     public function column_link_data( $item )
     {
 
-        var_dump( $item['link_data'] );
+        // var_dump( $item['link_data'] );
 
     }
 
     public function column_earned( $item )
     {
 
-        var_dump( $item['earned'] );
+        echo $item['earned'];
 
     }
 
-    public function column_paied( $item )
+    public function column_paid( $item )
     {
 
-        var_dump( $item['paied'] );
+        echo $item['paid'];
 
     }
 
@@ -288,15 +322,15 @@ class MXALFWPCustomTable extends WP_List_Table
             return [];
         }
 
-        $itemStatus = isset( $_GET['user_status'] ) ? trim( $_GET['user_status'] ) : 'active';
+        $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
 
         $action = [
-            'blocked' => __( 'Move to blocked', 'mxalfwp-domain' ),
+            'trash' => __( 'Move to trash', 'mxalfwp-domain' ),
         ];
 
-        if ($itemStatus == 'blocked') {
+        if ($itemStatus == 'trash') {
 
-            unset( $action['blocked'] );
+            unset( $action['trash'] );
 
             $action['restore'] = __( 'Restore Item', 'mxalfwp-domain' );
             $action['delete']  = __( 'Delete Permanently', 'mxalfwp-domain' );
@@ -330,16 +364,16 @@ class MXALFWPCustomTable extends WP_List_Table
         global $wpdb;
 
         $tableName     = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-        $itemStatus    = isset( $_GET['user_status'] ) ? trim( $_GET['user_status'] ) : 'active';
+        $itemStatus    = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
         $activeNumber = $wpdb->get_var( "SELECT COUNT(id) FROM {$tableName} WHERE status='active';" );
-        $blockedNumber   = $wpdb->get_var( "SELECT COUNT(id) FROM {$tableName} WHERE status='blocked';" );
+        $trashNumber   = $wpdb->get_var( "SELECT COUNT(id) FROM {$tableName} WHERE status='trash';" );
         $url           = admin_url( 'admin.php?page=' . MXALFWP_MAIN_MENU_SLUG );
 
         $statusLinks   = [];
 
         // active
         $statusLinks['active'] = [
-            'url'     => add_query_arg( 'user_status', 'active', $url ),
+            'url'     => add_query_arg( 'link_status', 'active', $url ),
             'label'   => sprintf(
                 _nx(
                     'Active <span class="count">(%s)</span>',
@@ -356,23 +390,23 @@ class MXALFWPCustomTable extends WP_List_Table
             unset( $statusLinks['active'] );
         }
 
-        // blocked
-        $statusLinks['blocked'] = [
-            'url'     => add_query_arg( 'user_status', 'blocked', $url ),
+        // trash
+        $statusLinks['trash'] = [
+            'url'     => add_query_arg( 'link_status', 'trash', $url ),
             'label'   => sprintf(
                 _nx(
-                    'Blocked <span class="count">(%s)</span>',
-                    'Blocked <span class="count">(%s)</span>',
-                    $blockedNumber,
-                    'blocked'
+                    'Trash <span class="count">(%s)</span>',
+                    'Trash <span class="count">(%s)</span>',
+                    $trashNumber,
+                    'trash'
                 ),
-                number_format_i18n( $blockedNumber )
+                number_format_i18n( $trashNumber )
             ),
-            'current' => 'blocked' == $itemStatus,
+            'current' => 'trash' == $itemStatus,
         ];
 
-        if ($blockedNumber == 0) {
-            unset( $statusLinks['blocked'] );
+        if ($trashNumber == 0) {
+            unset( $statusLinks['trash'] );
         }
 
         return $this->get_views_links( $statusLinks );
@@ -382,11 +416,11 @@ class MXALFWPCustomTable extends WP_List_Table
     public function no_items()
     {
 
-        $itemStatus = isset( $_GET['user_status'] ) ? trim( $_GET['user_status'] ) : 'active';
+        $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
         
-        if ($itemStatus == 'blocked') {
+        if ($itemStatus == 'trash') {
 
-            _e( 'No items found from blocked users.' );
+            _e( 'No items found from trash users.' );
 
         } else {
 

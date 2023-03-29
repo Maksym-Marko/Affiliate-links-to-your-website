@@ -30,10 +30,12 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 
                         <tr>
                             <th>{{ translation.text_5 }}</th>
+                            <th>{{ translation.text_14 }}</th>
                             <th>{{ translation.text_6 }}</th>
                             <th>{{ translation.text_7 }}</th>
                             <th>{{ translation.text_8 }}</th>
                             <th>{{ translation.text_9 }}</th>
+                            <th>%</th>
                         </tr>
                 
                     </thead>
@@ -62,32 +64,41 @@ if (document.getElementById('mxalfwp_cabinet')) {
                         <tr
                             v-for="link in links"
                             :key="link.id"
+                            :class="[link.status!=='active' ? 'mxalfwp_inactive_link' : '']"
                         >
                             <th>
                                 <div class="mxalfwp_link_wrapper">
                                     <div class="mxalfwp_link_content">
                                         {{link.link}}/?mxpartnerlink={{link.user_id}}
                                     </div>
-                                    <i
-                                      class="fa fa-files-o mxalfwp_link_icon"
-                                      aria-hidden="true"
-                                      id="mxalfwp_copy_link"
-                                      @click.prevent="copyLink"
-                                      :data-index="link.id"
-                                      :data-link="link.link + '/?mxpartnerlink=' + link.user_id"
-                                      v-if="copiedLink!==link.id"
-                                    ></i>
-                                    <i
-                                      class="fa fa-check mxalfwp_copied mxalfwp_link_icon"
-                                      aria-hidden="true"
-                                      v-else
-                                    ></i>
+
+                                    <div
+                                        v-if="link.status==='active'"
+                                        class="mxalfwp_link_icon"
+                                    >                                    
+                                        <i
+                                        class="fa fa-files-o"
+                                        aria-hidden="true"
+                                        id="mxalfwp_copy_link"
+                                        @click.prevent="copyLink"
+                                        :data-index="link.id"
+                                        :data-link="link.link + '/?mxpartnerlink=' + link.user_id"
+                                        v-if="copiedLink!==link.id"
+                                        ></i>
+                                        <i
+                                        class="fa fa-check mxalfwp_copied"
+                                        aria-hidden="true"
+                                        v-else
+                                        ></i>
+                                    </div>
                                 </div>
                             </th>
-                            <td>{{link.link_data.views}}</td>
+                            <td>{{pages(link.link_data)}}</td>
+                            <td>{{views(link.link_data)}}</td>
                             <td>{{link.bought}}</td>
                             <td>$ {{link.earned}}</td>
-                            <td>$ {{link.paied}}</td>
+                            <td>$ {{link.paid}}</td>
+                            <td>{{link.percent}}</td>
                         </tr>
                 
                     </tbody>
@@ -151,7 +162,31 @@ if (document.getElementById('mxalfwp_cabinet')) {
                     this.loadingTimeout = setTimeout(function () {
                         self.loading = false;
                     }, 2000);
-                }
+                },
+                views(link_data) {
+
+                    let views = 0;
+                    
+                    for (const [key, value] of Object.entries(link_data.data)) {
+                        for (const [_key, _value] of Object.entries(value)) {
+                            views+=1;
+                        }
+                    }
+
+                    return views;
+                    
+                },
+                pages(link_data) {
+
+                    let pages = 0;
+                    
+                    for (const [key, value] of Object.entries(link_data.data)) {
+                        pages+=1;
+                    }
+
+                    return pages;
+
+                },
             },
             watch: {
                 links() {

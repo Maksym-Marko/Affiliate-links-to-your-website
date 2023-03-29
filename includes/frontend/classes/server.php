@@ -31,7 +31,7 @@ class MXALFWPServer
 
                 $wpdb->prepare(
 
-                    "SELECT id, link, link_data, user_id, earned, paied, bought 
+                    "SELECT id, link, link_data, user_id, earned, paid, bought, percent, status 
                         FROM $tableName                         
                         WHERE user_id=%d
                         ORDER BY id DESC",
@@ -114,6 +114,7 @@ class MXALFWPServer
                         'link'       => $url,
                         'user_id'    => $userId,
                         'user_name'  => $user->data->display_name,
+                        'percent'    => get_option('mxalfwp_default_percent'),
                         'created_at' => $date,
                         'updated_at' => $date,
                     ],
@@ -121,6 +122,7 @@ class MXALFWPServer
                     [
                         '%s',
                         '%d',
+                        '%s',
                         '%s',
                         '%s',
                         '%s',
