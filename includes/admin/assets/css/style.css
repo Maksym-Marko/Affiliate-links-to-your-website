@@ -44,9 +44,10 @@
 .mxalfwp-ms-auto {
     margin-left: auto!important;
 }
-.mxalfwp-list-inline .mxalfwp-counter {
+.mxalfwp-counter {
     font-size: 24px;
     font-weight: 100;
+    line-height: 30px;
 }
 .mxalfwp-text-success {
     color: #7ace4c!important;
@@ -283,8 +284,14 @@
 .mxalfwp-mb-0 {
     margin-bottom: 0!important;
 }
-.mxalfwp-mt-15{
+.mxalfwp-mt-15 {
     margin-top: 15px;
+}
+.mxalfwp-mt-30 {
+    margin-top: 30px;
+}
+.mxalfwp-mb-15 {
+    margin-bottom: 15px;
 }
 @media (min-width: 768px) {
     .mxalfwp-col-md-12 {
@@ -342,4 +349,14 @@
 }
 .mxalfwp-big-text {
     font-size: 20px;
+}
+.mx-single-table-item-wrap a:hover {
+    text-decoration: none;
+}
+.mxalfwp-icon-box {
+    color: #2271b1;
+    font-size: 50px;
+}
+.mxalfwp-common-link:hover {
+    text-decoration: none !important;
 }

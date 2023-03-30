@@ -7,11 +7,11 @@ if (!class_exists('WP_List_Table')) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class MXALFWPCustomTable extends WP_List_Table
+class MXALFWPAffiliateLinks extends WP_List_Table
 {
 
     /*
-    * MXALFWPCustomTable
+    * MXALFWPAffiliateLinks
     */
 
     public function __construct( $args = [] )
@@ -106,7 +106,6 @@ class MXALFWPCustomTable extends WP_List_Table
             'views'       => __( 'Views', 'mxalfwp-domain' ),
             'bought'     => __( 'Bought', 'mxalfwp-domain' ),
             'earned'      => __( 'Earned', 'mxalfwp-domain' ),
-            'paid'        => __( 'Paid', 'mxalfwp-domain' ),
             'status'      => __( 'Status', 'mxalfwp-domain' ),
             'created_at'  => __( 'Created', 'mxalfwp-domain' ),
         ];
@@ -178,9 +177,9 @@ class MXALFWPCustomTable extends WP_List_Table
 
         if ($can_edit) {
 
-            $output .= '<a href="' . esc_url( $url ) . '&link-details=' . $item['id'] . '">' . $item['user_name'] . '</a>';
+            $output .= '<a href="' . esc_url( $url ) . '&mxalfwp-link-id=' . $item['id'] . '">' . $item['user_name'] . '</a>';
 
-            $actions['edit']  = '<a href="' . esc_url( $url ) . '&link-details=' . $item['id'] . '">' . __( 'Manage', 'mxalfwp-domain' ) . '</a>';
+            $actions['edit']  = '<a href="' . esc_url( $url ) . '&mxalfwp-link-id=' . $item['id'] . '">' . __( 'Link Analytics', 'mxalfwp-domain' ) . '</a>';
             $actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Trash', 'mxalfwp-domain' ) . '" href="' . esc_url(
                 wp_nonce_url(
                     add_query_arg(
@@ -298,13 +297,6 @@ class MXALFWPCustomTable extends WP_List_Table
     {
 
         echo $item['earned'];
-
-    }
-
-    public function column_paid( $item )
-    {
-
-        echo $item['paid'];
 
     }
 
@@ -448,7 +440,7 @@ if (!function_exists('mxalfwpTableLayout')) {
     
         if (!$isTable) return;
     
-        $tableInstance = new MXALFWPCustomTable();
+        $tableInstance = new MXALFWPAffiliateLinks();
         
         $tableInstance->prepare_items();
     

@@ -35,7 +35,8 @@ class MXALFWPAdminMain
         // MXALFWPCPTGenerator::createCPT();
 
         // Affiliate links table
-        mxalfwpRequireClassFileAdmin( 'custom-table.php' );
+        mxalfwpRequireClassFileAdmin( 'links-table.php' );
+        mxalfwpRequireClassFileAdmin( 'analytics-pages-table.php' );
 
     }
 
@@ -68,16 +69,16 @@ class MXALFWPAdminMain
     */
     public function routesCollection()
     {
-
+ 
         // main menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'index', '', [
             'page_title' => 'Affiliate Links',
             'menu_title' => 'Affiliate Links'
         ] );
 
-            // single table item
-            MXALFWPRoute::get( 'MXALFWPMainAdminController', 'singleTableItem', 'NULL', [
-                'page_title' => 'Single Table Item',
+            // Links Analytics
+            MXALFWPRoute::get( 'MXALFWPMainAdminController', 'linksAnalytics', 'NULL', [
+                'page_title' => 'Links Analytics',
             ], MXALFWP_SINGLE_TABLE_ITEM_MENU );
 
             // // single table item
@@ -89,12 +90,12 @@ class MXALFWPAdminMain
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', '', [
             'page_title' => 'Settings',
             'menu_title' => 'Settings'
-        ], 'sub_menu' );
+        ], 'mxalfwp-setting' );
 
-        // // hide menu item
-        // MXALFWPRoute::get( 'MXALFWPMainAdminController', 'hidemenu', 'NULL', [
-        //     'page_title' => 'Hidden Menu title',
-        // ], 'hide_menu' );
+        // hide menu item
+        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'visitedPageDetails', 'NULL', [
+            'page_title' => 'Visited Page Details',
+        ], 'mxalfwp-visited-page-details' );
 
         // sub settings menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'settingsMenuItemAction', 'NULL', [

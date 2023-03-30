@@ -31,7 +31,7 @@ class MXALFWPServer
 
                 $wpdb->prepare(
 
-                    "SELECT id, link, link_data, user_id, earned, paid, bought, percent, status 
+                    "SELECT id, link, link_data, user_id, earned, bought, percent, status 
                         FROM $tableName                         
                         WHERE user_id=%d
                         ORDER BY id DESC",

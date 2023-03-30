@@ -34,7 +34,6 @@ if (document.getElementById('mxalfwp_cabinet')) {
                             <th>{{ translation.text_6 }}</th>
                             <th>{{ translation.text_7 }}</th>
                             <th>{{ translation.text_8 }}</th>
-                            <th>{{ translation.text_9 }}</th>
                             <th>%</th>
                         </tr>
                 
@@ -97,7 +96,6 @@ if (document.getElementById('mxalfwp_cabinet')) {
                             <td>{{views(link.link_data)}}</td>
                             <td>{{link.bought}}</td>
                             <td>$ {{link.earned}}</td>
-                            <td>$ {{link.paid}}</td>
                             <td>{{link.percent}}</td>
                         </tr>
                 

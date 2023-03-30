@@ -54,7 +54,16 @@ if (!defined( 'MXALFWP_PLUGN_BASE_NAME')) {
 */
 if (!defined('MXALFWP_TABLE_SLUG')) {
 
-	define( 'MXALFWP_TABLE_SLUG', 'mxalfwp_affiliate' );
+	define( 'MXALFWP_TABLE_SLUG', 'mxalfwp_affiliate_links' );
+
+}
+
+/*
+* Define MXALFWP_USERS_TABLE_SLUG
+*/
+if (!defined('MXALFWP_USERS_TABLE_SLUG')) {
+
+	define( 'MXALFWP_USERS_TABLE_SLUG', 'mxalfwp_affiliate_users' );
 
 }
 
@@ -95,7 +104,7 @@ if (!defined('MXALFWP_MAIN_MENU_SLUG')) {
 if (!defined( 'MXALFWP_SINGLE_TABLE_ITEM_MENU')) {
 
 	// single table item menu
-	define( 'MXALFWP_SINGLE_TABLE_ITEM_MENU', 'mxalfwp-affiliate-links-single' );
+	define( 'MXALFWP_SINGLE_TABLE_ITEM_MENU', 'mxalfwp-affiliate-links-analytics' );
 
 }
 

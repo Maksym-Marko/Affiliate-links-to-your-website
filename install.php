@@ -9,7 +9,8 @@ require_once MXALFWP_PLUGIN_ABS_PATH . 'includes/core/create-table.php';
 class MXALFWPBasisPluginClass
 {
 
-    private static $tableSlug = MXALFWP_TABLE_SLUG;
+    private static $affiliateLinlksTableSlug = MXALFWP_TABLE_SLUG;
+    private static $affiliateLinlksUsersTableSlug = MXALFWP_USERS_TABLE_SLUG;
 
     public static function activate()
     {
@@ -17,11 +18,22 @@ class MXALFWPBasisPluginClass
         // set option for rewrite rules CPT
         self::createOptionForActivation();
 
+        // create links table
+        self::createLinksTable();
+
+        // create users table
+        self::createUsersTable();
+
+    }
+
+    public static function createLinksTable()
+    {
+
         // Create table
         global $wpdb;
 
         // Table name
-        $tableName    = $wpdb->prefix . self::$tableSlug;
+        $tableName    = $wpdb->prefix . self::$affiliateLinlksTableSlug;
 
         $productTable = new MXALFWPCreateTable($tableName);
 
@@ -38,22 +50,22 @@ class MXALFWPBasisPluginClass
         // links_data
         $linkData = [
             'data' => [
-                // 'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
-                //     [
-                //         'location' => 'Ukraine, Kyiv',
-                //         'date'     => '0000-00-00 00:00:00'
-                //     ],
-                //     [
-                //         'location' => 'Ukraine, Volyn',
-                //         'date'     => '0000-00-00 00:00:00'
-                //     ],
-                // ],
-                // 'http://affiliate-links-woocommerce.local/products/' => [
-                //     [
-                //         'location' => 'Ukraine, Kyiv',
-                //         'date'     => '0000-00-00 00:00:00'
-                //     ],
-                // ]
+                'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
+                    [
+                        'location' => 'Ukraine, Kyiv',
+                        'date'     => '0000-00-00 00:00:00'
+                    ],
+                    [
+                        'location' => 'Ukraine, Volyn',
+                        'date'     => '0000-00-00 00:00:00'
+                    ],
+                ],
+                'http://affiliate-links-woocommerce.local/products/' => [
+                    [
+                        'location' => 'Ukraine, Kyiv',
+                        'date'     => '0000-00-00 00:00:00'
+                    ],
+                ]
             ]
         ];
 
@@ -63,10 +75,7 @@ class MXALFWPBasisPluginClass
         $productTable->int('bought');
 
         // earned
-        $productTable->int('earned');
-
-        // paid
-        $productTable->int('paid');
+        $productTable->varchar('earned', 10, true, '0');
 
        // percent
        $productTable->varchar('percent', 20, true, '0');
@@ -85,6 +94,38 @@ class MXALFWPBasisPluginClass
 
         // create table
         $tableCreated = $productTable->createTable();
+
+    }
+
+    public static function createUsersTable()
+    {
+
+        // Create table
+        global $wpdb;
+
+        // Table name
+        $tableName    = $wpdb->prefix . self::$affiliateLinlksUsersTableSlug;
+
+        $productTable = new MXALFWPCreateTable($tableName);
+
+        // user_id
+        $productTable->int('user_id');
+
+        // paid
+        $productTable->varchar('paid', 10, true, '0');
+
+        // created
+        $productTable->datetime('created_at');
+
+        // updated
+        $productTable->datetime('updated_at');
+
+        // create "id" column as AUTO_INCREMENT
+        $productTable->create_columns();
+
+        // create table
+        $tableCreated = $productTable->createTable();
+        
     }
 
     public static function deactivate()
