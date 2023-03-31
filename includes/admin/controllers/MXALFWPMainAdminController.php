@@ -59,19 +59,19 @@ class MXALFWPMainAdminController extends MXALFWPController
     {
 
         // delete action
-        $deleteId = isset($_GET['delete']) ? trim(sanitize_text_field($_GET['delete'])) : false;
+        // $deleteId = isset($_GET['delete']) ? trim(sanitize_text_field($_GET['delete'])) : false;
 
-        if ($deleteId) {
+        // if ($deleteId) {
 
-            if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'delete')) {
+        //     if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'delete')) {
 
-                $this->modelInstance->deletePermanently($deleteId);
-            }
+        //         $this->modelInstance->deletePermanently($deleteId);
+        //     }
 
-            mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG . '&item_status=trash'));
+        //     mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG . '&item_status=trash'));
 
-            return;
-        }
+        //     return;
+        // }
 
         // restore action
         $restore_id = isset($_GET['restore']) ? trim(sanitize_text_field($_GET['restore'])) : false;
@@ -124,7 +124,111 @@ class MXALFWPMainAdminController extends MXALFWPController
     // create table item
     public function createTableItem()
     {
-
         return new MXALFWPMxView('create-table-item');
+    }
+
+    // create table item
+    public function managePartner()
+    {
+
+        $userId = isset($_GET['user_id']) ? trim(sanitize_text_field($_GET['user_id'])) : false;
+
+        if (!$userId) {
+            mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG));
+            return;
+        }
+
+        // Active links
+        $active = "AND status = 'active'";
+        $activeLinksData = $this->modelInstance->getResults(NULL, 'user_id', intval($userId), $active);
+        $activePageViews = 0;
+        $activePages     = 0;
+        $activeLinks     = 0;
+
+        // Trash links
+        $trash = "AND status = 'trash'";
+        $trashLinksData = $this->modelInstance->getResults(NULL, 'user_id', intval($userId), $trash);
+        $trashPageViews = 0;
+        $trashPages     = 0;
+        $trashLinks     = 0;
+
+        if (count($activeLinksData) == 0 && count($trashLinksData) == 0) {
+            mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG));
+            return;
+        }
+
+        $activeLinks = count($activeLinksData);
+        $trashLinks  = count($trashLinksData);
+
+        $bought = 0;
+        $earned = 0;
+        $paid   = 0;
+
+        // Active Data Parse
+        foreach ($activeLinksData as $key => $value) {
+            $unserialized = maybe_unserialize($value->link_data);
+            if ($unserialized !== NULL) {
+
+                // 
+                $activePages = count($unserialized['data']);
+
+                //
+                foreach ($unserialized['data'] as $value_) {
+                    $activePageViews += count($value_);
+                }
+            }
+
+            // bought
+            $bought += $value->bought;
+
+            // earned
+            $earned += floatval( $value->earned );
+
+        }
+
+        // Trash Data Parse
+        foreach ($trashLinksData as $key => $value) {
+            $unserialized = maybe_unserialize($value->link_data);
+            if ($unserialized !== NULL) {
+
+                // 
+                $trashPages = count($unserialized['data']);
+
+                //
+                foreach ($unserialized['data'] as $value_) {
+                    $trashPageViews += count($value_);
+                }
+            }
+
+            // bought
+            $bought += $value->bought;
+
+            // earned
+            $earned += floatval( $value->earned );
+
+        }
+
+        $userData = $this->modelInstance->getRow(NULL, 'user_id', intval($userId));
+
+        $data = [
+            // 'activeLinksData' => $activeLinksData,
+            'userData'  => [
+                'user_id' => $userData->user_id,
+                'user_name' => $userData->user_name,
+            ],
+            'activeLinks'     => $activeLinks,
+            'activePages'     => $activePages,
+            'activePageViews' => $activePageViews,
+
+            'trashLinks'     => $trashLinks,
+            'trashPages'     => $trashPages,
+            'trashPageViews' => $trashPageViews,
+
+            'bought'         => $bought,
+            'earned'         => $earned,
+            'paid'           => $paid
+        ];
+
+        return new MXALFWPMxView('manage-partner', $data);
     }
 }

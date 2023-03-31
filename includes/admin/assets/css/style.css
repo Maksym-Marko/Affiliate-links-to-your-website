@@ -38,6 +38,10 @@
 }
 
 /*  */
+.mxalfwp-margin-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
 .mxalfwp-text-center {
     text-align: center !important;
 }

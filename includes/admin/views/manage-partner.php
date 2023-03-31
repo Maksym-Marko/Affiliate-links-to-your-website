@@ -1,5 +1,3 @@
-<?php $link_data = maybe_unserialize($data->link_data); ?>
-
 <div class="mxalfwp-sub-page-text-wrap">
 
     <!--  -->
@@ -8,7 +6,8 @@
             <div class="mxalfwp-col-lg-3 mxalfwp-col-md-4 mxalfwp-col-sm-4 mxalfwp-col-xs-12">
                 <h4 class="mxalfwp-page-title">
                     <a href="<?php echo admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG); ?>" class="mxalfwp-common-link"><i class="fa fa-chevron-left" aria-hidden="true"></i> All links</a> |
-                    <?php echo __('Link Data', 'mxalfwp-domain'); ?>
+
+                    <?php echo __('Page Views', 'mxalfwp-domain'); ?>
                 </h4>
             </div>
             <div class="mxalfwp-col-lg-9 mxalfwp-col-sm-8 mxalfwp-col-md-8 mxalfwp-col-xs-12">
@@ -16,9 +15,7 @@
                 <div class="mxalfwp-d-md-flex">
                     <ol class="mxalfwp-breadcrumb mxalfwp-ms-auto">
                         <li class="mxalfwp-big-text">
-
-                            <a href="<?php echo admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $data->user_id); ?>" class="mxalfwp-common-link"><i class="fa fa-user" aria-hidden="true"></i> <?php echo __('Entire data of', 'mxalfwp-domain'); ?> <?php echo $data->user_name; ?></a>
-
+                            <a href="<?php echo admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG . '&user_id=' . $data['userData']['user_id']); ?>"><?php echo __('All Links Of: ', 'mxalfwp-domain') . $data['userData']['user_name']; ?></a>
                         </li>
                     </ol>
                 </div>
@@ -31,7 +28,7 @@
     <div class="mxalfwp-row">
         <div class="mxalfwp-col-md-12">
             <h3 class="mxalfwp-page-title mxalfwp-mt-30">
-                <?php echo __('Analytics', 'mxalfwp-domain'); ?>
+                <?php echo __('Personal Data', 'mxalfwp-domain'); ?>
             </h3>
         </div>
     </div>
@@ -49,41 +46,56 @@
                     <?php echo __('Partner', 'mxalfwp-domain'); ?>
                 </h5>
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <a href="<?php echo admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $data->user_id); ?>" class="mxalfwp-common-link"><?php echo $data->user_name; ?></a>
+                    <a href="<?php echo admin_url('user-edit.php?user_id=' . $data['userData']['user_id']); ?>" class="mxalfwp-common-link" target="_blank"><?php echo $data['userData']['user_name']; ?> (#<?php echo $data['userData']['user_id']; ?>)</a>
                 </div>
             </div>
-        </div> 
+        </div>
 
-        <!-- Affiliate Link -->
+        <!-- Number of Active links -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-link" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Affiliate Link', 'mxalfwp-domain'); ?>
+                    <?php echo __('Number of Active links', 'mxalfwp-domain'); ?>
                 </h5>
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data->link  . '/?mxpartnerlink=' . $data->user_id; ?>
+                    <?php echo $data['activeLinks']; ?>
                 </div>
             </div>
         </div>
 
-        <!-- Pages -->
+        <!-- Number of Trash links -->
+        <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
+            <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
+                <div class="mxalfwp-icon-box ">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </div>
+                <h5 class="mxalfwp-box-title mxalfwp-mt-15">
+                    <?php echo __('Number of Trash links', 'mxalfwp-domain'); ?>
+                </h5>
+                <div class="mxalfwp-counter mxalfwp-mb-15">
+                    <?php echo $data['trashLinks']; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visited Pages -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-files-o" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Pages', 'mxalfwp-domain'); ?>
+                    <?php echo __('Visited Pages', 'mxalfwp-domain'); ?>
                 </h5>
                 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo count($link_data['data']); ?>
+                    <?php echo $data['trashPages'] + $data['trashPages']; ?>
                 </div>
 
-                <small><?php echo __('The number of pages that users have visited through the current affiliate link', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('The number of pages that users have visited through the affiliate links of this partner', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
@@ -95,23 +107,15 @@
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Views', 'mxalfwp-domain'); ?>
+                    <?php echo __('Page Views', 'mxalfwp-domain'); ?>
                 </h5>
 
                 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php 
-                        $views = 0;
-
-                        foreach ($link_data['data'] as $key => $value) {
-                            $views += count( $value );
-                        }
-                
-                        echo $views;
-                    ?>
+                    <?php echo $data['activePageViews'] + $data['trashPageViews']; ?>
                 </div>
 
-                <small><?php echo __('Total number of page views', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('Total number of page views via the affiliate links of this partner', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
@@ -127,10 +131,10 @@
                 </h5>
                 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data->bought; ?>
+                    <?php echo $data['bought']; ?>
                 </div>
 
-                <small><?php echo __('How many products have been purchased through the current affiliate link', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('How many products have been purchased through the affiliate links of this partner', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
@@ -146,7 +150,7 @@
                 </h5>
                 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data->earned; ?>
+                    $<?php echo $data['earned']; ?>
                 </div>
 
                 <small><?php echo __('How much did the partner earn', 'mxalfwp-domain'); ?></small>
@@ -154,17 +158,39 @@
             </div>
         </div>
 
-    </div>
+        <!-- Paid -->
+        <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
+            <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
+                <div class="mxalfwp-icon-box">
+                    <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                </div>
+                <h5 class="mxalfwp-box-title mxalfwp-mt-15">
+                    <?php echo __('Paid', 'mxalfwp-domain'); ?>
+                </h5>
+                
+                <form class="mxalfwp-counter mxalfwp-mb-15 mxalfwp-payment-form">
+                    <div class="mxalfwp-payment-input">
+                        <label for="mxalfwp_payment_partner">$</label>
+                        <input type="number" id="mxalfwp_payment_partner" name="mxalfwp_payment_partner" step="0.01" value="<?php echo $data['paid']; ?>" />
+                    </div>
+                    <div>
+                        <button type="submit" class="mxalfwp-btn mxalfwp-btn-danger
+                            mxalfwp-d-md-block
+                            mxalfwp-pull-right
+                            mxalfwp-margin-auto
+                            mxalfwp-mt-15
+                            mxalfwp-hidden-xs mxalfwp-hidden-sm
+                            mxalfwp-waves-effect mxalfwp-waves-light
+                            mxalfwp-text-white"
+                        >
+                            <?php echo __('Change Amount', 'mxalfwp-domain'); ?>
+                        </button>
+                    </div>
+                </form>
 
-    <!-- Section title -->
-    <div class="mxalfwp-row">
-        <div class="mxalfwp-col-md-12">
-            <h3 class="mxalfwp-page-title mxalfwp-mt-30">
-                <?php echo __('Pages visited through the current affiliate link', 'mxalfwp-domain'); ?>
-            </h3>
+                <small><?php echo __('How much did you pay your partner', 'mxalfwp-domain'); ?></small>
+
+            </div>
         </div>
     </div>
-
-    <?php mxalfwpAnalyticsPagesTableLayout($link_data); ?>
-
 </div>

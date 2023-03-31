@@ -4,7 +4,7 @@
 if (!defined('ABSPATH')) exit;
 
 if (!class_exists('WP_List_Table')) {
-    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
 class MXALFWPAffiliateLinks extends WP_List_Table
@@ -13,8 +13,11 @@ class MXALFWPAffiliateLinks extends WP_List_Table
     /*
     * MXALFWPAffiliateLinks
     */
+    public $search     = '';
+    public $status     = '';
+    public $searchUser = '';
 
-    public function __construct( $args = [] )
+    public function __construct($args = [])
     {
 
         parent::__construct(
@@ -23,7 +26,6 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                 'plural'   => 'mxalfwp_plural',
             ]
         );
-
     }
 
     public function prepare_items()
@@ -36,36 +38,41 @@ class MXALFWPAffiliateLinks extends WP_List_Table
         $currentPage = $this->get_pagenum();
 
         if (1 < $currentPage) {
-            $offset = $perPage * ( $currentPage - 1 );
+            $offset = $perPage * ($currentPage - 1);
         } else {
             $offset = 0;
         }
 
         // sortable
-        $order = isset( $_GET['order'] ) ? trim( sanitize_text_field( $_GET['order'] ) ) : 'desc';
-        $orderBy = isset( $_GET['orderby'] ) ? trim( sanitize_text_field( $_GET['orderby'] ) ) : 'id';
+        $order = isset($_GET['order']) ? trim(sanitize_text_field($_GET['order'])) : 'desc';
+        $orderBy = isset($_GET['orderby']) ? trim(sanitize_text_field($_GET['orderby'])) : 'id';
 
         // search
-        $search = '';
-
         if (!empty($_REQUEST['s'])) {
-            $search = "AND title LIKE '%" . esc_sql( $wpdb->esc_like( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ) ) . "%' ";
+            $this->search = "AND link LIKE '%" . esc_sql($wpdb->esc_like(sanitize_text_field(wp_unslash($_REQUEST['s'])))) . "%' ";
         }
 
         // status
-        $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
-        $status = "AND status = '$itemStatus'";
-        
+        $itemStatus = isset($_GET['link_status']) ? trim($_GET['link_status']) : 'active';
+        $this->status = "AND status = '$itemStatus'";
+
+        // Links per User
+        $itemUserId = isset($_GET['user_id']) ? trim(sanitize_text_field($_GET['user_id'])) : false;
+
+        if ($itemUserId) {
+            $this->searchUser = "AND user_id = '$itemUserId'";
+        }
+
         // get data
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
         $items = $wpdb->get_results(
-            "SELECT * FROM {$tableName} WHERE 1 = 1 {$status} {$search}" .
-            $wpdb->prepare( "ORDER BY {$orderBy} {$order} LIMIT %d OFFSET %d;", $perPage, $offset ),
+            "SELECT * FROM {$tableName} WHERE 1 = 1 {$this->status} {$this->search} {$this->searchUser}" .
+                $wpdb->prepare("ORDER BY {$orderBy} {$order} LIMIT %d OFFSET %d;", $perPage, $offset),
             ARRAY_A
         );
 
-        $count = $wpdb->get_var( "SELECT COUNT(id) FROM {$tableName} WHERE 1 = 1 {$status} {$search};" );
+        $count = $wpdb->get_var("SELECT COUNT(id) FROM {$tableName} WHERE 1 = 1 {$this->status} {$this->search} {$this->searchUser};");
 
         // set data
         $this->items = $items;
@@ -86,10 +93,9 @@ class MXALFWPAffiliateLinks extends WP_List_Table
             [
                 'total_items' => $count,
                 'per_page'    => $perPage,
-                'total_pages' => ceil( $count / $perPage ),
+                'total_pages' => ceil($count / $perPage),
             ]
         );
-
     }
 
     public function get_columns()
@@ -97,20 +103,19 @@ class MXALFWPAffiliateLinks extends WP_List_Table
 
         return [
             'cb'          => '<input type="checkbox" />',
-            'id'          => __( 'ID', 'mxalfwp-domain' ),
-            'user_id'     => __( 'User ID', 'mxalfwp-domain' ),
-            'user_name'   => __( 'User Name', 'mxalfwp-domain' ),
-            'link_data'   => __( 'Links Data', 'mxalfwp-domain' ),
-            'link'        => __( 'Link', 'mxalfwp-domain' ),
-            'pages'       => __( 'Pages', 'mxalfwp-domain' ),
-            'views'       => __( 'Views', 'mxalfwp-domain' ),
-            'bought'     => __( 'Bought', 'mxalfwp-domain' ),
-            'earned'      => __( 'Earned', 'mxalfwp-domain' ),
-            'status'      => __( 'Status', 'mxalfwp-domain' ),
-            'created_at'  => __( 'Created', 'mxalfwp-domain' ),
+            'id'          => __('ID', 'mxalfwp-domain'),
+            'user_id'     => __('User ID', 'mxalfwp-domain'),
+            'user_name'   => __('User Name', 'mxalfwp-domain'),
+            'link_data'   => __('Links Data', 'mxalfwp-domain'),
+            'link'        => __('Link', 'mxalfwp-domain'),
+            'pages'       => __('Pages', 'mxalfwp-domain'),
+            'views'       => __('Views', 'mxalfwp-domain'),
+            'bought'     => __('Bought', 'mxalfwp-domain'),
+            'earned'      => __('Earned', 'mxalfwp-domain'),
+            'status'      => __('Status', 'mxalfwp-domain'),
+            'created_at'  => __('Created', 'mxalfwp-domain'),
         ];
-        
-    }    
+    }
 
     public function get_hidden_columns()
     {
@@ -121,7 +126,6 @@ class MXALFWPAffiliateLinks extends WP_List_Table
             'user_id',
             'status',
         ];
-
     }
 
     public function get_sortable_columns()
@@ -133,54 +137,49 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                 false
             ]
         ];
-        
     }
 
-    public function column_default( $item, $columnName )
+    public function column_default($item, $columnName)
     {
 
-        do_action( "manage_mxalfwp_items_custom_column", $columnName, $item );
-
+        do_action("manage_mxalfwp_items_custom_column", $columnName, $item);
     }
 
-    public function column_cb( $item )
+    public function column_cb($item)
     {
-        
-        echo sprintf( '<input type="checkbox" class="mxalfwp_bulk_input" name="mxalfwp-action-%1$s" value="%1$s" />', $item['id'] );
-    
+
+        echo sprintf('<input type="checkbox" class="mxalfwp_bulk_input" name="mxalfwp-action-%1$s" value="%1$s" />', $item['id']);
     }
 
-    public function column_id( $item )
+    public function column_id($item)
     {
 
         echo $item['id'];
-
     }
 
-    public function column_user_id( $item )
+    public function column_user_id($item)
     {
 
         echo $item['user_id'];
-
     }
 
-    public function column_user_name( $item )
+    public function column_user_name($item)
     {
 
-        $url      = admin_url( 'admin.php?page=' . MXALFWP_SINGLE_TABLE_ITEM_MENU );
+        $url      = admin_url('admin.php?page=' . MXALFWP_SINGLE_TABLE_ITEM_MENU);
 
         $user_id  = get_current_user_id();
 
-        $can_edit = current_user_can( 'edit_user', $user_id );
+        $can_edit = current_user_can('edit_user', $user_id);
 
         $output   = '<strong>';
 
         if ($can_edit) {
 
-            $output .= '<a href="' . esc_url( $url ) . '&mxalfwp-link-id=' . $item['id'] . '">' . $item['user_name'] . '</a>';
+            $output .= '<a href="' . admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $item['user_id']) . '">' . $item['user_name'] . '</a>';
 
-            $actions['edit']  = '<a href="' . esc_url( $url ) . '&mxalfwp-link-id=' . $item['id'] . '">' . __( 'Link Analytics', 'mxalfwp-domain' ) . '</a>';
-            $actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Trash', 'mxalfwp-domain' ) . '" href="' . esc_url(
+            $actions['edit']  = '<a href="' . esc_url($url) . '&mxalfwp-link-id=' . $item['id'] . '">' . __('Link Analytics', 'mxalfwp-domain') . '</a>';
+            $actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__('Trash', 'mxalfwp-domain') . '" href="' . esc_url(
                 wp_nonce_url(
                     add_query_arg(
                         [
@@ -191,16 +190,16 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                     'trash',
                     'mxalfwp_nonce'
                 )
-            ) . '">' . esc_html__( 'Trash', 'mxalfwp-domain' ) . '</a>';
+            ) . '">' . esc_html__('Trash', 'mxalfwp-domain') . '</a>';
 
-            $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
+            $itemStatus = isset($_GET['link_status']) ? trim($_GET['link_status']) : 'active';
 
             if ($itemStatus == 'trash') {
 
-                unset( $actions['edit'] );
-                unset( $actions['trash'] );
+                unset($actions['edit']);
+                unset($actions['trash']);
 
-                $actions['restore'] = '<a aria-label="' . esc_attr__( 'Restore', 'mxalfwp-domain' ) . '" href="' . esc_url(
+                $actions['restore'] = '<a aria-label="' . esc_attr__('Restore', 'mxalfwp-domain') . '" href="' . esc_url(
                     wp_nonce_url(
                         add_query_arg(
                             [
@@ -211,100 +210,91 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                         'restore',
                         'mxalfwp_nonce'
                     )
-                ) . '">' . esc_html__( 'Restore', 'mxalfwp-domain' ) . '</a>';
+                ) . '">' . esc_html__('Restore', 'mxalfwp-domain') . '</a>';
 
-                $actions['delete'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete Permanently', 'mxalfwp-domain' ) . '" href="' . esc_url(
-                    wp_nonce_url(
-                        add_query_arg(
-                            [
-                                'delete' => $item['id'],
-                            ],
-                            $url
-                        ),
-                        'delete',
-                        'mxalfwp_nonce'
-                    )
-                ) . '">' . esc_html__( 'Delete Permanently', 'mxalfwp-domain' ) . '</a>';
+                // $actions['delete'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete Permanently', 'mxalfwp-domain' ) . '" href="' . esc_url(
+                //     wp_nonce_url(
+                //         add_query_arg(
+                //             [
+                //                 'delete' => $item['id'],
+                //             ],
+                //             $url
+                //         ),
+                //         'delete',
+                //         'mxalfwp_nonce'
+                //     )
+                // ) . '">' . esc_html__( 'Delete Permanently', 'mxalfwp-domain' ) . '</a>';
 
             }
-    
+
             $rowActions = [];
-    
+
             foreach ($actions as $action => $link) {
-                $rowActions[] = '<span class="' . esc_attr( $action ) . '">' . $link . '</span>';
+                $rowActions[] = '<span class="' . esc_attr($action) . '">' . $link . '</span>';
             }
-    
-            $output .= '<div class="row-actions">' . implode( ' | ', $rowActions ) . '</div>';
-                
+
+            $output .= '<div class="row-actions">' . implode(' | ', $rowActions) . '</div>';
         } else {
 
             $output .= $item['title'];
-
         }
 
         $output .= '</strong>';
 
         echo $output;
-
     }
 
-    public function column_link( $item )
+    public function column_link($item)
     {
 
         echo $item['link'] . '/?mxpartnerlink=' . $item['user_id'];
-
     }
 
-    public function column_pages( $item )
+    public function column_pages($item)
     {
 
-        $link_data = maybe_unserialize( $item['link_data'] );
+        $link_data = maybe_unserialize($item['link_data']);
 
         echo count($link_data['data']);
-
     }
 
-    public function column_views( $item )
+    public function column_views($item)
     {
 
-        $link_data = maybe_unserialize( $item['link_data'] );
+        $link_data = maybe_unserialize($item['link_data']);
 
         $views = 0;
 
         foreach ($link_data['data'] as $key => $value) {
-            $views += count( $value );
+            $views += count($value);
         }
 
         echo $views;
-
     }
 
-    public function column_bought( $item )
+    public function column_bought($item)
     {
 
         echo $item['bought'];
+    }
 
-    }    
-
-    public function column_link_data( $item )
+    public function column_link_data($item)
     {
 
         // var_dump( $item['link_data'] );
 
     }
 
-    public function column_earned( $item )
+    public function column_earned($item)
     {
 
         echo $item['earned'];
-
     }
 
-    public function column_created_at( $item )
+    public function column_created_at($item)
     {
 
         echo $item['created_at'];
-
     }
 
     protected function get_bulk_actions()
@@ -314,39 +304,38 @@ class MXALFWPAffiliateLinks extends WP_List_Table
             return [];
         }
 
-        $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
+        $itemStatus = isset($_GET['link_status']) ? trim($_GET['link_status']) : 'active';
 
         $action = [
-            'trash' => __( 'Move to trash', 'mxalfwp-domain' ),
+            'trash' => __('Move to trash', 'mxalfwp-domain'),
         ];
 
         if ($itemStatus == 'trash') {
 
-            unset( $action['trash'] );
+            unset($action['trash']);
 
-            $action['restore'] = __( 'Restore Item', 'mxalfwp-domain' );
-            $action['delete']  = __( 'Delete Permanently', 'mxalfwp-domain' );
+            $action['restore'] = __('Restore Links', 'mxalfwp-domain');
+            // $action['delete']  = __( 'Delete Permanently', 'mxalfwp-domain' );
 
         }
 
         return $action;
-
     }
 
-    public function search_box( $text, $inputId )
+    public function search_box($text, $inputId)
     {
 
-        if (empty($_REQUEST['s']) && ! $this->has_items()) {
+        if (empty($_REQUEST['s']) && !$this->has_items()) {
             return;
         }
 
-        ?>
-            <p class="search-box">
-                <label class="screen-reader-text" for="<?php echo esc_attr( $inputId ); ?>"><?php echo $text; ?>:</label>
-                <input type="search" id="<?php echo esc_attr( $inputId ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-                    <?php submit_button( $text, '', '', false, ['id' => 'mxalfwp-search-submit'] ); ?>
-            </p>
-        <?php
+?>
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo esc_attr($inputId); ?>"><?php echo $text; ?>:</label>
+            <input type="search" id="<?php echo esc_attr($inputId); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+            <?php submit_button($text, '', '', false, ['id' => 'mxalfwp-search-submit']); ?>
+        </p>
+<?php
 
     }
 
@@ -355,17 +344,23 @@ class MXALFWPAffiliateLinks extends WP_List_Table
 
         global $wpdb;
 
-        $tableName     = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-        $itemStatus    = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
-        $activeNumber = $wpdb->get_var( "SELECT COUNT(id) FROM {$tableName} WHERE status='active';" );
-        $trashNumber   = $wpdb->get_var( "SELECT COUNT(id) FROM {$tableName} WHERE status='trash';" );
-        $url           = admin_url( 'admin.php?page=' . MXALFWP_MAIN_MENU_SLUG );
+        $tableName    = $wpdb->prefix . MXALFWP_TABLE_SLUG;
+
+        $itemStatus   = 'active';
+        $activeNumber = $wpdb->get_var("SELECT COUNT(id) FROM {$tableName} WHERE status='active' {$this->searchUser};");
+        $trashNumber  = $wpdb->get_var("SELECT COUNT(id) FROM {$tableName} WHERE status='trash' {$this->searchUser};");
+
+        if ($this->status !== "AND status = 'active'") {
+            $itemStatus = 'trash';
+        }
+
+        $url           = admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG);
 
         $statusLinks   = [];
 
         // active
         $statusLinks['active'] = [
-            'url'     => add_query_arg( 'link_status', 'active', $url ),
+            'url'     => add_query_arg('link_status', 'active', $url),
             'label'   => sprintf(
                 _nx(
                     'Active <span class="count">(%s)</span>',
@@ -373,18 +368,18 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                     $activeNumber,
                     'active'
                 ),
-                number_format_i18n( $activeNumber )
+                number_format_i18n($activeNumber)
             ),
             'current' => 'active' == $itemStatus,
         ];
 
         if ($activeNumber == 0) {
-            unset( $statusLinks['active'] );
+            unset($statusLinks['active']);
         }
 
         // trash
         $statusLinks['trash'] = [
-            'url'     => add_query_arg( 'link_status', 'trash', $url ),
+            'url'     => add_query_arg('link_status', 'trash', $url),
             'label'   => sprintf(
                 _nx(
                     'Trash <span class="count">(%s)</span>',
@@ -392,68 +387,62 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                     $trashNumber,
                     'trash'
                 ),
-                number_format_i18n( $trashNumber )
+                number_format_i18n($trashNumber)
             ),
             'current' => 'trash' == $itemStatus,
         ];
 
         if ($trashNumber == 0) {
-            unset( $statusLinks['trash'] );
+            unset($statusLinks['trash']);
         }
 
-        return $this->get_views_links( $statusLinks );
-
+        return $this->get_views_links($statusLinks);
     }
 
     public function no_items()
     {
 
-        $itemStatus = isset( $_GET['link_status'] ) ? trim( $_GET['link_status'] ) : 'active';
-        
+        $itemStatus = isset($_GET['link_status']) ? trim($_GET['link_status']) : 'active';
+
         if ($itemStatus == 'trash') {
 
-            _e( 'No items found from trash users.' );
-
+            _e('No items found from trash users.');
         } else {
 
-            _e( 'No affiliate activity found.' );
-
+            _e('No affiliate activity found.');
         }
-
     }
-
 }
 
 if (!function_exists('mxalfwpTableLayout')) {
 
-    function mxalfwpTableLayout() {
+    function mxalfwpTableLayout()
+    {
 
         global $wpdb;
-    
-        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-    
-        $isTable = $wpdb->get_var(
-    
-            $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $tableName ) )
-    
-        );
-    
-        if (!$isTable) return;
-    
-        $tableInstance = new MXALFWPAffiliateLinks();
-        
-        $tableInstance->prepare_items();
-    
-        $tableInstance->views();
-    
-        echo '<form id="mxalfwp_custom_talbe_search_form" method="post">';
-            $tableInstance->search_box( 'Search Items', 'mxalfwp_custom_talbe_search_input' );
-        echo '</form>';
-    
-        echo '<form id="mxalfwp_custom_talbe_form" method="post">';
-            $tableInstance->display();
-        echo '</form>';
-    
-    }
 
+        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
+
+        $isTable = $wpdb->get_var(
+
+            $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($tableName))
+
+        );
+
+        if (!$isTable) return;
+
+        $tableInstance = new MXALFWPAffiliateLinks();
+
+        $tableInstance->prepare_items();
+
+        $tableInstance->views();
+
+        echo '<form id="mxalfwp_custom_talbe_search_form" method="post">';
+        $tableInstance->search_box('Search Link', 'mxalfwp_custom_talbe_search_input');
+        echo '</form>';
+
+        echo '<form id="mxalfwp_custom_talbe_form" method="post">';
+        $tableInstance->display();
+        echo '</form>';
+    }
 }

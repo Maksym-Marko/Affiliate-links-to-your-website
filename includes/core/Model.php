@@ -64,12 +64,12 @@ class MXALFWPModel
     /**
     * get results from the database
     */
-    public function getResults( $table = false, $wherName = NULL, $wherValue = 1 )
+    public function getResults( $table = NULL, $wherName = NULL, $wherValue = 1, $and = '' )
     {
 
         $tableName = $this->wpdb->prefix . $this->table;
 
-        if ($table !== false) {
+        if ($table !== NULL) {
 
             $tableName = $table;
 
@@ -77,7 +77,7 @@ class MXALFWPModel
 
         if ($wherName !== NULL) {
 
-            $results = $this->wpdb->get_results( "SELECT $this->fields FROM $tableName WHERE $wherName = $wherValue" );
+            $results = $this->wpdb->get_results( "SELECT $this->fields FROM $tableName WHERE $wherName = $wherValue {$and}" );
 
         } else {
 

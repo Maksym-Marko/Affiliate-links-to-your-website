@@ -7,25 +7,26 @@ if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
-class MXALFWPLinkAnalytics extends WP_List_Table
+class MXALFWPPageViews extends WP_List_Table
 {
 
     /*
-    * MXALFWPLinkAnalytics
+    * MXALFWPPageViews
     */
+
     public $linkData = NULL;
+    public $visitedPage = NULL;
 
     public function __construct($args = [])
     {
-
         parent::__construct(
             [
-                'singular' => 'mxalfwp_la_singular',
-                'plural'   => 'mxalfwp_la_plural',
+                'singular' => 'mxalfwp_pv_singular',
+                'plural'   => 'mxalfwp_pv_plural',
             ]
         );
-
-        $this->linkData    = $args['data'];
+        $this->linkData    = $args['linkData'];
+        $this->visitedPage = $args['visitedPage'];
     }
 
     public function prepare_items()
@@ -42,13 +43,19 @@ class MXALFWPLinkAnalytics extends WP_List_Table
         }
 
         // get data
-        $linkId = isset($_GET['mxalfwp-link-id']) ? trim(sanitize_text_field($_GET['mxalfwp-link-id'])) : 0;
-
+        $dataFull = [];
         $data = [];
 
         if ($this->linkData !== NULL) {
-            $unserialize = maybe_unserialize($this->linkData);
-            $data = $unserialize;
+            $unserialize = maybe_unserialize($this->linkData->link_data);
+            $dataFull = $unserialize['data'];
+        }
+
+        foreach ($dataFull as $key => $value) {
+            if ($key == $this->visitedPage) {
+                $data = $value;
+                break;
+            }
         }
 
         // set data
@@ -57,19 +64,10 @@ class MXALFWPLinkAnalytics extends WP_List_Table
         $dataPerPage = $data;
 
         if (count($data) > 10) {
-
             $dataPerPage = array_slice($data, $offset, $perPage);
         }
 
-        foreach ($dataPerPage as $key => $value) {
-            $tmp = [
-                'link_id' => $linkId,
-                'page'    => $key,
-                'views'   => $value
-            ];
-
-            array_push($items, $tmp);
-        }
+        $items = $dataPerPage;
 
         $count = count($data);
 
@@ -94,49 +92,38 @@ class MXALFWPLinkAnalytics extends WP_List_Table
 
     public function get_columns()
     {
-
         return [
-            'page'     => __('Visited Page', 'mxalfwp-domain'),
-            'views'    => __('Views Number', 'mxalfwp-domain'),
-            'actions'  => __('Actions', 'mxalfwp-domain'),
+            'location' => __('Location', 'mxalfwp-domain'),
+            'date'     => __('Visit Date', 'mxalfwp-domain'),
         ];
     }
 
     public function column_default($item, $columnName)
     {
-        do_action("manage_mxalfwp_pages_custom_column", $columnName, $item);
+        do_action("manage_mxalfwp_page_views_custom_column", $columnName, $item);
     }
 
-    public function column_page($item)
+    public function column_location($item)
     {
-        echo $item['page'];
+        echo $item['location'];
     }
 
-    public function column_views($item)
+    public function column_date($item)
     {
-        echo count($item['views']);
-    }
-
-    public function column_actions($item)
-    {
-
-        $url = admin_url('admin.php?page=mxalfwp-visited-page-details'); ?>
-
-        <a href="<?php echo esc_url($url); ?>&mxalfwp-link-id=<?php echo $item['link_id']; ?>&mxalfwp-visited-page=<?php echo $item['page']; ?>">Details</a>
-<?php
+        echo $item['date'];
     }
 }
 
-if (!function_exists('mxalfwpAnalyticsPagesTableLayout')) {
+if (!function_exists('mxalfwpPageViewsTableLayout')) {
 
-    function mxalfwpAnalyticsPagesTableLayout($data)
+    function mxalfwpPageViewsTableLayout($data)
     {
 
-        $tableInstance = new MXALFWPLinkAnalytics($data);
+        $tableInstance = new MXALFWPPageViews($data);
 
         $tableInstance->prepare_items();
 
-        echo '<form id="mxalfwp_analytics_pages_form" method="post">';
+        echo '<form id="mxalfwp_page_views_form" method="post">';
         $tableInstance->display();
         echo '</form>';
     }

@@ -21,7 +21,38 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         // Settings page
         add_action( 'wp_ajax_mxalfwp_save_settings', ['MXALFWPMainAdminModel', 'prepareSaveSettings'], 10 );
+
+        // pay a partner
+        add_action( 'wp_ajax_mxalfwp_pay_partner', ['MXALFWPMainAdminModel', 'preparePayPartner'], 10 );        
         
+    }
+
+    /*
+    * Pay Partner
+    */
+    public static function preparePayPartner()
+    {
+
+        // Checked POST nonce is not empty
+        if (empty($_POST['nonce'])) wp_die( '0' );
+
+        // Checked or nonce match
+        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
+
+            var_dump($_POST);
+
+            // number validation
+
+            // check if the number is not less than saved "paid"
+
+            // check if the number is not more than saved "paid"
+
+            // save changes
+
+        }
+
+        wp_die();
+
     }
 
     /*
@@ -317,19 +348,19 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     public function deletePermanently( $id )
     {
 
-        global $wpdb;
+        // global $wpdb;
 
-        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
+        // $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
-        $wpdb->delete( 
-            $tableName, 
-            [
-                'id' => $id
-            ], 
-            [ 
-                '%d'
-            ] 
-        );
+        // $wpdb->delete( 
+        //     $tableName, 
+        //     [
+        //         'id' => $id
+        //     ], 
+        //     [ 
+        //         '%d'
+        //     ] 
+        // );
 
     }
 

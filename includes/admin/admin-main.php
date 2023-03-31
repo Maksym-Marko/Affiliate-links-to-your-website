@@ -34,9 +34,10 @@ class MXALFWPAdminMain
 
         // MXALFWPCPTGenerator::createCPT();
 
-        // Affiliate links table
+        // Affiliate links tables
         mxalfwpRequireClassFileAdmin( 'links-table.php' );
         mxalfwpRequireClassFileAdmin( 'analytics-pages-table.php' );
+        mxalfwpRequireClassFileAdmin( 'page-views-table.php' );
 
     }
 
@@ -96,6 +97,11 @@ class MXALFWPAdminMain
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'visitedPageDetails', 'NULL', [
             'page_title' => 'Visited Page Details',
         ], 'mxalfwp-visited-page-details' );
+
+        // hide menu item
+        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'managePartner', 'NULL', [
+            'page_title' => 'Partner',
+        ], 'mxalfwp-manage-partner' );        
 
         // sub settings menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'settingsMenuItemAction', 'NULL', [

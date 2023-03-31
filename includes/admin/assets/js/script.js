@@ -1,5 +1,26 @@
 jQuery(document).ready(function ($) {
 
+	// Pay to a partner
+	$( '.mxalfwp-payment-form' ).on( 'submit', function( e ) {
+
+		e.preventDefault();
+
+		const amount = $( this ).find( '#mxalfwp_payment_partner' ).val();
+
+		let data = {
+			'action': 'mxalfwp_pay_partner',
+			'nonce': mxalfwp_admin_localize.nonce,
+			'amount': amount
+		};
+
+		jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
+
+			console.log(response)
+
+		});
+
+	} );
+
 	// Bulk actions
 	$('#mxalfwp_custom_talbe_form').on('submit', function (e) {
 
