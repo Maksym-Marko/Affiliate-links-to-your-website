@@ -21,7 +21,9 @@ class MXALFWPEnqueueScripts
 
         wp_enqueue_style('mxalfwp_font_awesome', MXALFWP_PLUGIN_URL . 'assets/font-awesome-4.6.3/css/font-awesome.min.css');
 
-        wp_enqueue_style('mxalfwp_admin_style', MXALFWP_PLUGIN_URL . 'includes/admin/assets/css/style.css', ['mxalfwp_font_awesome'], MXALFWP_PLUGIN_VERSION, 'all');
+        wp_enqueue_style('mxalfwp_common_style', MXALFWP_PLUGIN_URL . '/assets/css/common-style.css', ['mxalfwp_font_awesome'], MXALFWP_PLUGIN_VERSION, 'all');
+
+        wp_enqueue_style('mxalfwp_admin_style', MXALFWP_PLUGIN_URL . 'includes/admin/assets/css/style.css', ['mxalfwp_common_style'], MXALFWP_PLUGIN_VERSION, 'all');
 
         // include Vue.js
         // dev version
@@ -47,6 +49,7 @@ class MXALFWPEnqueueScripts
                 'text_5'  => __('Please enter a number.', 'mxalfwp-domain'),
                 'text_6'  => __('Percent must be between 0.1 and 99.', 'mxalfwp-domain'),
                 'text_7'  => __('Server Error!', 'mxalfwp-domain'),
+                'text_8'  => __('Are you sure you want to manage this partner?', 'mxalfwp-domain'),
             ]
 
         ]);

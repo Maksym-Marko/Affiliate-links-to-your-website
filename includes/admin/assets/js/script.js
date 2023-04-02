@@ -1,25 +1,84 @@
 jQuery(document).ready(function ($) {
 
-	// Pay to a partner
-	$( '.mxalfwp-payment-form' ).on( 'submit', function( e ) {
+	let mxalfwpSubmitKey = true;
+	
+	$('.mxalfwp-block-user-form').on('submit', function (e) {
 
 		e.preventDefault();
 
-		const amount = $( this ).find( '#mxalfwp_payment_partner' ).val();
+		if( confirm( mxalfwp_admin_localize.translation.text_8 ) ) {
+
+			if (!mxalfwpSubmitKey) return;
+
+			let userKey = $(this).find('.mxalfwp_user_key').val();
+			let userId = $(this).find('.mxalfwp_user_id').val();
+			let status = $(this).find('.mxalfwp_user_status').val();			
+
+			let data = {
+				'action': 'mxalfwp_block_partner',
+				'nonce': mxalfwp_admin_localize.nonce,
+				'user_key': userKey,
+				'user_id': userId,
+				'status': status
+			};			
+
+			mxalfwpSubmitKey = false;
+
+			jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
+				
+				if (mxalfwpIsJSON(response)) {
+	
+					alert(JSON.parse(response).message);
+	
+				}
+	
+				mxalfwpSubmitKey = true;
+
+				location.reload();
+	
+			});
+
+		}		
+
+	} );
+
+	// Pay to a partner
+	$('.mxalfwp-payment-form').on('submit', function (e) {
+
+		e.preventDefault();
+
+		if (!mxalfwpSubmitKey) return;
+
+		let amount = Number($(this).find('#mxalfwp_payment_partner').val());
+		amount = parseFloat(amount).toFixed(2);
+
+		let userKey = $(this).find('.mxalfwp_user_key').val();
+		let userId = $(this).find('.mxalfwp_user_id').val();
+
 
 		let data = {
 			'action': 'mxalfwp_pay_partner',
 			'nonce': mxalfwp_admin_localize.nonce,
-			'amount': amount
+			'amount': amount,
+			'user_key': userKey,
+			'user_id': userId
 		};
+
+		mxalfwpSubmitKey = false;
 
 		jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
 
-			console.log(response)
+			if (mxalfwpIsJSON(response)) {
+
+				alert(JSON.parse(response).message);
+
+			}
+
+			mxalfwpSubmitKey = true;
 
 		});
 
-	} );
+	});
 
 	// Bulk actions
 	$('#mxalfwp_custom_talbe_form').on('submit', function (e) {
@@ -139,6 +198,15 @@ jQuery(document).ready(function ($) {
 
 });
 
+function mxalfwpIsJSON(str) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 
 // Vue 2
 if (document.getElementById('mxalfwp_admin_settings')) {
@@ -154,20 +222,20 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 		Vue.component('mxalfwp_admin_settings_form', {
 			props: {
 				translation: {
-                    type: Object,
-                    required: true
-                },
+					type: Object,
+					required: true
+				},
 				percent: {
 					type: Number,
 					required: true
 				},
 				savesettings: {
 					type: Function,
-                    required: true
+					required: true
 				},
 				progress: {
 					type: Boolean,
-                    required: true
+					required: true
 				}
 			},
 			template: `
@@ -252,13 +320,13 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 			},
 			methods: {
 				isNumber() {
-					if( isNaN( this.default_percent ) ) {
+					if (isNaN(this.default_percent)) {
 						return false;
 					}
 					return true;
 				},
 				isInRange() {
-					if( this.default_percent > 99 || this.default_percent < 0.1 ) {
+					if (this.default_percent > 99 || this.default_percent < 0.1) {
 						return false;
 					}
 					return true;
@@ -269,26 +337,26 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 
 					this.formChecking();
 
-					if( ! this.isNumber() ) {
+					if (!this.isNumber()) {
 						return;
 					}
 
-					if( ! this.isInRange() ) {
+					if (!this.isInRange()) {
 						return;
 					}
 
-					this.savesettings({'percent':this.default_percent});
+					this.savesettings({ 'percent': this.default_percent });
 
 				},
 				formChecking() {
 					this.errors = [];
 
-					if( ! this.isNumber() ) {
-						this.errors.push( this.translation.text_5 );
+					if (!this.isNumber()) {
+						this.errors.push(this.translation.text_5);
 					}
 
-					if( ! this.isInRange() ) {
-						this.errors.push( this.translation.text_6 );
+					if (!this.isInRange()) {
+						this.errors.push(this.translation.text_6);
 					}
 				}
 			},
@@ -314,21 +382,21 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 				progress: false
 			},
 			methods: {
-				saveSettings( obj ) {
+				saveSettings(obj) {
 
 					this.progress = true;
 
-                    const self = this;
+					const self = this;
 
-                    const xmlhttp = new XMLHttpRequest();
+					const xmlhttp = new XMLHttpRequest();
 
-                    xmlhttp.open('POST', this.ajaxdata.ajax_url);
+					xmlhttp.open('POST', this.ajaxdata.ajax_url);
 
-                    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+					xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
 
-                    xmlhttp.onload = function () {
+					xmlhttp.onload = function () {
 
-                        if (this.status === 200) {
+						if (this.status === 200) {
 
 							const res = JSON.parse(this.response);
 
@@ -338,53 +406,53 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 								alert(res.message);
 							}
 
-                        } else {
-                            self.errors.push(translation.text_7);
-                        }
+						} else {
+							self.errors.push(translation.text_7);
+						}
 
 						self.progress = false;
 
-                    }
+					}
 
-                    const data = {
-                        action: 'mxalfwp_save_settings',
-                        nonce: this.ajaxdata.nonce,
+					const data = {
+						action: 'mxalfwp_save_settings',
+						nonce: this.ajaxdata.nonce,
 						percent: obj.percent
-                    }
+					}
 
-                    xmlhttp.send(this.toQueryString(data));
+					xmlhttp.send(this.toQueryString(data));
 
-                },
-                toQueryString(obj) {
-                    var str = [];
-                    for (var p in obj)
-                        if (obj.hasOwnProperty(p)) {
-                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                        }
-                    return str.join("&");
-                }
+				},
+				toQueryString(obj) {
+					var str = [];
+					for (var p in obj)
+						if (obj.hasOwnProperty(p)) {
+							str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+						}
+					return str.join("&");
+				}
 			},
-            mounted() {
+			mounted() {
 
-                // translation
-                if (mxalfwp_admin_localize.translation) {
-                    this.translation = mxalfwp_admin_localize.translation
-                }
+				// translation
+				if (mxalfwp_admin_localize.translation) {
+					this.translation = mxalfwp_admin_localize.translation
+				}
 
 				// get default percent
 				if (mxalfwp_admin_localize.percent) {
-                    this.percent = parseFloat( mxalfwp_admin_localize.percent )
-                }
+					this.percent = parseFloat(mxalfwp_admin_localize.percent)
+				}
 
 				// ajax url
-                if (mxalfwp_admin_localize.ajax_url) {
-                    this.ajaxdata.ajax_url = mxalfwp_admin_localize.ajax_url
-                }
+				if (mxalfwp_admin_localize.ajax_url) {
+					this.ajaxdata.ajax_url = mxalfwp_admin_localize.ajax_url
+				}
 
-                // nonce
-                if (mxalfwp_admin_localize.nonce) {
-                    this.ajaxdata.nonce = mxalfwp_admin_localize.nonce
-                }
+				// nonce
+				if (mxalfwp_admin_localize.nonce) {
+					this.ajaxdata.nonce = mxalfwp_admin_localize.nonce
+				}
 
 			}
 		});

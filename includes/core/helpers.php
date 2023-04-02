@@ -89,3 +89,85 @@ function mxalfwpAdminRedirect( $url ) {
     } );
 
 }
+
+/*
+* Earned
+*/
+function mxalfwpPartnerEarned( $userId ) {
+
+    $earned = 0;
+
+    $inst   = new MXALFWPModel();
+
+    $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
+
+    if( count( $linksData ) == 0 ) {
+        return 0;
+    }
+
+    foreach ($linksData as $value) {
+        $earned += floatval($value->earned);
+    }
+
+    return $earned;
+
+}
+
+/*
+* Bought
+*/
+function mxalfwpPartnerBought( $userId ) {
+
+    $bought = 0;
+
+    $inst =  new MXALFWPModel();
+
+    $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
+
+    if( count( $linksData ) == 0 ) {
+        return 0;
+    }
+
+    foreach ($linksData as $value) {
+        $bought += intval($value->bought);
+    }
+
+    return $bought;
+
+}
+
+/*
+* Paid
+*/
+function mxalfwpPartnerPaid( $userId ) {
+
+    $paid = 0;
+
+    $inst =  new MXALFWPModel();
+
+    $linksData = $inst->getRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($userId));
+
+    if( $linksData == NULL ) {
+        return 0;
+    }
+
+    return $linksData->paid;
+
+}
+
+/*
+* Get Partner Status
+*/
+function mxalfwpGetPartnerStatus( $userId ) {
+
+    $inst =  new MXALFWPModel();
+
+    $linksData = $inst->getRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($userId));
+
+    if( $linksData == NULL ) {
+        return 0;
+    }
+
+    return $linksData->status;
+
+}

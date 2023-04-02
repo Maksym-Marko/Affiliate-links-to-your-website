@@ -211,6 +211,10 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 getcurrentuserlinks: {
                     type: Function,
                     required: true
+                },
+                partnerstatus: {
+                    type: String,
+                    required: true
                 }
             },
             template: `
@@ -221,6 +225,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 <form 
                     class="mxalfwp-generate-link-form"
                     @submit.prevent="generateLink"
+                    v-if="partnerstatus === 'active'"
                 >
                 
                     <div>
@@ -259,6 +264,12 @@ if (document.getElementById('mxalfwp_cabinet')) {
 					</ul>
                 
                 </form>
+
+                <div
+                    v-if="partnerstatus === 'blocked'"
+                >
+                    <h3 class="mxalfwp-blocked-text">{{ translation.text_15 }}</h3>
+                </div>
 
             </div>
         `,
@@ -381,7 +392,10 @@ if (document.getElementById('mxalfwp_cabinet')) {
             data: {
                 translation: {},
                 ajaxdata: {},
-                links: []
+                links: [],
+                perPage: 10,
+                page: 1,
+                partnerStatus: 'active'
             },
             methods: {
                 getCurrentUserLinks() {
@@ -443,6 +457,12 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 if (mxalfwp_frontend_localize.nonce) {
                     this.ajaxdata.nonce = mxalfwp_frontend_localize.nonce
                 }
+
+                // partner status
+                if (mxalfwp_frontend_localize.partner_status) {
+                    this.partnerStatus = mxalfwp_frontend_localize.partner_status
+                }
+                
 
                 this.getCurrentUserLinks();
 

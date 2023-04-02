@@ -36,14 +36,14 @@ class MXALFWPModel
     /**
     * select row from the database
     */
-    public function getRow( $table = NULL, $wherName = NULL, $wherValue = NULL )
+    public function getRow( $table = NULL, $wherName = NULL, $wherValue = NULL, $and = '' )
     {
 
         $tableName = $this->wpdb->prefix . $this->table;
 
         if ($table !== NULL) {
 
-            $tableName = $table;
+            $tableName = $this->wpdb->prefix . $table;
 
         }
 
@@ -55,7 +55,7 @@ class MXALFWPModel
 
         }
 
-        $getRow = $this->wpdb->get_row( "SELECT $this->fields FROM $tableName {$where}" );
+        $getRow = $this->wpdb->get_row( "SELECT $this->fields FROM $tableName {$where} {$and}" );
 
         return $getRow;
         
@@ -87,6 +87,36 @@ class MXALFWPModel
 
         return $results;
         
+    }
+
+    /**
+    * update row
+    */
+    public function updateRow( $table = NULL, $wherName = NULL, $wherValue = NULL, $columns = [], $masks = [] ){
+
+        $tableName = $this->wpdb->prefix . $this->table;
+
+        if ($table !== NULL) {
+
+            $tableName = $this->wpdb->prefix . $table;
+
+        }
+
+        if($wherName == NULL || $wherValue == NULL) return false;
+
+        $update = $this->wpdb->update(
+
+            $tableName,
+            $columns,
+            [
+                $wherName => $wherValue
+            ],
+            $masks
+
+        );
+
+        return $update;
+
     }
 
 }

@@ -50,22 +50,22 @@ class MXALFWPBasisPluginClass
         // links_data
         $linkData = [
             'data' => [
-                'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
-                    [
-                        'location' => 'Ukraine, Kyiv',
-                        'date'     => '0000-00-00 00:00:00'
-                    ],
-                    [
-                        'location' => 'Ukraine, Volyn',
-                        'date'     => '0000-00-00 00:00:00'
-                    ],
-                ],
-                'http://affiliate-links-woocommerce.local/products/' => [
-                    [
-                        'location' => 'Ukraine, Kyiv',
-                        'date'     => '0000-00-00 00:00:00'
-                    ],
-                ]
+                // 'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
+                //     [
+                //         'location' => 'Ukraine, Kyiv',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                //     [
+                //         'location' => 'Ukraine, Volyn',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                // ],
+                // 'http://affiliate-links-woocommerce.local/products/' => [
+                //     [
+                //         'location' => 'Ukraine, Kyiv',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                // ]
             ]
         ];
 
@@ -113,6 +113,12 @@ class MXALFWPBasisPluginClass
 
         // paid
         $productTable->varchar('paid', 10, true, '0');
+
+        // user key
+        $productTable->varchar('user_key', 18, true, 'kfpei84h3o59ajg839');
+
+        // status
+        $productTable->varchar('status', 10, true, 'active');
 
         // created
         $productTable->datetime('created_at');

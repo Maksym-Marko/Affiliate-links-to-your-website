@@ -21,7 +21,9 @@ class MXALFWPEnqueueScriptsFrontend
 
         wp_enqueue_style('mxalfwp_font_awesome', MXALFWP_PLUGIN_URL . 'assets/font-awesome-4.6.3/css/font-awesome.min.css');
 
-        wp_enqueue_style('mxalfwp_style', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/css/style.css', ['mxalfwp_font_awesome'], MXALFWP_PLUGIN_VERSION, 'all');
+        wp_enqueue_style('mxalfwp_common_style', MXALFWP_PLUGIN_URL . '/assets/css/common-style.css', ['mxalfwp_font_awesome'], MXALFWP_PLUGIN_VERSION, 'all');
+
+        wp_enqueue_style('mxalfwp_style', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/css/style.css', ['mxalfwp_common_style'], MXALFWP_PLUGIN_VERSION, 'all');
 
         // include Vue.js
         // dev version
@@ -34,8 +36,9 @@ class MXALFWPEnqueueScriptsFrontend
 
         wp_localize_script('mxalfwp_script', 'mxalfwp_frontend_localize', [
 
-            'nonce'       => wp_create_nonce('mxalfwp_nonce_request_front'),
-            'ajax_url'    => admin_url('admin-ajax.php'),
+            'nonce'          => wp_create_nonce('mxalfwp_nonce_request_front'),
+            'ajax_url'       => admin_url('admin-ajax.php'),
+            'partner_status' => mxalfwpGetPartnerStatus( get_current_user_id() ),
 
             'translation' => [
                 'text_1'  => __('Generate Affiliate Link', 'mxalfwp-domain'),
@@ -52,6 +55,7 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_12' => __('Server Error!', 'mxalfwp-domain'),
                 'text_13' => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
                 'text_14' => __('Visited pages', 'mxalfwp-domain'),                
+                'text_15' => __('You are blocked.', 'mxalfwp-domain'),                
             ]
 
         ]);

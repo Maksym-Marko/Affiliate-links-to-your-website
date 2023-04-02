@@ -140,17 +140,17 @@ class MXALFWPMainAdminController extends MXALFWPController
 
         // Active links
         $active = "AND status = 'active'";
-        $activeLinksData = $this->modelInstance->getResults(NULL, 'user_id', intval($userId), $active);
-        $activePageViews = 0;
-        $activePages     = 0;
-        $activeLinks     = 0;
+        $activeLinksData  = $this->modelInstance->getResults(NULL, 'user_id', intval($userId), $active);
+        $activePageViews  = 0;
+        $activePages      = 0;
+        $activeLinks      = 0;
 
         // Trash links
         $trash = "AND status = 'trash'";
-        $trashLinksData = $this->modelInstance->getResults(NULL, 'user_id', intval($userId), $trash);
-        $trashPageViews = 0;
-        $trashPages     = 0;
-        $trashLinks     = 0;
+        $trashLinksData  = $this->modelInstance->getResults(NULL, 'user_id', intval($userId), $trash);
+        $trashPageViews  = 0;
+        $trashPages      = 0;
+        $trashLinks      = 0;
 
         if (count($activeLinksData) == 0 && count($trashLinksData) == 0) {
             mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG));
@@ -162,15 +162,18 @@ class MXALFWPMainAdminController extends MXALFWPController
 
         $bought = 0;
         $earned = 0;
-        $paid   = 0;
+
+        // 
+        $activePagesArray = [];
+        $trashPagesArray  = [];
 
         // Active Data Parse
         foreach ($activeLinksData as $key => $value) {
             $unserialized = maybe_unserialize($value->link_data);
             if ($unserialized !== NULL) {
 
-                // 
-                $activePages = count($unserialized['data']);
+                //
+                $activePagesArray = array_merge($activePagesArray, $unserialized['data']);
 
                 //
                 foreach ($unserialized['data'] as $value_) {
@@ -182,9 +185,11 @@ class MXALFWPMainAdminController extends MXALFWPController
             $bought += $value->bought;
 
             // earned
-            $earned += floatval( $value->earned );
-
+            $earned += floatval($value->earned);
         }
+
+        $activePages = count($activePagesArray);
+
 
         // Trash Data Parse
         foreach ($trashLinksData as $key => $value) {
@@ -192,7 +197,7 @@ class MXALFWPMainAdminController extends MXALFWPController
             if ($unserialized !== NULL) {
 
                 // 
-                $trashPages = count($unserialized['data']);
+                $trashPagesArray = array_merge($trashPagesArray, $unserialized['data']);
 
                 //
                 foreach ($unserialized['data'] as $value_) {
@@ -204,17 +209,27 @@ class MXALFWPMainAdminController extends MXALFWPController
             $bought += $value->bought;
 
             // earned
-            $earned += floatval( $value->earned );
-
+            $earned += floatval($value->earned);
         }
 
-        $userData = $this->modelInstance->getRow(NULL, 'user_id', intval($userId));
+        $trashPages = count($trashPagesArray);
+
+        $userLinkData = $this->modelInstance->getRow(NULL, 'user_id', intval($userId));
+        $userData = $this->modelInstance->getRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($userId));
+
+        $userKey = null;
+
+        if( $userData !== NULL ) {
+            $userKey = $userData->user_key;
+        }
 
         $data = [
             // 'activeLinksData' => $activeLinksData,
             'userData'  => [
-                'user_id' => $userData->user_id,
-                'user_name' => $userData->user_name,
+                'user_id'     => $userLinkData->user_id,
+                'user_name'   => $userLinkData->user_name,
+                'user_key'    => $userKey,
+                'status'      => $userData->status,
             ],
             'activeLinks'     => $activeLinks,
             'activePages'     => $activePages,
@@ -226,9 +241,11 @@ class MXALFWPMainAdminController extends MXALFWPController
 
             'bought'         => $bought,
             'earned'         => $earned,
-            'paid'           => $paid
+            'paid'           => $userData->paid
         ];
 
         return new MXALFWPMxView('manage-partner', $data);
     }
+
+
 }

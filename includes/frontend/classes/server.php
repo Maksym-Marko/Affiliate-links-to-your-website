@@ -8,7 +8,7 @@ class MXALFWPServer
     public static function registerAjax()
     {
         // Generate link
-        add_action('wp_ajax_mxalfwp_link_generate', ['MXALFWPServer', 'link_generate']);
+        add_action('wp_ajax_mxalfwp_link_generate', ['MXALFWPServer', 'linkGenerate']);
 
         // Get current user's links
         add_action('wp_ajax_mxalfwp_get_links', ['MXALFWPServer', 'get_links']);
@@ -59,26 +59,20 @@ class MXALFWPServer
         wp_die();
     }
 
-    public static function link_generate()
+    public static function linkGenerate()
     {
 
         if (empty($_POST['nonce'])) wp_die();
 
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
 
-            $url = trim($_POST['url']);
-
-            $url = rtrim($url, '//');
-
-            $url = sanitize_url($url);
+            $url = sanitize_url(rtrim(trim($_POST['url']),'//'));
 
             global $wpdb;
 
             $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
-            $userId = get_current_user_id();
-
-            $user = get_user_by('ID', $userId);
+            $userId = get_current_user_id();            
 
             $findUrl = $wpdb->get_row(
                 $wpdb->prepare(
@@ -104,33 +98,10 @@ class MXALFWPServer
                 ];
             } else {
 
-                // insert link
-                $date = date('Y-m-d H:i:s');
-                $insert = $wpdb->insert(
+                $insertLink = self::insertLink( $url, $userId );
+                $insertUser = self::insertUser( $userId );
 
-                    $tableName,
-
-                    [
-                        'link'       => $url,
-                        'user_id'    => $userId,
-                        'user_name'  => $user->data->display_name,
-                        'percent'    => get_option('mxalfwp_default_percent'),
-                        'created_at' => $date,
-                        'updated_at' => $date,
-                    ],
-
-                    [
-                        '%s',
-                        '%d',
-                        '%s',
-                        '%s',
-                        '%s',
-                        '%s',
-                    ]
-
-                );
-
-                if ($insert !== 1) {
+                if ($insertLink !== 1) {
 
                     $responce = [
                         'status' => 'failed',
@@ -144,4 +115,91 @@ class MXALFWPServer
 
         wp_die();
     }
+
+    public static function insertLink( $url, $userId )
+    {
+
+        global $wpdb;
+
+        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
+
+        $user = get_user_by('ID', $userId);
+
+        // insert link
+        $date = date('Y-m-d H:i:s');
+
+        return $wpdb->insert(
+
+            $tableName,
+
+            [
+                'link'       => $url,
+                'user_id'    => $userId,
+                'user_name'  => $user->data->display_name,
+                'percent'    => get_option('mxalfwp_default_percent'),
+                'created_at' => $date,
+                'updated_at' => $date,
+            ],
+
+            [
+                '%s',
+                '%d',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+            ]
+
+        );
+    }
+
+    public static function insertUser( $userId )
+    {
+
+        global $wpdb;
+
+        $tableName = $wpdb->prefix . MXALFWP_USERS_TABLE_SLUG;
+
+        $partner = $wpdb->get_row(
+            $wpdb->prepare(
+
+                "SELECT id FROM $tableName 
+                    WHERE user_id = %d",
+                $userId
+
+            )
+        );
+
+        if( $partner == NULL ) {
+
+            // insert user
+            $date = date('Y-m-d H:i:s');
+
+            $userKey = wp_generate_password( 18, false );
+
+            return $wpdb->insert(
+
+                $tableName,
+
+                [
+                    'user_id'    => $userId,
+                    'user_key'   => $userKey,
+                    'created_at' => $date,
+                    'updated_at' => $date,
+                ],
+
+                [
+                    '%d',
+                    '%s',
+                    '%s',
+                    '%s',
+                ]
+
+            );
+        }
+
+        return false;
+
+    }
+
 }

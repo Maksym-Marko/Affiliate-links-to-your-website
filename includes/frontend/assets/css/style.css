@@ -103,3 +103,7 @@
 .mxalfwp_inactive_link {
     opacity: 0.3;
 }
+.mxalfwp-blocked-text {
+    color: grey;
+    
+}

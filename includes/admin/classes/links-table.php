@@ -170,6 +170,8 @@ class MXALFWPAffiliateLinks extends WP_List_Table
 
         $user_id  = get_current_user_id();
 
+        $userStatus = mxalfwpGetPartnerStatus($user_id);
+
         $can_edit = current_user_can('edit_user', $user_id);
 
         $output   = '<strong>';
@@ -199,18 +201,23 @@ class MXALFWPAffiliateLinks extends WP_List_Table
                 unset($actions['edit']);
                 unset($actions['trash']);
 
-                $actions['restore'] = '<a aria-label="' . esc_attr__('Restore', 'mxalfwp-domain') . '" href="' . esc_url(
-                    wp_nonce_url(
-                        add_query_arg(
-                            [
-                                'restore' => $item['id'],
-                            ],
-                            $url
-                        ),
-                        'restore',
-                        'mxalfwp_nonce'
-                    )
-                ) . '">' . esc_html__('Restore', 'mxalfwp-domain') . '</a>';
+                if( $userStatus == 'active' ) {
+                    $actions['restore'] = '<a aria-label="' . esc_attr__('Restore', 'mxalfwp-domain') . '" href="' . esc_url(
+                        wp_nonce_url(
+                            add_query_arg(
+                                [
+                                    'restore' => $item['id'],
+                                ],
+                                $url
+                            ),
+                            'restore',
+                            'mxalfwp_nonce'
+                        )
+                    ) . '">' . esc_html__('Restore', 'mxalfwp-domain') . '</a>';
+                } else {
+                    $actions['blocked'] = esc_html__('This user is blocked', 'mxalfwp-domain');
+                }
+
 
                 // $actions['delete'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete Permanently', 'mxalfwp-domain' ) . '" href="' . esc_url(
                 //     wp_nonce_url(

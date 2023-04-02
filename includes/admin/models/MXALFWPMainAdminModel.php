@@ -15,16 +15,125 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     public static function wpAjax()
     {
 
-        add_action( 'wp_ajax_mxalfwp_update', ['MXALFWPMainAdminModel', 'prepareUpdateDatabaseColumn'], 10, 1 );
-        add_action( 'wp_ajax_mxalfwp_create_item', ['MXALFWPMainAdminModel', 'prepareItemCreation'], 10, 1 );
-        add_action( 'wp_ajax_mxalfwp_bulk_actions', ['MXALFWPMainAdminModel', 'prepareBulkActions'], 10 );
+        add_action('wp_ajax_mxalfwp_update', ['MXALFWPMainAdminModel', 'prepareUpdateDatabaseColumn'], 10, 1);
+        add_action('wp_ajax_mxalfwp_create_item', ['MXALFWPMainAdminModel', 'prepareItemCreation'], 10, 1);
+        add_action('wp_ajax_mxalfwp_bulk_actions', ['MXALFWPMainAdminModel', 'prepareBulkActions'], 10);
 
         // Settings page
-        add_action( 'wp_ajax_mxalfwp_save_settings', ['MXALFWPMainAdminModel', 'prepareSaveSettings'], 10 );
+        add_action('wp_ajax_mxalfwp_save_settings', ['MXALFWPMainAdminModel', 'prepareSaveSettings'], 10);
 
         // pay a partner
-        add_action( 'wp_ajax_mxalfwp_pay_partner', ['MXALFWPMainAdminModel', 'preparePayPartner'], 10 );        
-        
+        add_action('wp_ajax_mxalfwp_pay_partner', ['MXALFWPMainAdminModel', 'preparePayPartner'], 10);
+
+        // block a partner
+        add_action('wp_ajax_mxalfwp_block_partner', ['MXALFWPMainAdminModel', 'prepareBlockPartner'], 10);
+
+    }
+
+    /*
+    * Block Partner
+    */
+    public static function prepareBlockPartner()
+    {
+
+        // Checked POST nonce is not empty
+        if (empty($_POST['nonce'])) wp_die('0');
+
+        // Checked or nonce match
+        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
+
+            self::blockPartner($_POST);
+        }
+
+        wp_die();
+
+    }
+
+    public static function blockPartner($data)
+    {
+
+        $inst = new MXALFWPMainAdminModel();
+
+        $userKey = sanitize_text_field($data['user_key']);
+
+        $and = "AND user_key = '$userKey'";
+
+        $userData = $inst->getRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), $and);
+
+        $responce = [
+            'status' => 'success',
+            'message' => __('The Partner Unblocked!', 'mxalfwp-domain')
+        ];
+
+        // user not found
+        if ($userData == NULL) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('No partner found!', 'mxalfwp-domain')
+            ];
+
+            echo json_encode($responce);
+
+            return;
+        }
+
+        $status = 'active';
+
+        if( $userData->status == 'active' ) {
+
+            $status = 'blocked';
+
+            $responce = [
+                'status' => 'success',
+                'message' => __('The Partner Blocked!', 'mxalfwp-domain')
+            ];
+
+        }
+
+        // save changes
+        $updated = $inst->updateRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), [
+            'status' => $status
+        ],
+        [
+            '%s'
+        ]);
+
+        if( $updated !== 1 ) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('Something went wrong!', 'mxalfwp-domain')
+            ];
+
+            echo json_encode($responce);
+
+            return;
+
+        }
+
+        $linksData = self::partnerLinksData(intval($data['user_id']));
+
+        foreach ($linksData as $key => $value) {
+            if( $value->status == 'trash' ) {
+                $inst->updateRow(NULL, 'user_id', intval($data['user_id']), [
+                    'status' => 'active'
+                ],
+                [
+                    '%s'
+                ]);
+            } else {
+                $inst->updateRow(NULL, 'user_id', intval($data['user_id']), [
+                    'status' => 'trash'
+                ],
+                [
+                    '%s'
+                ]);
+            }
+        }
+
+        echo json_encode($responce);
+
     }
 
     /*
@@ -34,25 +143,126 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     {
 
         // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die( '0' );
+        if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
 
-            var_dump($_POST);
-
-            // number validation
-
-            // check if the number is not less than saved "paid"
-
-            // check if the number is not more than saved "paid"
-
-            // save changes
-
+            self::payPartner($_POST);
         }
 
         wp_die();
+    }
 
+    public static function payPartner($data)
+    {
+
+        $inst = new MXALFWPMainAdminModel();
+
+        $userKey = sanitize_text_field($data['user_key']);
+
+        $and = "AND user_key = '$userKey'";
+
+        $userData = $inst->getRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), $and);
+
+        $responce = [
+            'status' => 'success',
+            'message' => __('Paid amount changed!', 'mxalfwp-domain')
+        ];
+
+        // user not found
+        if ($userData == NULL) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('No partner found!', 'mxalfwp-domain')
+            ];
+
+            echo json_encode($responce);
+
+            return;
+        }
+
+        // check paid data
+        if (floatval($data['amount']) <= floatval($userData->paid)) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('The amount of the last payment is ', 'mxalfwp-domain') . floatval($userData->paid) . __('. You cannot pay the same amount or less!', 'mxalfwp-domain')
+            ];
+
+            echo json_encode($responce);
+
+            return;
+            
+        }
+
+        // $userData->paid
+        $earned = 0;
+
+        $linksData = self::partnerLinksData(intval($data['user_id']));
+
+        if (count($linksData) == 0) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('Something went wrong with links Data!', 'mxalfwp-domain')
+            ];
+
+            echo json_encode($responce);
+
+            return;
+        }
+
+        foreach ($linksData as $value) {
+            $earned += floatval($value->earned);
+        }
+
+        if (floatval($data['amount']) > $earned) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('You cannot top up more than ', 'mxalfwp-domain') . $earned
+            ];
+
+            echo json_encode($responce);
+
+            return;
+        }
+
+        // save changes
+        $updated = $inst->updateRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), [
+            'paid' => floatval($data['amount'])
+        ],
+        [
+            '%s'
+        ]);
+
+        if( $updated !== 1 ) {
+
+            $responce = [
+                'status' => 'failed',
+                'message' => __('Something went wrong. Paid amount not saved!', 'mxalfwp-domain') . $earned
+            ];
+
+            echo json_encode($responce);
+
+            return;
+
+        }
+
+        echo json_encode($responce);
+
+    }
+
+    public static function partnerLinksData($userId)
+    {
+
+        $inst = new MXALFWPMainAdminModel();
+
+        $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
+
+        return $linksData;
     }
 
     /*
@@ -62,33 +272,30 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     {
 
         // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die( '0' );
+        if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
 
-            $updated = update_option('mxalfwp_default_percent',floatval($_POST['percent']));
+            $updated = update_option('mxalfwp_default_percent', floatval($_POST['percent']));
 
             $responce = [
                 'status' => 'success',
                 'message' => __('Settings updated!', 'mxalfwp-domain')
             ];
 
-            if( ! $updated ) {
+            if (!$updated) {
 
                 $responce = [
                     'status' => 'failed',
                     'message' => __('Something went wrong! Did you make changes?', 'mxalfwp-domain')
                 ];
-
             }
 
             echo json_encode($responce);
-
         }
 
         wp_die();
-
     }
 
     /*
@@ -96,9 +303,9 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     */
     public static function prepareBulkActions()
     {
-        
+
         // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die( '0' );
+        if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
         if (wp_verify_nonce($_POST['nonce'], 'bulk-mxalfwp_plural')) {
@@ -108,21 +315,19 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
                 if (!current_user_can('edit_posts')) return;
 
-                self::actionDelete( $_POST['ids'] );
-                
-                return;
+                self::actionDelete($_POST['ids']);
 
+                return;
             }
-            
+
             // restore
             if ($_POST['bulk_action']  == 'restore') {
 
                 if (!current_user_can('edit_posts')) return;
 
-                self::actionRestore( $_POST['ids'] );
-                
-                return;
+                self::actionRestore($_POST['ids']);
 
+                return;
             }
 
             // move to trash
@@ -130,55 +335,49 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
                 if (!current_user_can('edit_posts')) return;
 
-                self::actionTrash( $_POST['ids'] );
-                
+                self::actionTrash($_POST['ids']);
+
                 return;
-
             }
-
         }
 
         wp_die();
-
     }
 
     /**
      * Handle bulk actions 
      */
     // Delete permanently
-    public static function actionDelete( $ids )
+    public static function actionDelete($ids)
     {
 
         foreach ($ids as $id) {
-            ( new self )->deletePermanently( $id );
+            (new self)->deletePermanently($id);
         }
 
         return;
-
     }
 
     // Restore
-    public static function actionRestore( $ids )
+    public static function actionRestore($ids)
     {
 
         foreach ($ids as $id) {
-            ( new self )->restoreItem( $id );
+            (new self)->restoreItem($id);
         }
 
         return;
-
     }
 
     // Move to Trash
-    public static function actionTrash( $ids )
+    public static function actionTrash($ids)
     {
 
         foreach ($ids as $id) {
-            ( new self )->moveToTrash( $id );
+            (new self)->moveToTrash($id);
         }
 
         return;
-
     }
 
     /*
@@ -188,38 +387,37 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     {
 
         // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die( '0' );
+        if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request')) {
 
             // Create item
-            $title = sanitize_text_field( $_POST['title'] );
-            $description = esc_html( $_POST['description'] );
+            $title = sanitize_text_field($_POST['title']);
+            $description = esc_html($_POST['description']);
 
             $data = [
                 'title' => $title,
                 'description' => $description,
             ];
 
-            self::createItem( $data );
+            self::createItem($data);
         }
 
         wp_die();
-
     }
 
     // Create item
-    public static function createItem( $data )
+    public static function createItem($data)
     {
 
         global $wpdb;
-        
+
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-        
+
         $created = $wpdb->insert(
-            
-            $tableName, 
+
+            $tableName,
             [
                 'title' => $data['title'],
                 'description' => $data['description'],
@@ -232,7 +430,6 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         );
 
         echo $created;
-
     }
 
     /*
@@ -242,15 +439,15 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     {
 
         // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die( '0' );
+        if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request')) {
 
             // Update data
-            $id = sanitize_text_field( $_POST['id'] );
-            $title = sanitize_text_field( $_POST['title'] );
-            $description = esc_html( $_POST['description'] );
+            $id = sanitize_text_field($_POST['id']);
+            $title = sanitize_text_field($_POST['title']);
+            $description = esc_html($_POST['description']);
 
             $data = [
                 'id'          => $id,
@@ -258,19 +455,18 @@ class MXALFWPMainAdminModel extends MXALFWPModel
                 'description' => $description,
             ];
 
-            self::updateDatabaseColumn( $data );
+            self::updateDatabaseColumn($data);
         }
 
         wp_die();
-
     }
 
     // Update item
-    public static function updateDatabaseColumn( $data )
+    public static function updateDatabaseColumn($data)
     {
 
         global $wpdb;
-        
+
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
         $wpdb->update(
@@ -289,18 +485,17 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             ]
 
         );
-
     }
 
     /*
     * Actions
     */
     // restore item
-    public function restoreItem( $id )
+    public function restoreItem($id)
     {
 
         global $wpdb;
-        
+
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
         $wpdb->update(
@@ -317,14 +512,13 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             ]
 
         );
-
     }
     // move to trash
-    public function moveToTrash( $id )
+    public function moveToTrash($id)
     {
 
         global $wpdb;
-        
+
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
         $wpdb->update(
@@ -341,11 +535,10 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             ]
 
         );
-
     }
 
     // delete permanently
-    public function deletePermanently( $id )
+    public function deletePermanently($id)
     {
 
         // global $wpdb;
@@ -363,5 +556,4 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         // );
 
     }
-
 }
