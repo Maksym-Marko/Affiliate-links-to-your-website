@@ -11,6 +11,7 @@ class MXALFWPBasisPluginClass
 
     private static $affiliateLinlksTableSlug = MXALFWP_TABLE_SLUG;
     private static $affiliateLinlksUsersTableSlug = MXALFWP_USERS_TABLE_SLUG;
+    private static $affiliateLinlksOrdersTableSlug = MXALFWP_ORDERS_TABLE_SLUG;
 
     public static function activate()
     {
@@ -23,6 +24,9 @@ class MXALFWPBasisPluginClass
 
         // create users table
         self::createUsersTable();
+
+        // create orders table
+        self::createOrdersTable();
 
     }
 
@@ -71,11 +75,8 @@ class MXALFWPBasisPluginClass
 
         $productTable->longtext('link_data', false, maybe_serialize($linkData));
 
-        // bought
-        $productTable->int('bought');
-
-        // earned
-        $productTable->varchar('earned', 10, true, '0');
+        // link key
+        $productTable->varchar('link_key', 18, true, 'Jdl85uWngsN405Dmrb');
 
        // percent
        $productTable->varchar('percent', 20, true, '0');
@@ -132,6 +133,46 @@ class MXALFWPBasisPluginClass
         // create table
         $tableCreated = $productTable->createTable();
         
+    }
+
+    public static function createOrdersTable()
+    {
+
+        // Create table
+        global $wpdb;
+
+        // Table name
+        $tableName    = $wpdb->prefix . self::$affiliateLinlksOrdersTableSlug;
+
+        $productTable = new MXALFWPCreateTable($tableName);
+
+        // order_id
+        $productTable->int('order_id');
+
+        // user_id
+        $productTable->int('user_id');
+
+        // link_id
+        $productTable->int('link_id');
+
+        // status
+        $productTable->varchar('status', 20, true, 'on_hold');
+
+        // amount
+        $productTable->varchar('amount', 10, true, '0');
+
+        // created
+        $productTable->datetime('created_at');
+
+        // updated
+        $productTable->datetime('updated_at');
+
+        // create "id" column as AUTO_INCREMENT
+        $productTable->create_columns();
+
+        // create table
+        $tableCreated = $productTable->createTable();
+
     }
 
     public static function deactivate()

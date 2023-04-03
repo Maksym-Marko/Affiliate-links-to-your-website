@@ -93,8 +93,9 @@ class MXALFWPPageViews extends WP_List_Table
     public function get_columns()
     {
         return [
-            'location' => __('Location', 'mxalfwp-domain'),
-            'date'     => __('Visit Date', 'mxalfwp-domain'),
+            'region' => __('Region', 'mxalfwp-domain'),
+            'city'   => __('City', 'mxalfwp-domain'),
+            'date'   => __('Visit Date', 'mxalfwp-domain'),
         ];
     }
 
@@ -103,9 +104,14 @@ class MXALFWPPageViews extends WP_List_Table
         do_action("manage_mxalfwp_page_views_custom_column", $columnName, $item);
     }
 
-    public function column_location($item)
+    public function column_region($item)
     {
-        echo $item['location'];
+        echo $item['region'];
+    }
+
+    public function column_city($item)
+    {
+        echo $item['city'];
     }
 
     public function column_date($item)

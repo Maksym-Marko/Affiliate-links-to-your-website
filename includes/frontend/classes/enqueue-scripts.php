@@ -32,7 +32,7 @@ class MXALFWPEnqueueScriptsFrontend
         // production version
         // wp_enqueue_script( 'mxalfwp_vue2', MXALFWP_PLUGIN_URL . 'assets/add/vue/vue-prod.js', [], MXALFWP_PLUGIN_VERSION, true );
 
-        wp_enqueue_script('mxalfwp_script', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/js/script.js', ['mxalfwp_vue2'], MXALFWP_PLUGIN_VERSION, true);
+        wp_enqueue_script('mxalfwp_script', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/js/script.js', ['mxalfwp_vue2'], MXALFWP_PLUGIN_VERSION, true);        
 
         wp_localize_script('mxalfwp_script', 'mxalfwp_frontend_localize', [
 
@@ -59,5 +59,7 @@ class MXALFWPEnqueueScriptsFrontend
             ]
 
         ]);
+
+        wp_enqueue_script('mxalfwp_script_data_saver', MXALFWP_PLUGIN_URL . 'includes/frontend/assets/js/data-saver.js', ['mxalfwp_script'], MXALFWP_PLUGIN_VERSION, true);
     }
 }

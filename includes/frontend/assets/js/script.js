@@ -68,7 +68,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
                             <th>
                                 <div class="mxalfwp_link_wrapper">
                                     <div class="mxalfwp_link_content">
-                                        {{link.link}}/?mxpartnerlink={{link.user_id}}
+                                        {{link.link}}/?mxpartnerlink={{link.link_key}}
                                     </div>
 
                                     <div
@@ -81,7 +81,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
                                         id="mxalfwp_copy_link"
                                         @click.prevent="copyLink"
                                         :data-index="link.id"
-                                        :data-link="link.link + '/?mxpartnerlink=' + link.user_id"
+                                        :data-link="link.link + '/?mxpartnerlink=' + link.link_key"
                                         v-if="copiedLink!==link.id"
                                         ></i>
                                         <i
@@ -164,22 +164,22 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 views(link_data) {
 
                     let views = 0;
-                    
+
                     for (const [key, value] of Object.entries(link_data.data)) {
                         for (const [_key, _value] of Object.entries(value)) {
-                            views+=1;
+                            views += 1;
                         }
                     }
 
                     return views;
-                    
+
                 },
                 pages(link_data) {
 
                     let pages = 0;
-                    
+
                     for (const [key, value] of Object.entries(link_data.data)) {
-                        pages+=1;
+                        pages += 1;
                     }
 
                     return pages;
@@ -225,7 +225,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 <form 
                     class="mxalfwp-generate-link-form"
                     @submit.prevent="generateLink"
-                    v-if="partnerstatus === 'active'"
+                    v-if="partnerstatus === 'active' || partnerstatus === '0'"
                 >
                 
                     <div>
@@ -439,30 +439,34 @@ if (document.getElementById('mxalfwp_cabinet')) {
                             str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
                         }
                     return str.join("&");
+                },
+                getInitialData() {
+
+                    // translation
+                    if (mxalfwp_frontend_localize.translation) {
+                        this.translation = mxalfwp_frontend_localize.translation
+                    }
+
+                    // ajax url
+                    if (mxalfwp_frontend_localize.ajax_url) {
+                        this.ajaxdata.ajax_url = mxalfwp_frontend_localize.ajax_url
+                    }
+
+                    // nonce
+                    if (mxalfwp_frontend_localize.nonce) {
+                        this.ajaxdata.nonce = mxalfwp_frontend_localize.nonce
+                    }
+
+                    // partner status
+                    if (mxalfwp_frontend_localize.partner_status) {
+                        this.partnerStatus = mxalfwp_frontend_localize.partner_status
+                    }
+
                 }
             },
             mounted() {
 
-                // translation
-                if (mxalfwp_frontend_localize.translation) {
-                    this.translation = mxalfwp_frontend_localize.translation
-                }
-
-                // ajax url
-                if (mxalfwp_frontend_localize.ajax_url) {
-                    this.ajaxdata.ajax_url = mxalfwp_frontend_localize.ajax_url
-                }
-
-                // nonce
-                if (mxalfwp_frontend_localize.nonce) {
-                    this.ajaxdata.nonce = mxalfwp_frontend_localize.nonce
-                }
-
-                // partner status
-                if (mxalfwp_frontend_localize.partner_status) {
-                    this.partnerStatus = mxalfwp_frontend_localize.partner_status
-                }
-                
+                this.getInitialData();
 
                 this.getCurrentUserLinks();
 

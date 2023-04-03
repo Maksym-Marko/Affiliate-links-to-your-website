@@ -1,18 +1,18 @@
 jQuery(document).ready(function ($) {
 
 	let mxalfwpSubmitKey = true;
-	
+
 	$('.mxalfwp-block-user-form').on('submit', function (e) {
 
 		e.preventDefault();
 
-		if( confirm( mxalfwp_admin_localize.translation.text_8 ) ) {
+		if (confirm(mxalfwp_admin_localize.translation.text_8)) {
 
 			if (!mxalfwpSubmitKey) return;
 
 			let userKey = $(this).find('.mxalfwp_user_key').val();
 			let userId = $(this).find('.mxalfwp_user_id').val();
-			let status = $(this).find('.mxalfwp_user_status').val();			
+			let status = $(this).find('.mxalfwp_user_status').val();
 
 			let data = {
 				'action': 'mxalfwp_block_partner',
@@ -20,27 +20,27 @@ jQuery(document).ready(function ($) {
 				'user_key': userKey,
 				'user_id': userId,
 				'status': status
-			};			
+			};
 
 			mxalfwpSubmitKey = false;
 
 			jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
-				
+
 				if (mxalfwpIsJSON(response)) {
-	
+
 					alert(JSON.parse(response).message);
-	
+
 				}
-	
+
 				mxalfwpSubmitKey = true;
 
 				location.reload();
-	
+
 			});
 
-		}		
+		}
 
-	} );
+	});
 
 	// Pay to a partner
 	$('.mxalfwp-payment-form').on('submit', function (e) {
@@ -117,82 +117,6 @@ jQuery(document).ready(function ($) {
 			}
 
 		}
-
-	});
-
-	// Create table item
-	$('#mxalfwp_form_create_table_item').on('submit', function (e) {
-
-		e.preventDefault();
-
-		var nonce = $(this).find('#mxalfwp_wpnonce').val();
-
-		var title = $('#mxalfwp_title').val();
-		var description = $('#mxalfwp_mx_description').val();
-
-		var data = {
-
-			'action': 'mxalfwp_create_item',
-			'nonce': nonce,
-			'title': title,
-			'description': description
-
-		};
-
-		if (title == '' || description == '') {
-
-			alert('Fill in all fields')
-
-			return;
-
-		}
-
-		jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
-
-			if (response === '1') {
-				window.location.href = mxalfwp_admin_localize.main_page
-			}
-			alert('Created!');
-
-		});
-
-	});
-
-	// Edit table item
-	$('#mxalfwp_form_update').on('submit', function (e) {
-
-		e.preventDefault();
-
-		var nonce = $(this).find('#mxalfwp_wpnonce').val();
-
-		var id = $('#mxalfwp_id').val();
-		var title = $('#mxalfwp_title').val();
-		var description = $('#mxalfwp_mx_description').val();
-
-		var data = {
-
-			'action': 'mxalfwp_update',
-			'nonce': nonce,
-			'id': id,
-			'title': title,
-			'description': description
-
-		};
-
-		if (id == '' || title == '' || description == '') {
-
-			alert('Fill in all fields')
-
-			return;
-
-		}
-
-		jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
-
-			// console.log( response );
-			alert('Updated!');
-
-		});
 
 	});
 

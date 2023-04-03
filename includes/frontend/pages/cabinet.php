@@ -14,6 +14,8 @@ $earned = mxalfwpPartnerEarned($userId);
 $bought = mxalfwpPartnerBought($userId);
 $paid   = mxalfwpPartnerPaid($userId);
 
+var_dump($_COOKIE['mxalfwpLinkIdentifier']);
+
 ?>
 
 <div class="mxalfwp_partner_cabinet">

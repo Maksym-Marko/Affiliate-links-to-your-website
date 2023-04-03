@@ -97,17 +97,17 @@ function mxalfwpPartnerEarned( $userId ) {
 
     $earned = 0;
 
-    $inst   = new MXALFWPModel();
+    // $inst   = new MXALFWPModel();
 
-    $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
+    // $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
 
-    if( count( $linksData ) == 0 ) {
-        return 0;
-    }
+    // if( count( $linksData ) == 0 ) {
+    //     return 0;
+    // }
 
-    foreach ($linksData as $value) {
-        $earned += floatval($value->earned);
-    }
+    // foreach ($linksData as $value) {
+    //     $earned += floatval($value->earned);
+    // }
 
     return $earned;
 
@@ -120,17 +120,17 @@ function mxalfwpPartnerBought( $userId ) {
 
     $bought = 0;
 
-    $inst =  new MXALFWPModel();
+    // $inst =  new MXALFWPModel();
 
-    $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
+    // $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
 
-    if( count( $linksData ) == 0 ) {
-        return 0;
-    }
+    // if( count( $linksData ) == 0 ) {
+    //     return 0;
+    // }
 
-    foreach ($linksData as $value) {
-        $bought += intval($value->bought);
-    }
+    // foreach ($linksData as $value) {
+    //     $bought += intval($value->bought);
+    // }
 
     return $bought;
 

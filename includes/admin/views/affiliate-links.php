@@ -19,6 +19,8 @@
             </div>
         </div>
     </div>
+
+    <?php do_action( 'mxalfwp_affiliate_links_before_table' ); ?>
     
     <div class="wrap">
 
@@ -27,5 +29,7 @@
         ?>
 
     </div>
+
+    <?php do_action( 'mxalfwp_affiliate_links_after_table' ); ?>
 
 </div>

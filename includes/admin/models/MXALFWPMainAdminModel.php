@@ -15,8 +15,6 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     public static function wpAjax()
     {
 
-        add_action('wp_ajax_mxalfwp_update', ['MXALFWPMainAdminModel', 'prepareUpdateDatabaseColumn'], 10, 1);
-        add_action('wp_ajax_mxalfwp_create_item', ['MXALFWPMainAdminModel', 'prepareItemCreation'], 10, 1);
         add_action('wp_ajax_mxalfwp_bulk_actions', ['MXALFWPMainAdminModel', 'prepareBulkActions'], 10);
 
         // Settings page
@@ -27,7 +25,6 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         // block a partner
         add_action('wp_ajax_mxalfwp_block_partner', ['MXALFWPMainAdminModel', 'prepareBlockPartner'], 10);
-
     }
 
     /*
@@ -46,7 +43,6 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         }
 
         wp_die();
-
     }
 
     public static function blockPartner($data)
@@ -80,7 +76,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         $status = 'active';
 
-        if( $userData->status == 'active' ) {
+        if ($userData->status == 'active') {
 
             $status = 'blocked';
 
@@ -88,18 +84,22 @@ class MXALFWPMainAdminModel extends MXALFWPModel
                 'status' => 'success',
                 'message' => __('The Partner Blocked!', 'mxalfwp-domain')
             ];
-
         }
 
         // save changes
-        $updated = $inst->updateRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), [
-            'status' => $status
-        ],
-        [
-            '%s'
-        ]);
+        $updated = $inst->updateRow(
+            MXALFWP_USERS_TABLE_SLUG,
+            'user_id',
+            intval($data['user_id']),
+            [
+                'status' => $status
+            ],
+            [
+                '%s'
+            ]
+        );
 
-        if( $updated !== 1 ) {
+        if ($updated !== 1) {
 
             $responce = [
                 'status' => 'failed',
@@ -109,31 +109,39 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             echo json_encode($responce);
 
             return;
-
         }
 
         $linksData = self::partnerLinksData(intval($data['user_id']));
 
         foreach ($linksData as $key => $value) {
-            if( $value->status == 'trash' ) {
-                $inst->updateRow(NULL, 'user_id', intval($data['user_id']), [
-                    'status' => 'active'
-                ],
-                [
-                    '%s'
-                ]);
+            if ($value->status == 'trash') {
+                $inst->updateRow(
+                    NULL,
+                    'user_id',
+                    intval($data['user_id']),
+                    [
+                        'status' => 'active'
+                    ],
+                    [
+                        '%s'
+                    ]
+                );
             } else {
-                $inst->updateRow(NULL, 'user_id', intval($data['user_id']), [
-                    'status' => 'trash'
-                ],
-                [
-                    '%s'
-                ]);
+                $inst->updateRow(
+                    NULL,
+                    'user_id',
+                    intval($data['user_id']),
+                    [
+                        'status' => 'trash'
+                    ],
+                    [
+                        '%s'
+                    ]
+                );
             }
         }
 
         echo json_encode($responce);
-
     }
 
     /*
@@ -157,11 +165,11 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     public static function payPartner($data)
     {
 
-        $inst = new MXALFWPMainAdminModel();
+        $inst     = new MXALFWPMainAdminModel();
 
-        $userKey = sanitize_text_field($data['user_key']);
+        $userKey  = sanitize_text_field($data['user_key']);
 
-        $and = "AND user_key = '$userKey'";
+        $and      = "AND user_key = '$userKey'";
 
         $userData = $inst->getRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), $and);
 
@@ -194,7 +202,6 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             echo json_encode($responce);
 
             return;
-            
         }
 
         // $userData->paid
@@ -231,14 +238,19 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         }
 
         // save changes
-        $updated = $inst->updateRow(MXALFWP_USERS_TABLE_SLUG, 'user_id', intval($data['user_id']), [
-            'paid' => floatval($data['amount'])
-        ],
-        [
-            '%s'
-        ]);
+        $updated = $inst->updateRow(
+            MXALFWP_USERS_TABLE_SLUG,
+            'user_id',
+            intval($data['user_id']),
+            [
+                'paid' => floatval($data['amount'])
+            ],
+            [
+                '%s'
+            ]
+        );
 
-        if( $updated !== 1 ) {
+        if ($updated !== 1) {
 
             $responce = [
                 'status' => 'failed',
@@ -248,16 +260,13 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             echo json_encode($responce);
 
             return;
-
         }
 
         echo json_encode($responce);
-
     }
 
     public static function partnerLinksData($userId)
     {
-
         $inst = new MXALFWPMainAdminModel();
 
         $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
@@ -381,113 +390,6 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     }
 
     /*
-    * Prepare item creation
-    */
-    public static function prepareItemCreation()
-    {
-
-        // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die('0');
-
-        // Checked or nonce match
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request')) {
-
-            // Create item
-            $title = sanitize_text_field($_POST['title']);
-            $description = esc_html($_POST['description']);
-
-            $data = [
-                'title' => $title,
-                'description' => $description,
-            ];
-
-            self::createItem($data);
-        }
-
-        wp_die();
-    }
-
-    // Create item
-    public static function createItem($data)
-    {
-
-        global $wpdb;
-
-        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-
-        $created = $wpdb->insert(
-
-            $tableName,
-            [
-                'title' => $data['title'],
-                'description' => $data['description'],
-            ],
-            [
-                '%s',
-                '%s',
-            ]
-
-        );
-
-        echo $created;
-    }
-
-    /*
-    * Prepare item updating
-    */
-    public static function prepareUpdateDatabaseColumn()
-    {
-
-        // Checked POST nonce is not empty
-        if (empty($_POST['nonce'])) wp_die('0');
-
-        // Checked or nonce match
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request')) {
-
-            // Update data
-            $id = sanitize_text_field($_POST['id']);
-            $title = sanitize_text_field($_POST['title']);
-            $description = esc_html($_POST['description']);
-
-            $data = [
-                'id'          => $id,
-                'title'       => $title,
-                'description' => $description,
-            ];
-
-            self::updateDatabaseColumn($data);
-        }
-
-        wp_die();
-    }
-
-    // Update item
-    public static function updateDatabaseColumn($data)
-    {
-
-        global $wpdb;
-
-        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-
-        $wpdb->update(
-
-            $tableName,
-            [
-                'title'       => $data['title'],
-                'description' => $data['description'],
-            ],
-            [
-                'id'          => $data['id']
-            ],
-            [
-                '%s',
-                '%s',
-            ]
-
-        );
-    }
-
-    /*
     * Actions
     */
     // restore item
@@ -541,19 +443,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
     public function deletePermanently($id)
     {
 
-        // global $wpdb;
-
-        // $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-
-        // $wpdb->delete( 
-        //     $tableName, 
-        //     [
-        //         'id' => $id
-        //     ], 
-        //     [ 
-        //         '%d'
-        //     ] 
-        // );
+        // ...
 
     }
 }

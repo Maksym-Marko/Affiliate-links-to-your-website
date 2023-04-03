@@ -64,7 +64,7 @@ class MXALFWPModel
     /**
     * get results from the database
     */
-    public function getResults( $table = NULL, $wherName = NULL, $wherValue = 1, $and = '' )
+    public function getResults( $table = NULL, $wherName = NULL, $wherValue = 1, $and = '', $order = 'ORDER BY id DESC', $mask = '%d' )
     {
 
         $tableName = $this->wpdb->prefix . $this->table;
@@ -77,7 +77,19 @@ class MXALFWPModel
 
         if ($wherName !== NULL) {
 
-            $results = $this->wpdb->get_results( "SELECT $this->fields FROM $tableName WHERE $wherName = $wherValue {$and}" );
+            $results = $this->wpdb->get_results( 
+
+                $this->wpdb->prepare(
+
+                    "SELECT $this->fields
+                        FROM $tableName
+                        WHERE $wherName=$mask {$and}
+                        {$order}",
+                    $wherValue
+
+                )
+
+            );
 
         } else {
 

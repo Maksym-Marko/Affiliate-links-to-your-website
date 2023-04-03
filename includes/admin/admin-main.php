@@ -9,7 +9,7 @@ class MXALFWPAdminMain
     // list of model names used in the plugin
     public $modelsCollection = [
         'MXALFWPMainAdminModel'
-    ];
+    ];    
 
     /*
     * Additional classes
@@ -38,6 +38,21 @@ class MXALFWPAdminMain
         mxalfwpRequireClassFileAdmin( 'links-table.php' );
         mxalfwpRequireClassFileAdmin( 'analytics-pages-table.php' );
         mxalfwpRequireClassFileAdmin( 'page-views-table.php' );
+
+    }
+
+    /*
+    * Integration
+    */
+    public function integration()
+    {
+
+        mxalfwpRequireClassFileAdmin( 'integration/abstract.php' );
+
+
+        // woocommerce
+        mxalfwpRequireClassFileAdmin( 'integration/woocommerce.php' );
+
 
     }
 
@@ -118,6 +133,9 @@ $adminClassInstance = new MXALFWPAdminMain();
 
 // include classes
 $adminClassInstance->additionalClasses();
+
+// integration
+$adminClassInstance->integration();
 
 // include models
 $adminClassInstance->modelsCollection();

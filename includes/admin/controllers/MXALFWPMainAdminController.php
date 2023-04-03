@@ -58,29 +58,14 @@ class MXALFWPMainAdminController extends MXALFWPController
     public function linksAnalytics()
     {
 
-        // delete action
-        // $deleteId = isset($_GET['delete']) ? trim(sanitize_text_field($_GET['delete'])) : false;
-
-        // if ($deleteId) {
-
-        //     if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'delete')) {
-
-        //         $this->modelInstance->deletePermanently($deleteId);
-        //     }
-
-        //     mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG . '&item_status=trash'));
-
-        //     return;
-        // }
-
         // restore action
-        $restore_id = isset($_GET['restore']) ? trim(sanitize_text_field($_GET['restore'])) : false;
+        $restoreId = isset($_GET['restore']) ? trim(sanitize_text_field($_GET['restore'])) : false;
 
-        if ($restore_id) {
+        if ($restoreId) {
 
             if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'restore')) {
 
-                $this->modelInstance->restoreItem($restore_id);
+                $this->modelInstance->restoreItem($restoreId);
             }
 
             mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG . '&item_status=trash'));
@@ -89,13 +74,13 @@ class MXALFWPMainAdminController extends MXALFWPController
         }
 
         // trash action
-        $trash_id = isset($_GET['trash']) ? trim(sanitize_text_field($_GET['trash'])) : false;
+        $trashId = isset($_GET['trash']) ? trim(sanitize_text_field($_GET['trash'])) : false;
 
-        if ($trash_id) {
+        if ($trashId) {
 
             if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'trash')) {
 
-                $this->modelInstance->moveToTrash($trash_id);
+                $this->modelInstance->moveToTrash($trashId);
             }
 
             mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG));
@@ -182,10 +167,10 @@ class MXALFWPMainAdminController extends MXALFWPController
             }
 
             // bought
-            $bought += $value->bought;
+            // $bought += $value->bought;
 
             // earned
-            $earned += floatval($value->earned);
+            // $earned += floatval($value->earned);
         }
 
         $activePages = count($activePagesArray);
@@ -206,10 +191,10 @@ class MXALFWPMainAdminController extends MXALFWPController
             }
 
             // bought
-            $bought += $value->bought;
+            // $bought += $value->bought;
 
             // earned
-            $earned += floatval($value->earned);
+            // $earned += floatval($value->earned);
         }
 
         $trashPages = count($trashPagesArray);

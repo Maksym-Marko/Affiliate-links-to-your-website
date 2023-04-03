@@ -11,10 +11,115 @@ class MXALFWPServer
         add_action('wp_ajax_mxalfwp_link_generate', ['MXALFWPServer', 'linkGenerate']);
 
         // Get current user's links
-        add_action('wp_ajax_mxalfwp_get_links', ['MXALFWPServer', 'get_links']);
+        add_action('wp_ajax_mxalfwp_get_links', ['MXALFWPServer', 'getLinks']);
+
+        // Save Affliliate link data (views, pages)
+        add_action('wp_ajax_mxalfwp_save_link_data', ['MXALFWPServer', 'saveLinkData']);
     }
 
-    public static function get_links()
+    /**
+     * save link data
+     */
+    public static function saveLinkData()
+    {
+
+        if (empty($_POST['nonce'])) wp_die();
+
+        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+
+            $url = strtolower(sanitize_url(rtrim(trim($_POST['url']), '//')));
+
+            $linkKey = sanitize_text_field($_POST['link_key']);
+
+            $inst = new MXALFWPMainAdminModel();
+
+            $and = "AND link_key = '$linkKey'";
+
+            $linkData = $inst->getRow(NULL, 1, 1, $and);
+
+            if ($linkData == NULL) {
+                echo  'restore';
+                wp_die();
+            }
+
+            // 
+            $linkTrackingData = maybe_unserialize($linkData->link_data);
+
+            if (!is_array($linkTrackingData)) return;
+
+            // set link_data
+            if (!isset($linkTrackingData['data'][$url])) {
+                $linkTrackingData['data'][$url] = [];
+            }
+
+            $publicIP = self::getUserIp(); //'31.14.75.11';
+            $json     = file_get_contents("http://ipinfo.io/$publicIP/geo");
+            $json     = json_decode($json, true);
+
+            $visitData = [
+                'region' => '',
+                'city'   => '',
+                'date'   => date('Y-m-d H:i:s')
+            ];
+
+            if (isset($json['region'])) {
+                $visitData['region'] = sanitize_text_field($json['region']);
+            }
+
+            if (isset($json['city'])) {
+                $visitData['city'] = sanitize_text_field($json['city']);
+            }
+
+            array_push($linkTrackingData['data'][$url], $visitData);
+
+            // serialize data
+            $serializedData = maybe_serialize($linkTrackingData);
+
+            $updated = $inst->updateRow(
+                NULL,
+                'link_key',
+                $linkKey,
+                [
+                    'link_data' => $serializedData
+                ],
+                [
+                    '%s'
+                ]
+            );
+
+            echo $updated;
+        }
+
+        wp_die();
+    }
+
+    public static function getUserIp()
+    {
+
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        } else if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else if (isset($_SERVER['HTTP_X_FORWARDED'])) {
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        } else if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        } else if (isset($_SERVER['HTTP_FORWARDED'])) {
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        } else if (isset($_SERVER['REMOTE_ADDR'])) {
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $ipaddress = 'UNKNOWN';
+        }
+
+        return $ipaddress;
+    }
+
+    /**
+     * Get Links for partner
+     */
+    public static function getLinks()
     {
 
         if (empty($_POST['nonce'])) wp_die();
@@ -23,27 +128,13 @@ class MXALFWPServer
 
             $userId = get_current_user_id();
 
-            global $wpdb;
+            $inst = new MXALFWPMainAdminModel();
 
-            $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
-
-            $results = $wpdb->get_results(
-
-                $wpdb->prepare(
-
-                    "SELECT id, link, link_data, user_id, earned, bought, percent, status 
-                        FROM $tableName                         
-                        WHERE user_id=%d
-                        ORDER BY id DESC",
-                    $userId
-
-                )
-
-            );
+            $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
 
             $improvedResult = [];
 
-            foreach ($results as $value) {
+            foreach ($linksData as $value) {
 
                 $tmp = $value;
 
@@ -51,9 +142,8 @@ class MXALFWPServer
 
                 array_push($improvedResult, $tmp);
             }
-            
-            echo json_encode( $improvedResult);
 
+            echo json_encode($improvedResult);
         }
 
         wp_die();
@@ -66,13 +156,15 @@ class MXALFWPServer
 
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
 
-            $url = sanitize_url(rtrim(trim($_POST['url']),'//'));
+            $url = strtok($_POST['url'], '?');
+
+            $url = strtolower(sanitize_url(rtrim(trim($url), '//')));
 
             global $wpdb;
 
             $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
-            $userId = get_current_user_id();            
+            $userId = get_current_user_id();
 
             $findUrl = $wpdb->get_row(
                 $wpdb->prepare(
@@ -98,8 +190,8 @@ class MXALFWPServer
                 ];
             } else {
 
-                $insertLink = self::insertLink( $url, $userId );
-                $insertUser = self::insertUser( $userId );
+                $insertLink = self::insertLink($url, $userId);
+                $insertUser = self::insertUser($userId);
 
                 if ($insertLink !== 1) {
 
@@ -116,7 +208,7 @@ class MXALFWPServer
         wp_die();
     }
 
-    public static function insertLink( $url, $userId )
+    public static function insertLink($url, $userId)
     {
 
         global $wpdb;
@@ -128,6 +220,8 @@ class MXALFWPServer
         // insert link
         $date = date('Y-m-d H:i:s');
 
+        $linkKey = wp_generate_password(18, false);
+
         return $wpdb->insert(
 
             $tableName,
@@ -135,6 +229,7 @@ class MXALFWPServer
             [
                 'link'       => $url,
                 'user_id'    => $userId,
+                'link_key'   => $linkKey,
                 'user_name'  => $user->data->display_name,
                 'percent'    => get_option('mxalfwp_default_percent'),
                 'created_at' => $date,
@@ -148,12 +243,13 @@ class MXALFWPServer
                 '%s',
                 '%s',
                 '%s',
+                '%s',
             ]
 
         );
     }
 
-    public static function insertUser( $userId )
+    public static function insertUser($userId)
     {
 
         global $wpdb;
@@ -170,12 +266,12 @@ class MXALFWPServer
             )
         );
 
-        if( $partner == NULL ) {
+        if ($partner == NULL) {
 
             // insert user
             $date = date('Y-m-d H:i:s');
 
-            $userKey = wp_generate_password( 18, false );
+            $userKey = wp_generate_password(18, false);
 
             return $wpdb->insert(
 
@@ -199,7 +295,5 @@ class MXALFWPServer
         }
 
         return false;
-
     }
-
 }

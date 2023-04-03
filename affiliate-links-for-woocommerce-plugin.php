@@ -68,6 +68,15 @@ if (!defined('MXALFWP_USERS_TABLE_SLUG')) {
 }
 
 /*
+* Define MXALFWP_ORDERS_TABLE_SLUG
+*/
+if (!defined('MXALFWP_ORDERS_TABLE_SLUG')) {
+
+	define( 'MXALFWP_ORDERS_TABLE_SLUG', 'mxalfwp_affiliate_orders' );
+
+}
+
+/*
 * Define MXALFWP_PLUGIN_ABS_PATH
 * 
 * E:\OpenServer\domains\my-domain.com\wp-content\plugins\affiliate-links-for-woocommerce-plugin/
@@ -84,7 +93,7 @@ if (!defined( 'MXALFWP_PLUGIN_ABS_PATH')) {
 if (!defined('MXALFWP_PLUGIN_VERSION')) {
 
 	// version
-	define( 'MXALFWP_PLUGIN_VERSION', '2.0' ); // Must be replaced before production on for example '1.0'
+	define( 'MXALFWP_PLUGIN_VERSION', time() ); // Must be replaced before production on for example '1.0'
 
 }
 
