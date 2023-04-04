@@ -131,6 +131,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                 <!-- List of my Affiliate Links -->
                 <h3>{{ translation.text_4 }}</h3>
+                <p>{{ translation.text_17 }}</p>
                 <table class="mxalfwp_table">
                 
                     <thead>

@@ -48,6 +48,9 @@ class MXALFWPServer
                 wp_die();
             }
 
+            // check if link is active
+            if($linkData->status !== 'active') return;
+
             // 
             $linkTrackingData = maybe_unserialize($linkData->link_data);
 

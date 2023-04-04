@@ -64,7 +64,7 @@
                     <?php echo __('Affiliate Link', 'mxalfwp-domain'); ?>
                 </h5>
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data->link  . '/?mxpartnerlink=' . $data->user_id; ?>
+                    <?php echo $data->link  . '/?mxpartnerlink=' . $data->link_key; ?>
                 </div>
             </div>
         </div>
@@ -161,7 +161,7 @@
                     <i class="fa fa-money" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Earned Amoun', 'mxalfwp-domain'); ?>
+                    <?php echo __('Earned Amount', 'mxalfwp-domain'); ?>
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">

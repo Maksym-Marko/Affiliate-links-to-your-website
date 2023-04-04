@@ -146,7 +146,7 @@
                     <i class="fa fa-money" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Earned Amoun', 'mxalfwp-domain'); ?>
+                    <?php echo __('Earned Amount', 'mxalfwp-domain'); ?>
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
@@ -170,6 +170,10 @@
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
                     <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . $data['earned']; ?>
+                    |
+                    <span class="mxalfwp-not-paid-amount">
+                        <?php echo number_format(floatval($data['earned']) - floatval($data['paid']),2); ?>
+                    </span>
                 </div>
 
                 <small><?php echo __('How much did the partner earn', 'mxalfwp-domain'); ?></small>
@@ -250,4 +254,5 @@
         </div>
 
     </div>
+
 </div>

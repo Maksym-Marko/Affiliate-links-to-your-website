@@ -335,3 +335,23 @@ function mxalfwpGetPartnerCompletedOrdersAmount($userId) {
     return number_format( $amount, 2 );
 
 }
+
+/*
+* Get Partner's Completed Orders Amount
+*/
+function mxalfwpGetOrderById($orderId) {
+
+    $inst =  new MXALFWPModel();
+
+    $orderData = $inst->getRow(MXALFWP_ORDERS_TABLE_SLUG, 'order_id', intval($orderId));
+
+    if ($orderData == NULL) {
+        return false;
+    }
+
+    return [
+        'user_id' => $orderData->user_id,
+        'link_id' => $orderData->link_id
+    ];
+
+}

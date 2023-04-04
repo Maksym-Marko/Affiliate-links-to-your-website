@@ -15,7 +15,33 @@ class MXALFWPIntegrationWoocommerce
             return;
         }
 
+        // orders status changes
         add_action('woocommerce_order_status_changed', [$this, 'manageOrders'], 10, 3);
+
+        // show data for admin
+		add_action( 'woocommerce_admin_order_data_after_order_details', [$this, 'displayPartnerInOrder'] );
+
+    }
+
+    public function displayPartnerInOrder($order)
+    { 
+
+        $orderData = mxalfwpGetOrderById($order->get_id());
+
+        if(!$orderData) return;
+
+        $user = get_user_by( 'id', $orderData['user_id'] );
+
+?>
+        <br>
+        <p class="form-field form-field-wide wc-affiliate-partner">
+
+            <?php echo __('Affiliate link by ', 'mxalfwp-domain'); ?>
+            <a href="<?php echo admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $orderData['user_id']); ?>" class="mxalfwp-common-link" target="_blank"><?php echo $user->display_name;?></a>
+
+        </p>
+
+<?php
     }
 
     public function woocommerceRequiredMessage()

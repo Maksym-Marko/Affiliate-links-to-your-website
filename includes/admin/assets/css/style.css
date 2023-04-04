@@ -36,3 +36,7 @@
 .mxalfwpmx_block_wrap .thickbox img {
     width: 200px;
 }
+.mxalfwp-not-paid-amount {
+    color: red;
+    opacity: 0.5;
+}

@@ -56,7 +56,8 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_13' => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
                 'text_14' => __('Visited pages', 'mxalfwp-domain'),                
                 'text_15' => __('You are blocked.', 'mxalfwp-domain'),
-                'text_16' => get_option('mxalfwp_default_currency_sign')             
+                'text_16' => get_option('mxalfwp_default_currency_sign'),
+                'text_17' => __('You may use these links on your website or social media account. When a user buys a product on our site, you get a percentage.', 'mxalfwp-domain'),
             ]
 
         ]);

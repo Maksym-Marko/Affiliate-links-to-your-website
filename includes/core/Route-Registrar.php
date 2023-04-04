@@ -34,7 +34,7 @@ class MXALFWPRouteRegistrar
         'menu_title' => 'Link Name',
         'capability' => 'manage_options',
         'menu_slug'  => MXALFWP_MAIN_MENU_SLUG,
-        'dashicons'  => 'dashicons-image-filter',
+        'dashicons'  => 'dashicons-share',
         'position'   => 111
     ];
 

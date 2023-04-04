@@ -2,6 +2,12 @@
 
     <h2><?php echo __('Please, Sign in to go to this page', 'mxalfwp-domain'); ?></h2>
 
+    <?php if (in_array('woocommerce/woocommerce.php', get_option('active_plugins'), true)) : ?>
+
+        <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>"><?php echo __('Login', 'mxalfwp-domain'); ?></a>
+
+    <?php endif; ?>
+
     <?php return; ?>
 
 <?php endif; ?>
@@ -17,6 +23,10 @@ $paid   = mxalfwpPartnerPaid($userId);
 ?>
 
 <div class="mxalfwp_partner_cabinet">
+
+    <p>
+        <?php echo __('Copy the URL of the page or product and paste it into the box below to create an affiliate link.', 'mxalfwp-domain');?>
+    </p>
 
     <div id="mxalfwp_cabinet">
 
@@ -96,7 +106,7 @@ $paid   = mxalfwpPartnerPaid($userId);
                     <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . $paid; ?>
                 </div>
 
-                <small><?php echo __('How much did you paid', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('How much did you earn', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
