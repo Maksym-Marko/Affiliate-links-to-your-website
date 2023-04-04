@@ -13,8 +13,12 @@ class MXALFWPServer
         // Get current user's links
         add_action('wp_ajax_mxalfwp_get_links', ['MXALFWPServer', 'getLinks']);
 
+        // Get current user's links conunt
+        add_action('wp_ajax_mxalfwp_get_links_count', ['MXALFWPServer', 'getLinksCount']);
+
         // Save Affliliate link data (views, pages)
         add_action('wp_ajax_mxalfwp_save_link_data', ['MXALFWPServer', 'saveLinkData']);
+        add_action('wp_ajax_nopriv_mxalfwp_save_link_data', ['MXALFWPServer', 'saveLinkData']);
     }
 
     /**
@@ -26,6 +30,8 @@ class MXALFWPServer
         if (empty($_POST['nonce'])) wp_die();
 
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+
+            $userId = get_current_user_id();
 
             $url = strtolower(sanitize_url(rtrim(trim($_POST['url']), '//')));
 
@@ -45,7 +51,11 @@ class MXALFWPServer
             // 
             $linkTrackingData = maybe_unserialize($linkData->link_data);
 
+            // if no data
             if (!is_array($linkTrackingData)) return;
+
+            // if link owner
+            if ($userId === intval($linkData->user_id)) return;
 
             // set link_data
             if (!isset($linkTrackingData['data'][$url])) {
@@ -117,6 +127,35 @@ class MXALFWPServer
     }
 
     /**
+     * Get Links count
+     */
+    public static function getLinksCount()
+    {
+
+        if (empty($_POST['nonce'])) wp_die();
+
+        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+
+            $inst   =  new MXALFWPModel();
+
+            $userId = get_current_user_id();
+
+            $and    = "AND user_id = $userId";
+
+            $count  = $inst->getVar(NULL, 'id', $and);
+
+            if ($count == NULL) {
+                echo $count;
+                wp_die();
+            }
+
+            echo $count;
+        }
+
+        wp_die();
+    }
+
+    /**
      * Get Links for partner
      */
     public static function getLinks()
@@ -126,11 +165,27 @@ class MXALFWPServer
 
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
 
-            $userId = get_current_user_id();
+            $userId      = get_current_user_id();
 
-            $inst = new MXALFWPMainAdminModel();
 
-            $linksData = $inst->getResults(NULL, 'user_id', intval($userId));
+            $offset      = intval($_POST['per_page']);
+            $currentPage = intval($_POST['current_page']);
+
+            $currentPage = ($currentPage * $offset) - $offset;
+
+            global $wpdb;
+
+            $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
+
+            $linksData = $wpdb->get_results(
+                "SELECT * FROM {$tableName} 
+                WHERE user_id = $userId " .
+                    $wpdb->prepare(
+                        "ORDER BY id DESC LIMIT %d, %d",
+                        $currentPage,
+                        $offset
+                    )
+            );
 
             $improvedResult = [];
 
@@ -139,6 +194,10 @@ class MXALFWPServer
                 $tmp = $value;
 
                 $tmp->link_data = maybe_unserialize($value->link_data);
+
+                $tmp->orders = mxalfwpPartnerCompletedOrdersPerLink($value->user_id, $value->id);
+
+                $tmp->earned = mxalfwpGetPartnerCompletedOrdersAmountPerLink($value->id);
 
                 array_push($improvedResult, $tmp);
             }

@@ -10,11 +10,9 @@
 
 $userId = get_current_user_id();
 
-$earned = mxalfwpPartnerEarned($userId);
-$bought = mxalfwpPartnerBought($userId);
+$earned = mxalfwpPartnerEarnedAmount($userId);
+$orders = mxalfwpPartnerAllCompetedOrders($userId);
 $paid   = mxalfwpPartnerPaid($userId);
-
-var_dump($_COOKIE['mxalfwpLinkIdentifier']);
 
 ?>
 
@@ -22,15 +20,11 @@ var_dump($_COOKIE['mxalfwpLinkIdentifier']);
 
     <div id="mxalfwp_cabinet">
 
-        <mxalfwp_c_form
-          :translation='translation'
-          :ajaxdata="ajaxdata"
-          :toquerystring="toQueryString"
-          :getcurrentuserlinks="getCurrentUserLinks"
-          :partnerstatus="partnerStatus"
-        ></mxalfwp_c_form>
+        <mxalfwp_c_form :translation='translation' :ajaxdata="ajaxdata" :toquerystring="toQueryString" :getcurrentuserlinks="getCurrentUserLinks" :partnerstatus="partnerStatus"></mxalfwp_c_form>
 
         <mxalfwp_c_table :translation='translation' :links='links'></mxalfwp_c_table>
+
+        <mxalfwp_c_pagination :count="linksCount" :perpage="perPage" :currentpage="currentPage" :pageloading="pageLoading" @mxalfwp-get-page="setPage"></mxalfwp_c_pagination>
 
     </div>
 
@@ -50,21 +44,21 @@ var_dump($_COOKIE['mxalfwpLinkIdentifier']);
     <!-- Section -->
     <div class="mxalfwp-row mxalfwp-justify-content-center mxalfwp-mt-15">
 
-        <!-- Bought -->
+        <!-- Orders -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Bought', 'mxalfwp-domain'); ?>
+                    <?php echo __('Orders', 'mxalfwp-domain'); ?>
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $bought; ?>
+                    <?php echo $orders; ?>
                 </div>
 
-                <small><?php echo __('How many products have been purchased through your affiliate links', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('How many orders have been made through your affiliate links', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
@@ -80,7 +74,7 @@ var_dump($_COOKIE['mxalfwpLinkIdentifier']);
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    $ <?php echo $earned; ?>
+                    <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . $earned; ?>
                 </div>
 
                 <small><?php echo __('How much did you earn', 'mxalfwp-domain'); ?></small>
@@ -99,7 +93,7 @@ var_dump($_COOKIE['mxalfwpLinkIdentifier']);
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    $ <?php echo $paid; ?>
+                    <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . $paid; ?>
                 </div>
 
                 <small><?php echo __('How much did you paid', 'mxalfwp-domain'); ?></small>

@@ -52,7 +52,7 @@
                     <a href="<?php echo admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $data->user_id); ?>" class="mxalfwp-common-link"><?php echo $data->user_name; ?></a>
                 </div>
             </div>
-        </div> 
+        </div>
 
         <!-- Affiliate Link -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
@@ -78,7 +78,7 @@
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
                     <?php echo __('Pages', 'mxalfwp-domain'); ?>
                 </h5>
-                
+
                 <div class="mxalfwp-counter mxalfwp-mb-15">
                     <?php echo count($link_data['data']); ?>
                 </div>
@@ -98,16 +98,16 @@
                     <?php echo __('Views', 'mxalfwp-domain'); ?>
                 </h5>
 
-                
-                <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php 
-                        $views = 0;
 
-                        foreach ($link_data['data'] as $key => $value) {
-                            $views += count( $value );
-                        }
-                
-                        echo $views;
+                <div class="mxalfwp-counter mxalfwp-mb-15">
+                    <?php
+                    $views = 0;
+
+                    foreach ($link_data['data'] as $key => $value) {
+                        $views += count($value);
+                    }
+
+                    echo $views;
                     ?>
                 </div>
 
@@ -116,40 +116,78 @@
             </div>
         </div>
 
-        <!-- Bought -->
+        <!-- All Orders -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Bought', 'mxalfwp-domain'); ?>
+                    <?php echo __('All Orders', 'mxalfwp-domain'); ?>
                 </h5>
-                
+
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data->bought; ?>
+                    <?php echo mxalfwpPartnerOrdersPerLink($data->user_id, $data->id); ?>
                 </div>
 
-                <small><?php echo __('How many products have been purchased through the current affiliate link', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('How many orders have been made through the current affiliate link', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
 
-        <!-- Earned -->
+        <!-- Completed Orders -->
+        <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
+            <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
+                <div class="mxalfwp-icon-box">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                </div>
+                <h5 class="mxalfwp-box-title mxalfwp-mt-15">
+                    <?php echo __('Completed Orders', 'mxalfwp-domain'); ?>
+                </h5>
+
+                <div class="mxalfwp-counter mxalfwp-mb-15">
+                    <?php echo mxalfwpPartnerCompletedOrdersPerLink($data->user_id, $data->id); ?>
+                </div>
+
+                <small><?php echo __('How many orders have been made through the current affiliate link', 'mxalfwp-domain'); ?></small>
+
+            </div>
+        </div>
+
+        <!-- Earned Amoun -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-money" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Earned', 'mxalfwp-domain'); ?>
+                    <?php echo __('Earned Amoun', 'mxalfwp-domain'); ?>
                 </h5>
-                
+
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data->earned; ?>
+                    <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . mxalfwpGetCompletedOrdersAmountPerLink($data->id); ?>
                 </div>
 
-                <small><?php echo __('How much did the partner earn', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('How much did the current link make money', 'mxalfwp-domain'); ?></small>
+
+            </div>
+        </div>
+
+        <!-- Earned by Partner -->
+        <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
+            <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
+                <div class="mxalfwp-icon-box">
+                    <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                </div>
+                <h5 class="mxalfwp-box-title mxalfwp-mt-15">
+                    <?php echo __('Earned by Partner', 'mxalfwp-domain'); ?>
+                </h5>
+
+                <div class="mxalfwp-counter mxalfwp-mb-15">
+                    <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . mxalfwpGetPartnerCompletedOrdersAmountPerLink($data->id); ?>
+                </div>
+
+                <small><?php echo __('How much did the partner earn using this link', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>

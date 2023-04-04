@@ -47,9 +47,6 @@ class MXALFWPAdminMain
     public function integration()
     {
 
-        mxalfwpRequireClassFileAdmin( 'integration/abstract.php' );
-
-
         // woocommerce
         mxalfwpRequireClassFileAdmin( 'integration/woocommerce.php' );
 

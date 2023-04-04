@@ -7,6 +7,113 @@ if (document.getElementById('mxalfwp_cabinet')) {
         /**
          * Components 
          * */
+        // pagination
+        Vue.component('mxalfwp_c_pagination', {
+            props: {
+                count: {
+                    type: Number,
+                    required: true
+                },
+                perpage: {
+                    type: Number,
+                    required: true
+                },
+                currentpage: {
+                    type: Number,
+                    required: true
+                },
+                pageloading: {
+                    type: Boolean,
+                    required: true
+                }
+            },
+            template: `
+            <div>
+                <ul 
+                    v-if="( count - perpage ) > 0"
+                    class="mxalfwp-pagination"
+                >
+                    <li 
+                        v-if="currentpage>1"
+                        class="mxalfwp-page-item"
+                    >
+                        <a 
+                            class="mxalfwp-page-link" 
+                            href="#"
+                            @click.prevent="getPage(currentpage-1)"
+                        >Previous</a>
+                    </li>
+
+                    <li 
+                        v-for="page in coutPages"
+                        :key="page"
+                        :class="[page === currentpage ? 'mxalfwp-active' : '']"
+                        class="mxalfwp-page-item"
+                    >
+                        <a 
+                            class="mxalfwp-page-link" href="#"
+                            v-if="page !== currentpage"
+                            @click.prevent="getPage(page)"
+                        >{{page}}</a>
+                        <span
+                            v-else
+                            class="mxalfwp-page-link"
+                        >
+                            {{page}}
+                            <span class="mxalfwp-sr-only">(current)</span>
+                        </span>
+
+                    </li>
+                        
+                    <li 
+                        v-if="(currentpage*perpage)<count"
+                        class="mxalfwp-page-item"
+                    >
+                        <a 
+                            class="mxalfwp-page-link" 
+                            href="#"
+                            @click.prevent="getPage(currentpage+1)"
+                        >Next</a>
+                    </li>
+                </ul>
+
+            </div>
+            `,
+            data() {
+                return {
+
+                }
+            },
+            methods: {
+                getPage(page) {
+
+                    this.$emit('mxalfwp-get-page', page)
+
+                    let el = document.getElementById('mxalfwp_cabinet')
+
+                    const y = el.getBoundingClientRect().top + window.scrollY;
+
+                    window.scroll({
+                        top: y,
+                        behavior: 'smooth'
+                    });
+
+                }
+            },
+            computed: {
+                coutPages() {
+
+                    let difference = this.count / this.perpage
+
+                    if (Number.isInteger(difference)) {
+                        return difference
+                    }
+
+                    return parseInt(difference) + 1
+                }
+            }
+        });
+
         // Table
         Vue.component('mxalfwp_c_table', {
             props: {
@@ -94,15 +201,13 @@ if (document.getElementById('mxalfwp_cabinet')) {
                             </th>
                             <td>{{pages(link.link_data)}}</td>
                             <td>{{views(link.link_data)}}</td>
-                            <td>{{link.bought}}</td>
-                            <td>$ {{link.earned}}</td>
+                            <td>{{link.orders}}</td>
+                            <td>{{ translation.text_16 }} {{link.earned}}</td> 
                             <td>{{link.percent}}</td>
                         </tr>
                 
                     </tbody>
                 </table>
-
-
             </div>
         `,
             data() {
@@ -278,7 +383,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
                     url: null,
                     errors: [],
                     attempt: false,
-                    disableButton: false
+                    disableButton: false,
                 }
             },
             methods: {
@@ -393,11 +498,50 @@ if (document.getElementById('mxalfwp_cabinet')) {
                 translation: {},
                 ajaxdata: {},
                 links: [],
+                partnerStatus: 'active',
+
+                // pagination
+                linksCount: 1,
                 perPage: 10,
-                page: 1,
-                partnerStatus: 'active'
+                currentPage: 1,
+                pageLoading: true
             },
             methods: {
+                setPage(page) {
+                    this.currentPage = page;
+                    this.pageLoading = true;
+                    this.getCurrentUserLinks();
+                },
+                getLinksCount() {
+
+                    const self = this;
+
+                    const xmlhttp = new XMLHttpRequest();
+
+                    xmlhttp.open('POST', this.ajaxdata.ajax_url);
+
+                    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+
+                    xmlhttp.onload = function () {
+
+                        if (this.status === 200) {
+
+                            self.linksCount = parseInt(this.response);
+
+                            self.pageLoading = false;
+
+                        }
+
+                    }
+
+                    const data = {
+                        action: 'mxalfwp_get_links_count',
+                        nonce: this.ajaxdata.nonce
+                    }
+
+                    xmlhttp.send(this.toQueryString(data));
+
+                },
                 getCurrentUserLinks() {
 
                     this.links = [];
@@ -414,9 +558,9 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                         if (this.status === 200) {
 
-                            const links = JSON.parse(this.response);
+                            self.links = JSON.parse(this.response);
 
-                            self.links = links;
+                            self.getLinksCount();
 
                         } else {
                             self.errors.push(translation.text_12);
@@ -426,7 +570,9 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                     const data = {
                         action: 'mxalfwp_get_links',
-                        nonce: this.ajaxdata.nonce
+                        nonce: this.ajaxdata.nonce,
+                        current_page: this.currentPage,
+                        per_page: this.perPage
                     }
 
                     xmlhttp.send(this.toQueryString(data));

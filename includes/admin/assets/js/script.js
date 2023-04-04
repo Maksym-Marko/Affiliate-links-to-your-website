@@ -153,6 +153,10 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 					type: Number,
 					required: true
 				},
+				currency: {
+					type: String,
+					required: true
+				},
 				savesettings: {
 					type: Function,
 					required: true
@@ -165,6 +169,7 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 			template: `
 			<form @submit.prevent="saveChanges">
 
+				<!-- fields -->
 				<div class="mxalfwp-row mxalfwp-justify-content-center mxalfwp-mt-15">
 		
 					<!-- <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
@@ -180,6 +185,7 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 						</div>
 					</div> -->
 			
+					<!-- percent -->
 					<div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
 						<div class="mxalfwp-white-box mxalfwp-analytics-info">
 							<h3 class="mxalfwp-box-title">
@@ -192,27 +198,50 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 									name="mxalfwp_default_percent"
 									class="mxalfwp-input"
 									v-model="default_percent"
-									:class="[errors.length>0 && attempt ? 'mxalfwp-input-error' : '']"
 								/>
 								<small>{{translation.text_3}}</small>
 							</div>
 
-							<!-- Errors -->
-							<ul
-								v-if="errors.length>0 && attempt"
-								class="mxalfwp-errors"
-							>
-								<li
-									v-for="(error, index) in errors"
-									:key="index"
-									class="mxalfwp-error"
-								>
-									{{ error }}
-								</li>
-							</ul>
+						</div>
+					</div>
+
+					<!-- currency sign -->
+					<div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
+						<div class="mxalfwp-white-box mxalfwp-analytics-info">
+							<h3 class="mxalfwp-box-title">
+								{{translation.text_9}}
+							</h3>
+							<div>
+								<input
+									type="text"
+									name="mxalfwp_default_currency_sign"
+									class="mxalfwp-input"
+									v-model="default_currency_sign"
+								/>
+								<small>{{translation.text_10}}</small>
+							</div>							
 
 						</div>
 					</div>
+
+				</div>
+
+				<!-- errors -->
+				<div class="mxalfwp-mt-15 mxalfwp-text-center">
+
+					<!-- Errors -->
+					<ul
+						v-if="errors.length>0 && attempt"
+						class="mxalfwp-errors"
+					>
+						<li
+							v-for="(error, index) in errors"
+							:key="index"
+							class="mxalfwp-error"
+						>
+							{{ error }}
+						</li>
+					</ul>
 
 				</div>
 
@@ -238,19 +267,26 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 			data() {
 				return {
 					default_percent: 0,
+					default_currency_sign: '$',
 					attempt: false,
 					errors: []
 				}
 			},
 			methods: {
-				isNumber() {
-					if (isNaN(this.default_percent)) {
+				isNumber(str) {
+					if (isNaN(str)) {
 						return false;
 					}
 					return true;
 				},
-				isInRange() {
-					if (this.default_percent > 99 || this.default_percent < 0.1) {
+				isInRange(num) {
+					if (num > 99 || num < 0.1) {
+						return false;
+					}
+					return true;
+				},
+				isInLength(str) {
+					if (str.length < 0 || str.length > 5) {
 						return false;
 					}
 					return true;
@@ -261,27 +297,39 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 
 					this.formChecking();
 
-					if (!this.isNumber()) {
+					if (!this.isNumber(this.default_percent)) {
 						return;
 					}
 
-					if (!this.isInRange()) {
+					if (!this.isInRange(this.default_percent)) {
 						return;
 					}
 
-					this.savesettings({ 'percent': this.default_percent });
+					if(!this.isInLength(this.default_currency_sign)) {
+						return;
+					}
+
+					this.savesettings({ 
+						'percent': this.default_percent,
+						'currency':this.default_currency_sign
+					});
 
 				},
 				formChecking() {
 					this.errors = [];
 
-					if (!this.isNumber()) {
+					if (!this.isNumber(this.default_percent)) {
 						this.errors.push(this.translation.text_5);
 					}
 
-					if (!this.isInRange()) {
+					if (!this.isInRange(this.default_percent)) {
 						this.errors.push(this.translation.text_6);
 					}
+
+					if(!this.isInLength(this.default_currency_sign)) {
+						this.errors.push(this.translation.text_11);
+					}
+
 				}
 			},
 			watch: {
@@ -289,7 +337,13 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 					this.formChecking();
 				},
 				percent() {
-					this.default_percent = this.percent
+					this.default_percent = this.percent;
+				},
+				default_currency_sign() {
+					this.formChecking();
+				},
+				currency() {
+					this.default_currency_sign = this.currency;
 				}
 			}
 		})
@@ -303,6 +357,7 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 				translation: {},
 				ajaxdata: {},
 				percent: 0,
+				currency: '$',
 				progress: false
 			},
 			methods: {
@@ -341,7 +396,8 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 					const data = {
 						action: 'mxalfwp_save_settings',
 						nonce: this.ajaxdata.nonce,
-						percent: obj.percent
+						percent: obj.percent,
+						currency: obj.currency
 					}
 
 					xmlhttp.send(this.toQueryString(data));
@@ -366,6 +422,11 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 				// get default percent
 				if (mxalfwp_admin_localize.percent) {
 					this.percent = parseFloat(mxalfwp_admin_localize.percent)
+				}
+
+				// get default currency sign
+				if (mxalfwp_admin_localize.currency) {
+					this.currency = mxalfwp_admin_localize.currency
 				}
 
 				// ajax url

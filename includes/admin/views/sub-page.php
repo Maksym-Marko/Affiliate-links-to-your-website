@@ -39,6 +39,7 @@
             :percent="percent"
             :savesettings="saveSettings"
             :progress="progress"
+            :currency="currency"
         ></mxalfwp_admin_settings_form>
     </div>
 

@@ -143,11 +143,8 @@ class MXALFWPMainAdminController extends MXALFWPController
         }
 
         $activeLinks = count($activeLinksData);
-        $trashLinks  = count($trashLinksData);
-
-        $bought = 0;
-        $earned = 0;
-
+        $trashLinks  = count($trashLinksData);        
+        
         // 
         $activePagesArray = [];
         $trashPagesArray  = [];
@@ -166,11 +163,6 @@ class MXALFWPMainAdminController extends MXALFWPController
                 }
             }
 
-            // bought
-            // $bought += $value->bought;
-
-            // earned
-            // $earned += floatval($value->earned);
         }
 
         $activePages = count($activePagesArray);
@@ -190,11 +182,6 @@ class MXALFWPMainAdminController extends MXALFWPController
                 }
             }
 
-            // bought
-            // $bought += $value->bought;
-
-            // earned
-            // $earned += floatval($value->earned);
         }
 
         $trashPages = count($trashPagesArray);
@@ -207,6 +194,9 @@ class MXALFWPMainAdminController extends MXALFWPController
         if( $userData !== NULL ) {
             $userKey = $userData->user_key;
         }
+
+        $orders = mxalfwpPartnerAllCompetedOrders($userLinkData->user_id);
+        $earned = mxalfwpPartnerEarnedAmount($userLinkData->user_id);
 
         $data = [
             // 'activeLinksData' => $activeLinksData,
@@ -224,7 +214,7 @@ class MXALFWPMainAdminController extends MXALFWPController
             'trashPages'     => $trashPages,
             'trashPageViews' => $trashPageViews,
 
-            'bought'         => $bought,
+            'orders'         => $orders,
             'earned'         => $earned,
             'paid'           => $userData->paid
         ];

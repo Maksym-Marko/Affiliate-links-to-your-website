@@ -156,7 +156,7 @@ class MXALFWPBasisPluginClass
         $productTable->int('link_id');
 
         // status
-        $productTable->varchar('status', 20, true, 'on_hold');
+        $productTable->varchar('status', 20, true, 'on-hold');
 
         // amount
         $productTable->varchar('amount', 10, true, '0');
@@ -187,8 +187,14 @@ class MXALFWPBasisPluginClass
     */
     public static function createOptionForActivation()
     {
+        // Set default percent
         if (!get_option('mxalfwp_default_percent')) {
             add_option('mxalfwp_default_percent', '5.0');
+        }
+
+        // Set default currency sign
+        if (!get_option('mxalfwp_default_currency_sign')) {
+            add_option('mxalfwp_default_currency_sign', '$');
         }
         // add_option('mxalfwp_flush_rewrite_rules', 'go_flush_rewrite_rules');
     }

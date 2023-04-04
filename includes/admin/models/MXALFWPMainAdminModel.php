@@ -204,9 +204,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             return;
         }
 
-        // $userData->paid
-        $earned = 0;
-
+        // 
         $linksData = self::partnerLinksData(intval($data['user_id']));
 
         if (count($linksData) == 0) {
@@ -221,9 +219,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
             return;
         }
 
-        foreach ($linksData as $value) {
-            $earned += floatval($value->earned);
-        }
+        $earned = mxalfwpPartnerEarnedAmount(intval($data['user_id']));
 
         if (floatval($data['amount']) > $earned) {
 
@@ -286,20 +282,13 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         // Checked or nonce match
         if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
 
-            $updated = update_option('mxalfwp_default_percent', floatval($_POST['percent']));
+            $updatedPercent = update_option('mxalfwp_default_percent', floatval($_POST['percent']));
+            $updatedCurrency = update_option('mxalfwp_default_currency_sign', sanitize_text_field($_POST['currency']));
 
             $responce = [
                 'status' => 'success',
                 'message' => __('Settings updated!', 'mxalfwp-domain')
             ];
-
-            if (!$updated) {
-
-                $responce = [
-                    'status' => 'failed',
-                    'message' => __('Something went wrong! Did you make changes?', 'mxalfwp-domain')
-                ];
-            }
 
             echo json_encode($responce);
         }

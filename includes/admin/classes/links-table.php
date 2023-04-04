@@ -102,18 +102,20 @@ class MXALFWPAffiliateLinks extends WP_List_Table
     {
 
         return [
-            'cb'          => '<input type="checkbox" />',
-            'id'          => __('ID', 'mxalfwp-domain'),
-            'user_id'     => __('User ID', 'mxalfwp-domain'),
-            'user_name'   => __('User Name', 'mxalfwp-domain'),
-            'link_data'   => __('Links Data', 'mxalfwp-domain'),
-            'link'        => __('Link', 'mxalfwp-domain'),
-            'pages'       => __('Pages', 'mxalfwp-domain'),
-            'views'       => __('Views', 'mxalfwp-domain'),
-            'bought'     => __('Bought', 'mxalfwp-domain'),
-            'earned'      => __('Earned', 'mxalfwp-domain'),
-            'status'      => __('Status', 'mxalfwp-domain'),
-            'created_at'  => __('Created', 'mxalfwp-domain'),
+            'cb'              => '<input type="checkbox" />',
+            'id'              => __('ID', 'mxalfwp-domain'),
+            'user_id'         => __('User ID', 'mxalfwp-domain'),
+            'user_name'       => __('User Name', 'mxalfwp-domain'),
+            'link_data'       => __('Links Data', 'mxalfwp-domain'),
+            'link'            => __('Link', 'mxalfwp-domain'),
+            'pages'           => __('Pages', 'mxalfwp-domain'),
+            'views'           => __('Views', 'mxalfwp-domain'),
+            'orders'          => __('Orders', 'mxalfwp-domain'),
+            'orders_competed' => __('Competed Orders', 'mxalfwp-domain'),
+            'earned_amount'   => __('Earned Amoun', 'mxalfwp-domain'),
+            'earned'          => __('Earned by Partner', 'mxalfwp-domain'),
+            'status'          => __('Status', 'mxalfwp-domain'),
+            'created_at'      => __('Created', 'mxalfwp-domain'),
         ];
     }
 
@@ -267,10 +269,25 @@ class MXALFWPAffiliateLinks extends WP_List_Table
         echo $views;
     }
 
-    public function column_bought($item)
+    public function column_orders($item)
     {
 
-        echo 'bought';
+        echo mxalfwpPartnerOrdersPerLink($item['user_id'], $item['id']);
+
+    }
+
+    public function column_orders_competed($item)
+    {
+
+        echo mxalfwpPartnerCompletedOrdersPerLink($item['user_id'], $item['id']);
+
+    }
+
+    public function column_earned_amount($item)
+    {
+
+        echo get_option('mxalfwp_default_currency_sign') . ' ' . mxalfwpGetCompletedOrdersAmountPerLink($item['id']);
+
     }
 
     public function column_link_data($item)
@@ -282,8 +299,8 @@ class MXALFWPAffiliateLinks extends WP_List_Table
 
     public function column_earned($item)
     {
-
-        echo 'earned';
+ 
+        echo get_option('mxalfwp_default_currency_sign') . ' ' . mxalfwpGetPartnerCompletedOrdersAmountPerLink($item['id']);
     }
 
     public function column_created_at($item)

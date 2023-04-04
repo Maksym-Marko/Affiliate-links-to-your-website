@@ -47,7 +47,7 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_4'  => __('My Links Data', 'mxalfwp-domain'),
                 'text_5'  => __('Link', 'mxalfwp-domain'),
                 'text_6'  => __('Views', 'mxalfwp-domain'),
-                'text_7'  => __('Bought', 'mxalfwp-domain'),
+                'text_7'  => __('Orders', 'mxalfwp-domain'),
                 'text_8'  => __('Earned', 'mxalfwp-domain'),
                 'text_9'  => __('Paid', 'mxalfwp-domain'),
                 'text_10' => __('You must use current website\'s pages to create affiliate link!', 'mxalfwp-domain'),
@@ -55,7 +55,8 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_12' => __('Server Error!', 'mxalfwp-domain'),
                 'text_13' => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
                 'text_14' => __('Visited pages', 'mxalfwp-domain'),                
-                'text_15' => __('You are blocked.', 'mxalfwp-domain'),                
+                'text_15' => __('You are blocked.', 'mxalfwp-domain'),
+                'text_16' => get_option('mxalfwp_default_currency_sign')             
             ]
 
         ]);

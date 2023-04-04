@@ -120,37 +120,56 @@
             </div>
         </div>
 
-        <!-- Bought -->
+        <!-- Orders -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Bought', 'mxalfwp-domain'); ?>
+                    <?php echo __('Orders', 'mxalfwp-domain'); ?>
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    <?php echo $data['bought']; ?>
+                    <?php echo $data['orders']; ?>
                 </div>
 
-                <small><?php echo __('How many products have been purchased through the affiliate links of this partner', 'mxalfwp-domain'); ?></small>
+                <small><?php echo __('How many orders have been made through the affiliate links of this partner', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>
 
-        <!-- Earned -->
+        <!-- Earned Amoun -->
         <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
             <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
                 <div class="mxalfwp-icon-box">
                     <i class="fa fa-money" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Earned', 'mxalfwp-domain'); ?>
+                    <?php echo __('Earned Amoun', 'mxalfwp-domain'); ?>
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
-                    $<?php echo $data['earned']; ?>
+                    <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . mxalfwpGetPartnerCompletedOrdersAmount($data['userData']['user_id']); ?>
+                </div>
+
+                <small><?php echo __('How much did the partner make money', 'mxalfwp-domain'); ?></small>
+
+            </div>
+        </div>
+
+        <!-- Earned by partner -->
+        <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
+            <div class="mxalfwp-white-box mxalfwp-analytics-info mxalfwp-text-center">
+                <div class="mxalfwp-icon-box">
+                    <i class="fa fa-money" aria-hidden="true"></i>
+                </div>
+                <h5 class="mxalfwp-box-title mxalfwp-mt-15">
+                    <?php echo __('Earned by partner', 'mxalfwp-domain'); ?>
+                </h5>
+
+                <div class="mxalfwp-counter mxalfwp-mb-15">
+                    <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . $data['earned']; ?>
                 </div>
 
                 <small><?php echo __('How much did the partner earn', 'mxalfwp-domain'); ?></small>
@@ -170,7 +189,7 @@
  
                 <form class="mxalfwp-counter mxalfwp-mb-15 mxalfwp-payment-form">
                     <div class="mxalfwp-payment-input">
-                        <label for="mxalfwp_payment_partner">$</label>
+                        <label for="mxalfwp_payment_partner"><?php echo get_option('mxalfwp_default_currency_sign'); ?></label>
                         <input type="number" id="mxalfwp_payment_partner" name="mxalfwp_payment_partner" step="0.01" value="<?php echo $data['paid']; ?>" />
                         <input type="hidden" class="mxalfwp_user_key" name="mxalfwp_user_key" value="<?php echo $data['userData']['user_key']; ?>" />
                         <input type="hidden" class="mxalfwp_user_id" name="mxalfwp_user_id" value="<?php echo $data['userData']['user_id']; ?>" />

@@ -40,6 +40,7 @@ class MXALFWPEnqueueScripts
             'nonce'      => wp_create_nonce('mxalfwp_nonce_request_admin'),
             'main_page'  => admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG),
             'percent'    => get_option( 'mxalfwp_default_percent' ),
+            'currency'   => get_option( 'mxalfwp_default_currency_sign' ),
 
             'translation' => [
                 'text_1'  => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
@@ -50,6 +51,9 @@ class MXALFWPEnqueueScripts
                 'text_6'  => __('Percent must be between 0.1 and 99.', 'mxalfwp-domain'),
                 'text_7'  => __('Server Error!', 'mxalfwp-domain'),
                 'text_8'  => __('Are you sure you want to manage this partner?', 'mxalfwp-domain'),
+                'text_9'  => __('Currency Sign', 'mxalfwp-domain'),
+                'text_10' => __('This sign will be displayed next to the amounts', 'mxalfwp-domain'),
+                'text_11'  => __('The currency sign must contain from 0 to 5 characters', 'mxalfwp-domain'),
             ]
 
         ]);
