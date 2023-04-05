@@ -8,7 +8,7 @@ const mxalfwp_links_tracker = {
         this.manageQuery();
         this.manageLocalStorage();
     },
-    linkIdentifier: function() {
+    linkIdentifier: function () {
         return this.getCookie('mxalfwpLinkIdentifier')
     },
     getUrlData: function () {
@@ -42,7 +42,7 @@ const mxalfwp_links_tracker = {
 
         // partner id
         // this.linkIdentifier = this.$_GET.mxpartnerlink;
-        
+
         this.setCookie('mxalfwpLinkIdentifier', this.$_GET.mxpartnerlink, 100)
 
         // don't check localStorage
@@ -59,7 +59,7 @@ const mxalfwp_links_tracker = {
         const searchItems = this.urlData.search.substr(1).split("&");
 
         // if no GET items
-        if (this.getCookie('mxalfwpLinkIdentifier')==='') return;
+        if (this.getCookie('mxalfwpLinkIdentifier') === '') return;
 
         this.maybeSaveData();
 
@@ -79,8 +79,7 @@ const mxalfwp_links_tracker = {
             if (this.status === 200) {
 
                 if (this.response === 'restore') {
-                    localStorage.removeItem('mxalfwpLinkIdentifier')
-                    
+                    self.setCookie('mxalfwpLinkIdentifier', null, -1)
                 }
 
             }
@@ -105,27 +104,27 @@ const mxalfwp_links_tracker = {
             }
         return str.join("&");
     },
-    setCookie: function(cname, cvalue, exdays) {
+    setCookie: function (cname, cvalue, exdays) {
         const d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
-        let expires = "expires="+ d.toUTCString();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
-    getCookie: function(cname) {
+    getCookie: function (cname) {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
         let ca = decodedCookie.split(';');
-        for(let i = 0; i <ca.length; i++) {
-          let c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
         }
         return "";
-      }
+    }
 };
 
 // 

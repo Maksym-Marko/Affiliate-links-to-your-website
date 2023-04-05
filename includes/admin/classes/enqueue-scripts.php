@@ -53,7 +53,7 @@ class MXALFWPEnqueueScripts
                 'text_8'  => __('Are you sure you want to manage this partner?', 'mxalfwp-domain'),
                 'text_9'  => __('Currency Sign', 'mxalfwp-domain'),
                 'text_10' => __('This sign will be displayed next to the amounts', 'mxalfwp-domain'),
-                'text_11'  => __('The currency sign must contain from 0 to 5 characters', 'mxalfwp-domain'),
+                'text_11'  => __('The currency sign must contain from 1 to 5 characters', 'mxalfwp-domain'),
             ]
 
         ]);

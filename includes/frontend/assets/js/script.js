@@ -153,12 +153,14 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                         <tr>
                             <td>
-                                <h2
+                                <span
                                     v-if="!loading"
-                                >No links yet.</h2>
-                                <h2
+                                    class="mxalfwp-loading-text"
+                                >No links yet.</span>
+                                <span
                                     v-else
-                                >Loading...</h2>
+                                    class="mxalfwp-loading-text"
+                                >Loading...</span>
                             </td>
                         </tr>
                         
@@ -328,6 +330,7 @@ if (document.getElementById('mxalfwp_cabinet')) {
 
                 <!-- Generate Affiliate Link -->
                 <h3>{{ translation.text_1 }}</h3>
+                <p>{{ translation.text_18 }}</p>
                 <form 
                     class="mxalfwp-generate-link-form"
                     @submit.prevent="generateLink"

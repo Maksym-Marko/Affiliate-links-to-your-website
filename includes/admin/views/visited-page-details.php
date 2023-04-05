@@ -31,7 +31,7 @@
     <div class="mxalfwp-row">
         <div class="mxalfwp-col-md-12">
             <h3 class="mxalfwp-page-title mxalfwp-mt-30">
-                <?php echo __('Page views details', 'mxalfwp-domain'); ?>
+                <?php echo __('Page visit details', 'mxalfwp-domain'); ?>
             </h3>
         </div>
     </div>

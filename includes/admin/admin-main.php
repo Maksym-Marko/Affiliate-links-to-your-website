@@ -100,10 +100,10 @@ class MXALFWPAdminMain
             // ], MXALFWP_CREATE_TABLE_ITEM_MENU );
 
         // sub menu item
-        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', '', [
+        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', 'NULL', [
             'page_title' => 'Settings',
             'menu_title' => 'Settings'
-        ], 'mxalfwp-setting' );
+        ], 'mxalfwp-affiliate-setting', true );
 
         // hide menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'visitedPageDetails', 'NULL', [
@@ -113,13 +113,7 @@ class MXALFWPAdminMain
         // hide menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'managePartner', 'NULL', [
             'page_title' => 'Partner',
-        ], 'mxalfwp-manage-partner' );        
-
-        // sub settings menu item
-        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'settingsMenuItemAction', 'NULL', [
-            'menu_title' => 'Settings Item',
-            'page_title' => 'Title of settings page'
-        ], 'settings_menu_item', true );
+        ], 'mxalfwp-manage-partner' );
 
     }
 

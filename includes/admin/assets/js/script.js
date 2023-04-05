@@ -55,7 +55,6 @@ jQuery(document).ready(function ($) {
 		let userKey = $(this).find('.mxalfwp_user_key').val();
 		let userId = $(this).find('.mxalfwp_user_id').val();
 
-
 		let data = {
 			'action': 'mxalfwp_pay_partner',
 			'nonce': mxalfwp_admin_localize.nonce,
@@ -71,6 +70,8 @@ jQuery(document).ready(function ($) {
 			if (mxalfwpIsJSON(response)) {
 
 				alert(JSON.parse(response).message);
+
+				location.reload();
 
 			}
 
@@ -109,8 +110,7 @@ jQuery(document).ready(function ($) {
 
 				jQuery.post(mxalfwp_admin_localize.ajax_url, data, function (response) {
 
-					location.reload()
-					// console.log(response)
+					location.reload();
 
 				});
 
@@ -286,7 +286,7 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 					return true;
 				},
 				isInLength(str) {
-					if (str.length < 0 || str.length > 5) {
+					if (str.length < 1 || str.length > 5) {
 						return false;
 					}
 					return true;

@@ -49,16 +49,13 @@ class MXALFWPCreateTable
     }
 
     // add longtext
-    public function longtext($columnName = 'text', $notNull = false, $default = NULL)
+    public function longtext($columnName = 'text', $notNull = false)
     {
 
         // not null
         $notNull = $notNull ? 'NOT NULL' : 'NULL';
 
-        // default
-        $default = $default !== NULL ? 'default \'' . $default . '\'' : '';
-
-        $sql     = "$columnName longtext $notNull $default";
+        $sql     = "$columnName longtext $notNull";
 
         array_push($this->columns, $sql);
     }

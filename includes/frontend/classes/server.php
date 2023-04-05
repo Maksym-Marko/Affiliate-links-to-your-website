@@ -284,6 +284,29 @@ class MXALFWPServer
 
         $linkKey = wp_generate_password(18, false);
 
+        $linkData = [
+            'data' => [
+                // 'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
+                //     [
+                //         'location' => 'Ukraine, Kyiv',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                //     [
+                //         'location' => 'Ukraine, Volyn',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                // ],
+                // 'http://affiliate-links-woocommerce.local/products/' => [
+                //     [
+                //         'location' => 'Ukraine, Kyiv',
+                //         'date'     => '0000-00-00 00:00:00'
+                //     ],
+                // ]
+            ]
+        ];        
+
+        $linkData = maybe_serialize($linkData);
+
         return $wpdb->insert(
 
             $tableName,
@@ -291,6 +314,7 @@ class MXALFWPServer
             [
                 'link'       => $url,
                 'user_id'    => $userId,
+                'link_data'  => $linkData,
                 'link_key'   => $linkKey,
                 'user_name'  => $user->data->display_name,
                 'percent'    => get_option('mxalfwp_default_percent'),

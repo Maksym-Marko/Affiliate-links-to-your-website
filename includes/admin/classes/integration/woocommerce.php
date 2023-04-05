@@ -46,8 +46,11 @@ class MXALFWPIntegrationWoocommerce
 
     public function woocommerceRequiredMessage()
     { ?>
-        <div class="mxalfwp-p20 mxalfwp-danger-box mxalfwp-analytics-info mxalfwp-text-center">
-            <h2 class="mxalfwp-page-title"><?php echo __('Please install and activeate WooCommerce plugin', 'mxalfwp-domain'); ?></h2>
+        <div class="mxalfwp-p20 mxalfwp-analytics-info mxalfwp-text-center">
+            <p class="notice notice-warning">
+                <?php echo __('WooCommerce plugin is not activated. You can still use "Affiliate Links Expert" plugin to creating affiliate links and tracking visit data. You cannot track the number of items purchased. To track the number of items purchased, use the WooCommerce plugin or integrate your payment methods with the "Affiliate Links Expert" plugin.', 'mxalfwp-domain'); ?>
+                <?php echo __('Contact', 'mxalfwp-domain'); ?> <a href="https://markomaksym.com.ua/" target="_blank">Maksym Marko</a> - <?php echo __('the plugin\'s creator, if you need help!', 'mxalfwp-domain'); ?>
+            </p>
         </div>
 <?php }
 

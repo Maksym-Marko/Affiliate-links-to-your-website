@@ -52,28 +52,7 @@ class MXALFWPBasisPluginClass
         $productTable->longtext('link');
 
         // links_data
-        $linkData = [
-            'data' => [
-                // 'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
-                //     [
-                //         'location' => 'Ukraine, Kyiv',
-                //         'date'     => '0000-00-00 00:00:00'
-                //     ],
-                //     [
-                //         'location' => 'Ukraine, Volyn',
-                //         'date'     => '0000-00-00 00:00:00'
-                //     ],
-                // ],
-                // 'http://affiliate-links-woocommerce.local/products/' => [
-                //     [
-                //         'location' => 'Ukraine, Kyiv',
-                //         'date'     => '0000-00-00 00:00:00'
-                //     ],
-                // ]
-            ]
-        ];
-
-        $productTable->longtext('link_data', false, maybe_serialize($linkData));
+        $productTable->longtext('link_data');
 
         // link key
         $productTable->varchar('link_key', 18, true, 'Jdl85uWngsN405Dmrb');

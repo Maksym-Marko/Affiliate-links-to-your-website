@@ -1,13 +1,23 @@
 <div class="mxalfwp-sub-page-text-wrap">
 
     <!--  -->
-    <div class="mxalfwp-page-breadcrumb mxalfwp-bg-white">
+    <div class="mxalfwp-page-breadcrumb mxalfwp-bg-white <?php echo $data['userData']['status'] == 'active' ? '' : 'mxalfwp-blocked-bg'; ?>">
         <div class="mxalfwp-row mxalfwp-align-items-center">
             <div class="mxalfwp-col-lg-3 mxalfwp-col-md-4 mxalfwp-col-sm-4 mxalfwp-col-xs-12">
                 <h4 class="mxalfwp-page-title">
                     <a href="<?php echo admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG); ?>" class="mxalfwp-common-link"><i class="fa fa-chevron-left" aria-hidden="true"></i> All links</a> |
 
                     <?php echo $data['userData']['user_name']; ?>
+
+                    <?php if($data['userData']['status'] !== 'active') : ?>
+
+                        <span class="mxalfwp-blocked">
+                            <i class="fa fa-ban" aria-hidden="true"></i>
+                            <?php echo __('user blocked', 'mxalfwp-domain'); ?>
+                        </span>
+
+                    <?php endif; ?>
+
                 </h4>
             </div>
             <div class="mxalfwp-col-lg-9 mxalfwp-col-sm-8 mxalfwp-col-md-8 mxalfwp-col-xs-12">
@@ -165,18 +175,19 @@
                     <i class="fa fa-money" aria-hidden="true"></i>
                 </div>
                 <h5 class="mxalfwp-box-title mxalfwp-mt-15">
-                    <?php echo __('Earned by partner', 'mxalfwp-domain'); ?>
+                    <?php echo __('Earned By Partner', 'mxalfwp-domain'); ?>
                 </h5>
 
                 <div class="mxalfwp-counter mxalfwp-mb-15">
                     <?php echo get_option('mxalfwp_default_currency_sign') . ' ' . $data['earned']; ?>
                     |
                     <span class="mxalfwp-not-paid-amount">
-                        <?php echo number_format(floatval($data['earned']) - floatval($data['paid']),2); ?>
+                        <?php echo number_format(floatval($data['earned']) - floatval($data['paid']),2); ?> *
                     </span>
                 </div>
 
                 <small><?php echo __('How much did the partner earn', 'mxalfwp-domain'); ?></small>
+                <small class="mxalfwp-not-paid-amount">* <?php echo __('Amount you owe your partner', 'mxalfwp-domain'); ?></small>
 
             </div>
         </div>

@@ -433,11 +433,11 @@ if (!function_exists('mxalfwpTableLayout')) {
 
         global $wpdb;
 
-        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
+        $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;        
 
         $isTable = $wpdb->get_var(
 
-            $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($tableName))
+            $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->esc_like($tableName))
 
         );
 

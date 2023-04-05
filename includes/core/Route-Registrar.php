@@ -213,7 +213,7 @@ class MXALFWPRouteRegistrar
 
             $settingsLink = '<a href="' . get_admin_url() . 'admin.php?page=' . $this->subMenuSlug . '">' . __( $this->properties['menu_title'], 'mxalfwp-domain' ) . '</a>'; // options-general.php
 
-            array_push( $links, $settingsLink );
+            array_unshift( $links, $settingsLink );
 
             return $links;
 

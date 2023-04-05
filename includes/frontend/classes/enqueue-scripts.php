@@ -58,6 +58,7 @@ class MXALFWPEnqueueScriptsFrontend
                 'text_15' => __('You are blocked.', 'mxalfwp-domain'),
                 'text_16' => get_option('mxalfwp_default_currency_sign'),
                 'text_17' => __('You may use these links on your website or social media account. When a user buys a product on our site, you get a percentage.', 'mxalfwp-domain'),
+                'text_18' => __('Copy the URL of the page or product and paste it into the box below to create an affiliate link.', 'mxalfwp-domain')
             ]
 
         ]);
