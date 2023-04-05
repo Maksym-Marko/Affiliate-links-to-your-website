@@ -117,3 +117,6 @@
 .mxalfwp-h2 {
     font-size: 30px;
 }
+.mxalfwp-input-wrap > * {
+    height: 50px !important;
+}

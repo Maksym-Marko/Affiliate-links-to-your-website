@@ -286,20 +286,23 @@ class MXALFWPServer
 
         $linkData = [
             'data' => [
-                // 'http://affiliate-links-woocommerce.local/product/hoodie-with-logo/' => [
+                // 'http://kider-toy-shop.toy' => [
                 //     [
-                //         'location' => 'Ukraine, Kyiv',
-                //         'date'     => '0000-00-00 00:00:00'
+                //         'region' => 'Ukraine',
+                //         'city' => 'Kyiv',
+                //         'date' => '2023-04-05 09:20:07'
                 //     ],
                 //     [
-                //         'location' => 'Ukraine, Volyn',
-                //         'date'     => '0000-00-00 00:00:00'
+                //         'region' => 'Ukraine',
+                //         'city' => 'Volyn',
+                //         'date' => '2023-03-05 08:21:07'
                 //     ],
                 // ],
-                // 'http://affiliate-links-woocommerce.local/products/' => [
+                // 'http://kider-toy-shop.toy' => [
                 //     [
-                //         'location' => 'Ukraine, Kyiv',
-                //         'date'     => '0000-00-00 00:00:00'
+                //         'region' => 'Ukraine',
+                //         'city' => 'Kyiv',
+                //         'date' => '2023-04-05 08:23:02'
                 //     ],
                 // ]
             ]
