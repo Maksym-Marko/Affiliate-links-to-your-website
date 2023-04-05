@@ -1,6 +1,6 @@
 === Affiliate Links Expert ===
 Contributors: markomaksym
-Tags: Affiliate marketing, Affiliate tracking, Commission rates, Social media sharing, User dashboard, Real-time reporting, Affiliate program management, Click tracking, Visit tracking
+Tags: Affiliate marketing, Affiliate tracking, Commission rates, Social media sharing, Real-time reporting, User dashboard, Affiliate program management, Click tracking, Visit tracking
 Requires at least: 5.3
 Tested up to: 6.1
 Stable tag: 2.0
@@ -52,6 +52,10 @@ Finally, <strong>Affiliate Links Expert</strong> is easy to install and use. You
 </p>
 
 <p>
+You must make payments to partners yourself. <strong>Affiliate Links Expert</strong> only allows you to set the amount you have already paid in the admin panel. You can contact your partner directly and receive payment details by email.
+</p>
+
+<p>
 In conclusion, <strong>Affiliate Links Expert</strong> is the ultimate Free Wordpress plugin for affiliate marketing. Whether you are a website owner or a user, you can easily manage your affiliate data and track your earnings.
 </p>
 
@@ -73,10 +77,11 @@ In conclusion, <strong>Affiliate Links Expert</strong> is the ultimate Free Word
 
 == Screenshots ==
 
-1. Set up affiliate link
-2. Insert a shortcode into a particular page
-3. The user can create his own affiliate link
-4. You can see who's created the affiliate link and helped you sell your product
+1. List of affiliate links. Admin panel
+2. Affiliate link analytics page
+3. Page visit details
+4. Partner page (admin panel)
+5. Partner cabinet with analytics
 
 == Changelog ==
 
@@ -84,4 +89,4 @@ In conclusion, <strong>Affiliate Links Expert</strong> is the ultimate Free Word
 * Improved functionality. Admin Dashboard. Partner Dashboard. Visit tracking. Payment tracking.
 
 = 1.0 =
-* Affiliate Links Expert
+* Affiliate Links Expert.

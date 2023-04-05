@@ -94,11 +94,6 @@ class MXALFWPAdminMain
                 'page_title' => 'Links Analytics',
             ], MXALFWP_SINGLE_TABLE_ITEM_MENU );
 
-            // // single table item
-            // MXALFWPRoute::get( 'MXALFWPMainAdminController', 'createTableItem', 'NULL', [
-            //     'page_title' => 'Create Table Item',
-            // ], MXALFWP_CREATE_TABLE_ITEM_MENU );
-
         // sub menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', 'NULL', [
             'page_title' => 'Settings',
