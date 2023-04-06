@@ -94,11 +94,17 @@ class MXALFWPAdminMain
                 'page_title' => 'Links Analytics',
             ], MXALFWP_SINGLE_TABLE_ITEM_MENU );
 
-        // sub menu item
+        // settings
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', 'NULL', [
             'page_title' => 'Settings',
             'menu_title' => 'Settings'
         ], 'mxalfwp-affiliate-setting', true );
+
+        // sub menu item
+        MXALFWPRoute::get( 'MXALFWPMainAdminController', 'submenu', '', [
+            'page_title' => 'Settings',
+            'menu_title' => 'Settings'
+        ], 'mxalfwp-affiliate-setting' );
 
         // hide menu item
         MXALFWPRoute::get( 'MXALFWPMainAdminController', 'visitedPageDetails', 'NULL', [

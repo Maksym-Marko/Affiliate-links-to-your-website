@@ -5,7 +5,7 @@ Plugin Name: Affiliate Links Expert
 Plugin URI: https://github.com/Maxim-us/wp-plugin-skeleton
 Description: As a website owner, you can easily manage all your affiliate data from the admin panel. Also it is useful for users who want to create affiliate links and share them through social media platforms or websites.
 Author: Marko Maksym
-Version: 2.0
+Version: 2.2
 Author URI: https://markomaksym.com.ua
 */
 
@@ -93,7 +93,7 @@ if (!defined( 'MXALFWP_PLUGIN_ABS_PATH')) {
 if (!defined('MXALFWP_PLUGIN_VERSION')) {
 
 	// version
-	define( 'MXALFWP_PLUGIN_VERSION', '2.0' ); // Must be replaced before production on for example '1.0'
+	define( 'MXALFWP_PLUGIN_VERSION', '2.2' ); // Must be replaced before production on for example '1.0'
 
 }
 

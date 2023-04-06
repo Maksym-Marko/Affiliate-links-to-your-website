@@ -216,7 +216,7 @@ class MXALFWPMainAdminController extends MXALFWPController
 
             'orders'         => $orders,
             'earned'         => $earned,
-            'paid'           => $userData->paid
+            'paid'           => number_format($userData->paid, 2)
         ];
 
         return new MXALFWPMxView('manage-partner', $data);

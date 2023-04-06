@@ -56,33 +56,32 @@ class MXALFWPIntegrationWoocommerce
 
     public function manageOrders($id, $previous_status, $next_status)
     {
-
-        // if no cookies
-        if (!isset($_COOKIE['mxalfwpLinkIdentifier'])) return;
-
-        // get affiliate link by identifier
+        
         $inst       = new MXALFWPMainAdminModel();
-
-        $linkKey    = sanitize_text_field($_COOKIE['mxalfwpLinkIdentifier']);
-
-        $and        = "AND link_key = '$linkKey' AND status = 'active'";
-
-        $linkData   = $inst->getRow(NULL, 1, 1, $and);
-
-        if ($linkData == NULL) return;
-
-        $orderWC    = wc_get_order($id);
-
-        $amount     = $orderWC->get_total();
 
         // looking for in orders table
         $orderData  = $inst->getRow(MXALFWP_ORDERS_TABLE_SLUG, 'order_id', intval($id));
-
+        
         // date
         $date = date('Y-m-d H:i:s');
 
-        // create
-        if ($orderData == NULL) {
+        // create order
+        if($orderData == NULL) {
+
+            // if no cookies
+            if (!isset($_COOKIE['mxalfwpLinkIdentifier'])) return;
+
+            $linkKey    = sanitize_text_field($_COOKIE['mxalfwpLinkIdentifier']);
+
+            $and        = "AND link_key = '$linkKey' AND status = 'active'";
+
+            $linkData   = $inst->getRow(NULL, 1, 1, $and);
+
+            if ($linkData == NULL) return;
+
+            $orderWC    = wc_get_order($id);
+
+            $amount     = $orderWC->get_total();
 
             $insert = $inst->insertRow(
                 MXALFWP_ORDERS_TABLE_SLUG,
@@ -105,8 +104,30 @@ class MXALFWPIntegrationWoocommerce
                     '%s',
                 ]
             );
-            return $insert;
-        } else {
+
+            return;
+
+        }
+
+        // update order
+        if($orderData !== NULL) {
+
+            // get link key by order id
+            $linkKey = mxalfwpGetLinkKeyByOrderId($id);
+
+            if (!$linkKey) return;
+
+            $linkKey    = sanitize_text_field($linkKey);
+
+            $and        = "AND link_key = '$linkKey' AND status = 'active'";
+
+            $linkData   = $inst->getRow(NULL, 1, 1, $and);
+
+            if ($linkData == NULL) return;
+
+            $orderWC    = wc_get_order($id);
+
+            $amount     = $orderWC->get_total();
 
             // update
             $updated = $inst->updateRow(
@@ -125,8 +146,12 @@ class MXALFWPIntegrationWoocommerce
                 ]
             );
 
-            return $updated;
+            return;
+
         }
+
+        return;
+
     }
 }
 

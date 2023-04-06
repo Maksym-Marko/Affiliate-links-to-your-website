@@ -1,9 +1,9 @@
 === Affiliate Links Expert ===
 Contributors: markomaksym
 Tags: Affiliate marketing, Affiliate tracking, Commission rates, Social media sharing, Real-time reporting, User dashboard, Affiliate program management, Click tracking, Visit tracking
-Requires at least: 5.3
-Tested up to: 6.1
-Stable tag: 2.0
+Requires at least: 5.5
+Tested up to: 6.2
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
     WPP Generator Version:        5.2
@@ -30,6 +30,8 @@ But <strong>Affiliate Links Expert</strong> is not just for website owners. It's
 <p>
 You can use <strong>Affiliate Links Expert</strong> without WooCommerce plugin to create affiliate links and tracking data about visits. However, you cannot track the number of items purchased without the WooCommerce plugin. To track the number of items purchased, use the WooCommerce plugin or integrate your payment methods with the <strong>Affiliate Links Expert</strong> plugin. For help with the integration, contact the creator of the plugin <a href="https://markomaksym.com.ua/" rel="ugc">Maksym Marko</a> or use your own developer.
 </p>
+
+<iframe width="600" height="320" src="https://www.youtube.com/embed/NosJPidyvkA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <p>
 Let's take a closer look at the features of <strong>Affiliate Links Expert</strong>.
@@ -84,6 +86,12 @@ In conclusion, <strong>Affiliate Links Expert</strong> is the ultimate Free Word
 5. Partner cabinet with analytics
 
 == Changelog ==
+
+= 2.2 =
+* Number format improved.
+
+= 2.1 =
+* Tested up to WP 6.2.
 
 = 2.0 =
 * Improved functionality. Admin Dashboard. Partner Dashboard. Visit tracking. Payment tracking.

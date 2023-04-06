@@ -4,7 +4,7 @@
 
     <?php if (in_array('woocommerce/woocommerce.php', get_option('active_plugins'), true)) : ?>
 
-        <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>"><?php echo __('Login', 'mxalfwp-domain'); ?></a>
+        <a href="<?php echo get_permalink(get_option('woocommerce_myaccount_page_id')); ?>"><?php echo __('Login', 'mxalfwp-domain'); ?></a>
 
     <?php endif; ?>
 

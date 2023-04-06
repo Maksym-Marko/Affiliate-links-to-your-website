@@ -218,7 +218,7 @@ function mxalfwpPartnerPaid($userId)
         return 0;
     }
 
-    return $linksData->paid;
+    return number_format($linksData->paid, 2);
 }
 
 /*
@@ -353,5 +353,46 @@ function mxalfwpGetOrderById($orderId) {
         'user_id' => $orderData->user_id,
         'link_id' => $orderData->link_id
     ];
+
+}
+
+/*
+* Get link row by id
+*/
+function mxalfwpGetLinkRowById($linkId) {
+
+    $inst =  new MXALFWPModel();
+
+    $linkData = $inst->getRow(NULL, 'id', intval($linkId));
+
+    if ($linkData == NULL) {
+        return false;
+    }
+
+    return $linkData;
+
+}
+
+/*
+* Get link_key by order id
+*/
+function mxalfwpGetLinkKeyByOrderId($orderId) {
+
+    $order = mxalfwpGetOrderById($orderId);
+
+    if( $order ) {
+
+        if(mxalfwpGetPartnerStatus($order['user_id']) == 'active') {
+
+            $linkData = mxalfwpGetLinkRowById($order['link_id']);
+
+            if($linkData) {
+                return $linkData->link_key;
+            }
+        }
+
+    }
+
+    return false;
 
 }
