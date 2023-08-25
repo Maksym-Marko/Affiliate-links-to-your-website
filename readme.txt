@@ -2,8 +2,8 @@
 Contributors: markomaksym
 Tags: Affiliate marketing, Affiliate tracking, Commission rates, Social media sharing, Real-time reporting, User dashboard, Affiliate program management, Click tracking, Visit tracking
 Requires at least: 5.5
-Tested up to: 6.2
-Stable tag: 2.2
+Tested up to: 6.3
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
     WPP Generator Version:        5.2
@@ -86,6 +86,9 @@ In conclusion, <strong>Affiliate Links Expert</strong> is the ultimate Free Word
 5. Partner cabinet with analytics
 
 == Changelog ==
+
+= 2.3 =
+* Tested up to WP 6.3.
 
 = 2.2 =
 * Number format improved.
