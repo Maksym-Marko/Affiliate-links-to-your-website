@@ -29,13 +29,13 @@ class MXALFWPServer
 
         if (empty($_POST['nonce'])) wp_die();
 
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_front')) {
 
             $userId = get_current_user_id();
 
-            $url = strtolower(sanitize_url(rtrim(trim($_POST['url']), '//')));
+            $url = isset($_POST['url']) ? strtolower( rtrim( trim( sanitize_url( wp_unslash( $_POST['url'] ) ) ), '//' ) ) : '';
 
-            $linkKey = sanitize_text_field($_POST['link_key']);
+            $linkKey = isset($_POST['link_key']) ? sanitize_text_field( wp_unslash( $_POST['link_key'] ) ) : '';
 
             $inst = new MXALFWPMainAdminModel();
 
@@ -72,7 +72,7 @@ class MXALFWPServer
             $visitData = [
                 'region' => '',
                 'city'   => '',
-                'date'   => date('Y-m-d H:i:s')
+                'date'   => gmdate('Y-m-d H:i:s')
             ];
 
             if (isset($json['region'])) {
@@ -100,7 +100,7 @@ class MXALFWPServer
                 ]
             );
 
-            echo $updated;
+            echo absint( $updated );
         }
 
         wp_die();
@@ -111,17 +111,17 @@ class MXALFWPServer
 
         $ipaddress = '';
         if (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+            $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
         } else if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
         } else if (isset($_SERVER['HTTP_X_FORWARDED'])) {
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+            $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED'] ) );
         } else if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
-            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+            $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] ) );
         } else if (isset($_SERVER['HTTP_FORWARDED'])) {
-            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+            $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED'] ) );
         } else if (isset($_SERVER['REMOTE_ADDR'])) {
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
+            $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
         } else {
             $ipaddress = 'UNKNOWN';
         }
@@ -137,7 +137,7 @@ class MXALFWPServer
 
         if (empty($_POST['nonce'])) wp_die();
 
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_front')) {
 
             $inst   =  new MXALFWPModel();
 
@@ -148,11 +148,11 @@ class MXALFWPServer
             $count  = $inst->getVar(NULL, 'id', $and);
 
             if ($count == NULL) {
-                echo $count;
+                echo absint( $count );
                 wp_die();
             }
 
-            echo $count;
+            echo absint( $count );
         }
 
         wp_die();
@@ -166,13 +166,12 @@ class MXALFWPServer
 
         if (empty($_POST['nonce'])) wp_die();
 
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_front')) {
 
             $userId      = get_current_user_id();
 
-
-            $offset      = intval($_POST['per_page']);
-            $currentPage = intval($_POST['current_page']);
+            $offset      = isset( $_POST['per_page'] ) ? intval( $_POST['per_page'] ) : 10;
+            $currentPage = isset( $_POST['current_page'] ) ? intval( $_POST['current_page'] ) : 1;
 
             $currentPage = ($currentPage * $offset) - $offset;
 
@@ -180,14 +179,15 @@ class MXALFWPServer
 
             $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $linksData = $wpdb->get_results(
-                "SELECT * FROM {$tableName} 
-                WHERE user_id = $userId " .
-                    $wpdb->prepare(
-                        "ORDER BY id DESC LIMIT %d, %d",
-                        $currentPage,
-                        $offset
-                    )
+                $wpdb->prepare(
+                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- tableName is prefix+constant
+                    "SELECT * FROM {$tableName} WHERE user_id = %d ORDER BY id DESC LIMIT %d, %d",
+                    $userId,
+                    $currentPage,
+                    $offset
+                )
             );
 
             $improvedResult = [];
@@ -216,11 +216,11 @@ class MXALFWPServer
 
         if (empty($_POST['nonce'])) wp_die();
 
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_front')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_front')) {
 
-            $url = strtok($_POST['url'], '?');
+            $url = isset( $_POST['url'] ) ? strtok( sanitize_url( wp_unslash( $_POST['url'] ) ), '?' ) : '';
 
-            $url = strtolower(sanitize_url(rtrim(trim($url), '//')));
+            $url = strtolower(rtrim(trim($url), '//'));
 
             global $wpdb;
 
@@ -228,10 +228,11 @@ class MXALFWPServer
 
             $userId = get_current_user_id();
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $tableName is prefix + internal constant, values bound via prepare()
             $findUrl = $wpdb->get_row(
                 $wpdb->prepare(
 
-                    "SELECT link FROM $tableName 
+                    "SELECT link FROM $tableName
                         WHERE link = %s
                         AND user_id = %s",
                     $url,
@@ -242,13 +243,13 @@ class MXALFWPServer
 
             $responce = [
                 'status' => 'success',
-                'message' => __('Link Created Successfully!', 'mxalfwp-domain')
+                'message' => __('Link Created Successfully!', 'affiliate-links-woocommerce')
             ];
 
             if ($findUrl !== NULL) {
                 $responce = [
                     'status' => 'failed',
-                    'message' => __('You\'ve already created an affiliate link for this page!', 'mxalfwp-domain')
+                    'message' => __('You\'ve already created an affiliate link for this page!', 'affiliate-links-woocommerce')
                 ];
             } else {
 
@@ -259,7 +260,7 @@ class MXALFWPServer
 
                     $responce = [
                         'status' => 'failed',
-                        'message' => __('Something went wrong!', 'mxalfwp-domain')
+                        'message' => __('Something went wrong!', 'affiliate-links-woocommerce')
                     ];
                 }
             }
@@ -280,7 +281,7 @@ class MXALFWPServer
         $user = get_user_by('ID', $userId);
 
         // insert link
-        $date = date('Y-m-d H:i:s');
+        $date = gmdate('Y-m-d H:i:s');
 
         $linkKey = wp_generate_password(18, false);
 
@@ -310,6 +311,7 @@ class MXALFWPServer
 
         $linkData = maybe_serialize($linkData);
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->insert() escapes values via the format array
         return $wpdb->insert(
 
             $tableName,
@@ -345,10 +347,11 @@ class MXALFWPServer
 
         $tableName = $wpdb->prefix . MXALFWP_USERS_TABLE_SLUG;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $tableName is prefix + internal constant, value bound via prepare()
         $partner = $wpdb->get_row(
             $wpdb->prepare(
 
-                "SELECT id FROM $tableName 
+                "SELECT id FROM $tableName
                     WHERE user_id = %d",
                 $userId
 
@@ -358,10 +361,11 @@ class MXALFWPServer
         if ($partner == NULL) {
 
             // insert user
-            $date = date('Y-m-d H:i:s');
+            $date = gmdate('Y-m-d H:i:s');
 
             $userKey = wp_generate_password(18, false);
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->insert() escapes values via the format array
             return $wpdb->insert(
 
                 $tableName,

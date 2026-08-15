@@ -41,24 +41,24 @@ class MXALFWPEnqueueScriptsFrontend
             'partner_status' => mxalfwpGetPartnerStatus( get_current_user_id() ),
 
             'translation' => [
-                'text_1'  => __('Generate Affiliate Link', 'mxalfwp-domain'),
-                'text_2'  => __('Page URL', 'mxalfwp-domain'),
-                'text_3'  => __('Generate Link', 'mxalfwp-domain'),
-                'text_4'  => __('My Links Data', 'mxalfwp-domain'),
-                'text_5'  => __('Link', 'mxalfwp-domain'),
-                'text_6'  => __('Views', 'mxalfwp-domain'),
-                'text_7'  => __('Orders', 'mxalfwp-domain'),
-                'text_8'  => __('Earned', 'mxalfwp-domain'),
-                'text_9'  => __('Paid', 'mxalfwp-domain'),
-                'text_10' => __('You must use current website\'s pages to create affiliate link!', 'mxalfwp-domain'),
-                'text_11' => __('URL Incorrect!', 'mxalfwp-domain'),
-                'text_12' => __('Server Error!', 'mxalfwp-domain'),
-                'text_13' => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
-                'text_14' => __('Visited pages', 'mxalfwp-domain'),                
-                'text_15' => __('You are blocked.', 'mxalfwp-domain'),
+                'text_1'  => __('Generate Affiliate Link', 'affiliate-links-woocommerce'),
+                'text_2'  => __('Page URL', 'affiliate-links-woocommerce'),
+                'text_3'  => __('Generate Link', 'affiliate-links-woocommerce'),
+                'text_4'  => __('My Links Data', 'affiliate-links-woocommerce'),
+                'text_5'  => __('Link', 'affiliate-links-woocommerce'),
+                'text_6'  => __('Views', 'affiliate-links-woocommerce'),
+                'text_7'  => __('Orders', 'affiliate-links-woocommerce'),
+                'text_8'  => __('Earned', 'affiliate-links-woocommerce'),
+                'text_9'  => __('Paid', 'affiliate-links-woocommerce'),
+                'text_10' => __('You must use current website\'s pages to create affiliate link!', 'affiliate-links-woocommerce'),
+                'text_11' => __('URL Incorrect!', 'affiliate-links-woocommerce'),
+                'text_12' => __('Server Error!', 'affiliate-links-woocommerce'),
+                'text_13' => __('Vue DO NOT activated!!!', 'affiliate-links-woocommerce'),
+                'text_14' => __('Visited pages', 'affiliate-links-woocommerce'),                
+                'text_15' => __('You are blocked.', 'affiliate-links-woocommerce'),
                 'text_16' => get_option('mxalfwp_default_currency_sign'),
-                'text_17' => __('You may use these links on your website or social media account. When a user buys a product on our site, you get a percentage.', 'mxalfwp-domain'),
-                'text_18' => __('Copy the URL of the page or product and paste it into the box below to create an affiliate link.', 'mxalfwp-domain')
+                'text_17' => __('You may use these links on your website or social media account. When a user buys a product on our site, you get a percentage.', 'affiliate-links-woocommerce'),
+                'text_18' => __('Copy the URL of the page or product and paste it into the box below to create an affiliate link.', 'affiliate-links-woocommerce')
             ]
 
         ]);

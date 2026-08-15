@@ -41,8 +41,8 @@ class MXALFWPLinkAnalytics extends WP_List_Table
             $offset = 0;
         }
 
-        // get data
-        $linkId = isset($_GET['mxalfwp-link-id']) ? trim(sanitize_text_field($_GET['mxalfwp-link-id'])) : 0;
+        // get data — mxalfwp-link-id is a read-only filter parameter (no state change)
+        $linkId = isset($_GET['mxalfwp-link-id']) ? absint( wp_unslash( $_GET['mxalfwp-link-id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         $data = [];
 
@@ -96,25 +96,25 @@ class MXALFWPLinkAnalytics extends WP_List_Table
     {
 
         return [
-            'page'     => __('Visited Page', 'mxalfwp-domain'),
-            'views'    => __('Views Number', 'mxalfwp-domain'),
-            'actions'  => __('Actions', 'mxalfwp-domain'),
+            'page'     => __('Visited Page', 'affiliate-links-woocommerce'),
+            'views'    => __('Views Number', 'affiliate-links-woocommerce'),
+            'actions'  => __('Actions', 'affiliate-links-woocommerce'),
         ];
     }
 
     public function column_default($item, $columnName)
     {
-        do_action("manage_mxalfwp_pages_custom_column", $columnName, $item);
+        do_action("manage_mxalfwp_pages_custom_column", $columnName, $item); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
     }
 
     public function column_page($item)
     {
-        echo $item['page'];
+        echo esc_html( $item['page'] );
     }
 
     public function column_views($item)
     {
-        echo count($item['views']);
+        echo absint( count($item['views']) );
     }
 
     public function column_actions($item)
@@ -122,7 +122,7 @@ class MXALFWPLinkAnalytics extends WP_List_Table
 
         $url = admin_url('admin.php?page=mxalfwp-visited-page-details'); ?>
 
-        <a href="<?php echo esc_url($url); ?>&mxalfwp-link-id=<?php echo $item['link_id']; ?>&mxalfwp-visited-page=<?php echo $item['page']; ?>">Details</a>
+        <a href="<?php echo esc_url( $url ); ?>&mxalfwp-link-id=<?php echo absint( $item['link_id'] ); ?>&mxalfwp-visited-page=<?php echo rawurlencode( $item['page'] ); ?>">Details</a>
 <?php
     }
 }

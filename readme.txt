@@ -1,9 +1,9 @@
 === Affiliate Links Expert ===
 Contributors: markomaksym
-Tags: Affiliate marketing, Affiliate tracking, Commission rates, Social media sharing, Real-time reporting, User dashboard, Affiliate program management, Click tracking, Visit tracking
-Requires at least: 5.5
-Tested up to: 6.3
-Stable tag: 2.3
+Tags: Affiliate marketing, Affiliate tracking, Commission rates, Click tracking, Visit tracking
+Requires at least: 6.0
+Tested up to: 7.1
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
     WPP Generator Version:        5.2
@@ -11,7 +11,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
     WPP Generator Author Website: https://markomaksym.com.ua/
     WPP Generator Video Guide:     https://www.youtube.com/watch?v=6PZbXBhxtN0&list=PLqb2a5jr0z4XRwroV3nA9nAe4596lPjxr
 
-As a website owner, you can easily manage all your affiliate data from the admin panel. Also it is useful for users who want to create affiliate links and share them through social media platforms or websites.
+Manage affiliate data from the admin panel. Users can create affiliate links, track page views, see commissions, and share links on social media.
 
 == Description ==
 
@@ -86,6 +86,9 @@ In conclusion, <strong>Affiliate Links Expert</strong> is the ultimate Free Word
 5. Partner cabinet with analytics
 
 == Changelog ==
+
+= 2.4 =
+* Tested up to WP 7.1.
 
 = 2.3 =
 * Tested up to WP 6.3.

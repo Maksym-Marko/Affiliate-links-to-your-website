@@ -43,17 +43,17 @@ class MXALFWPEnqueueScripts
             'currency'   => get_option( 'mxalfwp_default_currency_sign' ),
 
             'translation' => [
-                'text_1'  => __('Vue DO NOT activated!!!', 'mxalfwp-domain'),
-                'text_2'  => __('Percent Per Buy', 'mxalfwp-domain'),
-                'text_3'  => __('Your partner will get this percentage of the product price.', 'mxalfwp-domain'),
-                'text_4'  => __('Save', 'mxalfwp-domain'),
-                'text_5'  => __('Please enter a number.', 'mxalfwp-domain'),
-                'text_6'  => __('Percent must be between 0.1 and 99.', 'mxalfwp-domain'),
-                'text_7'  => __('Server Error!', 'mxalfwp-domain'),
-                'text_8'  => __('Are you sure you want to manage this partner?', 'mxalfwp-domain'),
-                'text_9'  => __('Currency Sign', 'mxalfwp-domain'),
-                'text_10' => __('This sign will be displayed next to the amounts', 'mxalfwp-domain'),
-                'text_11'  => __('The currency sign must contain from 1 to 5 characters', 'mxalfwp-domain'),
+                'text_1'  => __('Vue DO NOT activated!!!', 'affiliate-links-woocommerce'),
+                'text_2'  => __('Percent Per Buy', 'affiliate-links-woocommerce'),
+                'text_3'  => __('Your partner will get this percentage of the product price.', 'affiliate-links-woocommerce'),
+                'text_4'  => __('Save', 'affiliate-links-woocommerce'),
+                'text_5'  => __('Please enter a number.', 'affiliate-links-woocommerce'),
+                'text_6'  => __('Percent must be between 0.1 and 99.', 'affiliate-links-woocommerce'),
+                'text_7'  => __('Server Error!', 'affiliate-links-woocommerce'),
+                'text_8'  => __('Are you sure you want to manage this partner?', 'affiliate-links-woocommerce'),
+                'text_9'  => __('Currency Sign', 'affiliate-links-woocommerce'),
+                'text_10' => __('This sign will be displayed next to the amounts', 'affiliate-links-woocommerce'),
+                'text_11'  => __('The currency sign must contain from 1 to 5 characters', 'affiliate-links-woocommerce'),
             ]
 
         ]);

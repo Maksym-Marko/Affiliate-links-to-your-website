@@ -32,7 +32,7 @@ class MXALFWPFrontEndMain
 }
 
 // Initialize
-$initialize_frontend_class = new MXALFWPFrontEndMain();
+$mxalfwp_initialize_frontend_class = new MXALFWPFrontEndMain();
 
 // include classes
-$initialize_frontend_class->additionalClasses();
+$mxalfwp_initialize_frontend_class->additionalClasses();

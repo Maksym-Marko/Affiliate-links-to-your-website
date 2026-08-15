@@ -1,8 +1,10 @@
-<div class="mx-main-page-text-wrap">
-    
-    <h1><?php echo __( 'Create Table Item', 'mxalfwp-domain' ); ?></h1>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
-    <a href="<?php echo admin_url( 'admin.php?page=' . MXALFWP_MAIN_MENU_SLUG ); ?>">Go Back</a>
+<div class="mx-main-page-text-wrap">
+
+    <h1><?php echo esc_html__( 'Create Table Item', 'affiliate-links-woocommerce' ); ?></h1>
+
+    <a href="<?php echo esc_url( admin_url( 'admin.php?page=' . MXALFWP_MAIN_MENU_SLUG ) ); ?>">Go Back</a>
 
     <div class="mxalfwpmx_block_wrap">
 
@@ -21,7 +23,7 @@
             </div>
 
             <p class="mx-submit_button_wrap">
-                <input type="hidden" id="mxalfwp_wpnonce" name="mxalfwp_wpnonce" value="<?php echo wp_create_nonce('mxalfwp_nonce_request'); ?>" />
+                <input type="hidden" id="mxalfwp_wpnonce" name="mxalfwp_wpnonce" value="<?php echo esc_attr( wp_create_nonce('mxalfwp_nonce_request') ); ?>" />
                 <input class="button-primary" type="submit" name="mxalfwp_submit" value="Create" />
             </p>
 

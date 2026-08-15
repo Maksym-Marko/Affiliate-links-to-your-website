@@ -175,7 +175,7 @@ if (document.getElementById('mxalfwp_admin_settings')) {
 					<!-- <div class="mxalfwp-col-lg-4 mxalfwp-col-md-12">
 						<div class="mxalfwp-white-box mxalfwp-analytics-info">
 							<h3 class="mxalfwp-box-title">
-								<?php echo __('Percent Per Buy', 'mxalfwp-domain'); ?>
+								<?php echo __('Percent Per Buy', 'affiliate-links-woocommerce'); ?>
 							</h3>
 							<ul class="mxalfwp-list-inline mxalfwp-two-part mxalfwp-d-flex mxalfwp-align-items-center mxalfwp-mb-0">
 								<li class="mxalfwp-ms-auto">

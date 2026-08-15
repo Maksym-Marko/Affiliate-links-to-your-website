@@ -57,13 +57,13 @@ final class MXALFWPAffiliateLinksForWoocommercePluginWPPGenerator
 }
 
 // create an instance of final class
-$wppGenerator = new MXALFWPAffiliateLinksForWoocommercePluginWPPGenerator();
+$mxalfwp_wppGenerator = new MXALFWPAffiliateLinksForWoocommercePluginWPPGenerator();
 
 // run core files
-$wppGenerator->includeCore();
+$mxalfwp_wppGenerator->includeCore();
 
 // include admin parth
-$wppGenerator->includeAdminPath();
+$mxalfwp_wppGenerator->includeAdminPath();
 
 // include frontend parth
-$wppGenerator->includeFrontendPath();
+$mxalfwp_wppGenerator->includeFrontendPath();

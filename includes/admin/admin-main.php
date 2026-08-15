@@ -121,19 +121,19 @@ class MXALFWPAdminMain
 }
 
 // Initialize
-$adminClassInstance = new MXALFWPAdminMain();
+$mxalfwp_adminClassInstance = new MXALFWPAdminMain();
 
 // include classes
-$adminClassInstance->additionalClasses();
+$mxalfwp_adminClassInstance->additionalClasses();
 
 // integration
-$adminClassInstance->integration();
+$mxalfwp_adminClassInstance->integration();
 
 // include models
-$adminClassInstance->modelsCollection();
+$mxalfwp_adminClassInstance->modelsCollection();
 
 // ajax requests
-$adminClassInstance->registrationAjaxActions();
+$mxalfwp_adminClassInstance->registrationAjaxActions();
 
 // include controllers
-$adminClassInstance->routesCollection();
+$mxalfwp_adminClassInstance->routesCollection();

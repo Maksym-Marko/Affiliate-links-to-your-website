@@ -49,9 +49,11 @@ class MXALFWPModel
 
         if ($wherName !== NULL && $wherValue !== NULL) {
 
-            $where = "WHERE $wherName = $wherValue";
+            // $wherName is an internal column identifier; the value is bound via prepare().
+            $where = $this->wpdb->prepare( 'WHERE ' . esc_sql( $wherName ) . ' = %s', $wherValue ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- identifier escaped with esc_sql(), value bound via prepare()
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $tableName is prefix + internal constant, $this->fields is a fixed internal column list, $where is pre-escaped via prepare(), $and is built internally from cast integers
         $getRow = $this->wpdb->get_row("SELECT $this->fields FROM $tableName {$where} {$and}");
 
         return $getRow;
@@ -72,21 +74,24 @@ class MXALFWPModel
 
         if ($wherName !== NULL) {
 
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $tableName is prefix + internal constant, $this->fields/$order are fixed internal identifiers, $wherName is escaped with esc_sql(), the value is bound via prepare() using the internal $mask placeholder, $and is built internally from cast integers
             $results = $this->wpdb->get_results(
 
                 $this->wpdb->prepare(
 
                     "SELECT $this->fields
                         FROM $tableName
-                        WHERE $wherName=$mask {$and}
+                        WHERE " . esc_sql( $wherName ) . "=$mask {$and}
                         {$order}",
                     $wherValue
 
                 )
 
             );
+            // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter
         } else {
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $tableName is prefix + internal constant, $this->fields is a fixed internal column list
             $results = $this->wpdb->get_results("SELECT $this->fields FROM $tableName");
         }
 
@@ -161,6 +166,9 @@ class MXALFWPModel
             $tableName = $this->wpdb->prefix . $table;
         }
 
+        $countBy = esc_sql( $countBy );
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $tableName is prefix + internal constant, $countBy escaped with esc_sql(), $and is built internally from cast integers
         $count = $this->wpdb->get_var( "SELECT COUNT($countBy) FROM {$tableName} WHERE 1=1 {$and}");
 
         return $count;

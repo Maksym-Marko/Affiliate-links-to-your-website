@@ -24,7 +24,7 @@ class MXALFWPIntegrationWoocommerce
     }
 
     public function displayPartnerInOrder($order)
-    { 
+    {
 
         $orderData = mxalfwpGetOrderById($order->get_id());
 
@@ -36,8 +36,8 @@ class MXALFWPIntegrationWoocommerce
         <br>
         <p class="form-field form-field-wide wc-affiliate-partner">
 
-            <?php echo __('Affiliate link by ', 'mxalfwp-domain'); ?>
-            <a href="<?php echo admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $orderData['user_id']); ?>" class="mxalfwp-common-link" target="_blank"><?php echo $user->display_name;?></a>
+            <?php echo esc_html__('Affiliate link by ', 'affiliate-links-woocommerce'); ?>
+            <a href="<?php echo esc_url( admin_url('admin.php?page=mxalfwp-manage-partner&user_id=' . $orderData['user_id']) ); ?>" class="mxalfwp-common-link" target="_blank"><?php echo esc_html( $user->display_name ); ?></a>
 
         </p>
 
@@ -48,22 +48,22 @@ class MXALFWPIntegrationWoocommerce
     { ?>
         <div class="mxalfwp-p20 mxalfwp-analytics-info mxalfwp-text-center">
             <p class="notice notice-warning">
-                <?php echo __('WooCommerce plugin is not activated. You can still use "Affiliate Links Expert" plugin to creating affiliate links and tracking visit data. You cannot track the number of items purchased. To track the number of items purchased, use the WooCommerce plugin or integrate your payment methods with the "Affiliate Links Expert" plugin.', 'mxalfwp-domain'); ?>
-                <?php echo __('Contact', 'mxalfwp-domain'); ?> <a href="https://markomaksym.com.ua/" target="_blank">Maksym Marko</a> - <?php echo __('the plugin\'s creator, if you need help!', 'mxalfwp-domain'); ?>
+                <?php echo esc_html__('WooCommerce plugin is not activated. You can still use "Affiliate Links Expert" plugin to creating affiliate links and tracking visit data. You cannot track the number of items purchased. To track the number of items purchased, use the WooCommerce plugin or integrate your payment methods with the "Affiliate Links Expert" plugin.', 'affiliate-links-woocommerce'); ?>
+                <?php echo esc_html__('Contact', 'affiliate-links-woocommerce'); ?> <a href="https://markomaksym.com.ua/" target="_blank">Maksym Marko</a> - <?php echo esc_html__('the plugin\'s creator, if you need help!', 'affiliate-links-woocommerce'); ?>
             </p>
         </div>
 <?php }
 
     public function manageOrders($id, $previous_status, $next_status)
     {
-        
+
         $inst       = new MXALFWPMainAdminModel();
 
         // looking for in orders table
         $orderData  = $inst->getRow(MXALFWP_ORDERS_TABLE_SLUG, 'order_id', intval($id));
-        
+
         // date
-        $date = date('Y-m-d H:i:s');
+        $date = gmdate('Y-m-d H:i:s');
 
         // create order
         if($orderData == NULL) {
@@ -71,7 +71,7 @@ class MXALFWPIntegrationWoocommerce
             // if no cookies
             if (!isset($_COOKIE['mxalfwpLinkIdentifier'])) return;
 
-            $linkKey    = sanitize_text_field($_COOKIE['mxalfwpLinkIdentifier']);
+            $linkKey    = sanitize_text_field( wp_unslash( $_COOKIE['mxalfwpLinkIdentifier'] ) );
 
             $and        = "AND link_key = '$linkKey' AND status = 'active'";
 

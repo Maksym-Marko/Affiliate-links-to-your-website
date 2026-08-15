@@ -166,8 +166,8 @@ class MXALFWPRouteRegistrar
     public function createAdminMainMenu()
     {
 
-        add_menu_page( __( $this->properties['page_title'], 'mxalfwp-domain' ),
-            __( $this->properties['menu_title'], 'mxalfwp-domain' ),
+        add_menu_page( $this->properties['page_title'],
+            $this->properties['menu_title'],
             $this->properties['capability'],
             $this->slug,
             [ $this, 'viewConnector' ],
@@ -183,8 +183,8 @@ class MXALFWPRouteRegistrar
         
         // create a sub menu
         add_submenu_page( $this->slug,
-            __( $this->properties['page_title'], 'mxalfwp-domain' ),
-            __( $this->properties['menu_title'], 'mxalfwp-domain' ),
+            $this->properties['page_title'],
+            $this->properties['menu_title'],
             $this->properties['capability'],
             $this->subMenuSlug,
             [ $this, 'viewConnector' ]
@@ -200,8 +200,8 @@ class MXALFWPRouteRegistrar
         
         // create a settings menu
         add_options_page(
-            __( $this->properties['page_title'], 'mxalfwp-domain' ),
-            __( $this->properties['menu_title'], 'mxalfwp-domain' ),
+            $this->properties['page_title'],
+            $this->properties['menu_title'],
             $this->properties['capability'],
             $this->subMenuSlug,
             [ $this, 'viewConnector' ]
@@ -211,7 +211,7 @@ class MXALFWPRouteRegistrar
         public function createSettingsLink( $links )
         {
 
-            $settingsLink = '<a href="' . get_admin_url() . 'admin.php?page=' . $this->subMenuSlug . '">' . __( $this->properties['menu_title'], 'mxalfwp-domain' ) . '</a>'; // options-general.php
+            $settingsLink = '<a href="' . esc_url( get_admin_url() . 'admin.php?page=' . $this->subMenuSlug ) . '">' . esc_html( $this->properties['menu_title'] ) . '</a>'; // options-general.php
 
             array_unshift( $links, $settingsLink );
 

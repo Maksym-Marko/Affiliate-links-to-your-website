@@ -29,9 +29,9 @@ class MXALFWPMainAdminController extends MXALFWPController
     public function visitedPageDetails()
     {
 
-        $linkId = isset($_GET['mxalfwp-link-id']) ? trim(sanitize_text_field($_GET['mxalfwp-link-id'])) : 0;
+        $linkId = isset($_GET['mxalfwp-link-id']) ? trim(sanitize_text_field( wp_unslash( $_GET['mxalfwp-link-id'] ) )) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-        $visitedPage = isset($_GET['mxalfwp-visited-page']) ? trim(sanitize_url($_GET['mxalfwp-visited-page'])) : 0;
+        $visitedPage = isset($_GET['mxalfwp-visited-page']) ? trim(sanitize_url( wp_unslash( $_GET['mxalfwp-visited-page'] ) )) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         $linkData = $this->modelInstance->getRow(NULL, 'id', intval($linkId));
 
@@ -59,11 +59,11 @@ class MXALFWPMainAdminController extends MXALFWPController
     {
 
         // restore action
-        $restoreId = isset($_GET['restore']) ? trim(sanitize_text_field($_GET['restore'])) : false;
+        $restoreId = isset($_GET['restore']) ? trim(sanitize_text_field( wp_unslash( $_GET['restore'] ) )) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         if ($restoreId) {
 
-            if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'restore')) {
+            if (isset($_GET['mxalfwp_nonce']) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['mxalfwp_nonce'] ) ), 'restore')) {
 
                 $this->modelInstance->restoreItem($restoreId);
             }
@@ -74,11 +74,11 @@ class MXALFWPMainAdminController extends MXALFWPController
         }
 
         // trash action
-        $trashId = isset($_GET['trash']) ? trim(sanitize_text_field($_GET['trash'])) : false;
+        $trashId = isset($_GET['trash']) ? trim(sanitize_text_field( wp_unslash( $_GET['trash'] ) )) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         if ($trashId) {
 
-            if (isset($_GET['mxalfwp_nonce']) || wp_verify_nonce($_GET['mxalfwp_nonce'], 'trash')) {
+            if (isset($_GET['mxalfwp_nonce']) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['mxalfwp_nonce'] ) ), 'trash')) {
 
                 $this->modelInstance->moveToTrash($trashId);
             }
@@ -89,7 +89,7 @@ class MXALFWPMainAdminController extends MXALFWPController
         }
 
         // edit action
-        $linkId = isset($_GET['mxalfwp-link-id']) ? trim(sanitize_text_field($_GET['mxalfwp-link-id'])) : 0;
+        $linkId = isset($_GET['mxalfwp-link-id']) ? trim(sanitize_text_field( wp_unslash( $_GET['mxalfwp-link-id'] ) )) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         $data = $this->modelInstance->getRow(NULL, 'id', intval($linkId));
 
@@ -97,7 +97,7 @@ class MXALFWPMainAdminController extends MXALFWPController
             if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == NULL) {
                 mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG));
             } else {
-                mxalfwpAdminRedirect($_SERVER['HTTP_REFERER']);
+                mxalfwpAdminRedirect( esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) );
             }
 
             return;
@@ -116,7 +116,7 @@ class MXALFWPMainAdminController extends MXALFWPController
     public function managePartner()
     {
 
-        $userId = isset($_GET['user_id']) ? trim(sanitize_text_field($_GET['user_id'])) : false;
+        $userId = isset($_GET['user_id']) ? trim(sanitize_text_field( wp_unslash( $_GET['user_id'] ) )) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         if (!$userId) {
             mxalfwpAdminRedirect(admin_url('admin.php?page=' . MXALFWP_MAIN_MENU_SLUG));

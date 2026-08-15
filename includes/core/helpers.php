@@ -32,37 +32,6 @@ function mxalfwpUseModel($model)
 }
 
 /*
-* Debugging
-*/
-function mxalfwpDebugToFile($content)
-{
-
-    $content = mxalfwpContentToString($content);
-
-    $path = MXALFWP_PLUGIN_ABS_PATH . 'mx-debug';
-
-    if (!file_exists($path)) {
-
-        mkdir($path, 0777, true);
-
-        file_put_contents($path . '/mx-debug.txt', $content);
-    } else {
-
-        file_put_contents($path . '/mx-debug.txt', $content);
-    }
-}
-// pretty debug text to the file
-function mxalfwpContentToString($content)
-{
-
-    ob_start();
-
-    var_dump($content);
-
-    return ob_get_clean();
-}
-
-/*
 * Manage posts columns. Add column to position
 */
 function mxalfwpInsertNewColumnToPosition(array $columns, int $position, array $newColumn)
@@ -84,7 +53,7 @@ function mxalfwpAdminRedirect($url)
     if (!$url) return;
 
     add_action('admin_footer', function () use ($url) {
-        echo "<script>window.location.href = '$url';</script>";
+        echo '<script>window.location.href = "' . esc_js( $url ) . '";</script>';
     });
 }
 

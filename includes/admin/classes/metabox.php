@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // Exit if accessed directly
 if (!defined('ABSPATH')) exit;
@@ -17,7 +17,7 @@ class MXALFWPMetaboxesGenerator
         $this->defaults = [
             'id'           => 'mx-extra-metabox-1',
             'post_types'   => 'page', // ['page', 'post']
-            'name'         => esc_html( 'Extra metabox 1', 'mxalfwp-domain' ),
+            'name'         => esc_html( 'Extra metabox 1', 'affiliate-links-woocommerce' ),
             'metabox_type' => 'input-text',
                 'options'  => []
         ];
@@ -44,7 +44,7 @@ class MXALFWPMetaboxesGenerator
             $i = 0;
 
             foreach ($this->args['options'] as $key => $value) {
-                
+
                 $this->args['options'][$key]['name'] = $this->args['post_meta_key'] . $i;
 
                 $i++;
@@ -75,7 +75,7 @@ class MXALFWPMetaboxesGenerator
     // save post meta
     public function saveMetaBox( $post_id )
     {
-        if (!isset($_POST[ $this->args['nonce_name'] ]) || !wp_verify_nonce(wp_unslash($_POST[$this->args['nonce_name']]), $this->args['nonce_action'])) {
+        if (!isset($_POST[ $this->args['nonce_name'] ]) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[$this->args['nonce_name']] ) ), $this->args['nonce_action'])) {
             return;
         }
 
@@ -95,23 +95,23 @@ class MXALFWPMetaboxesGenerator
             } elseif ($this->args['metabox_type'] == 'input-url') {
 
                 // url field
-                $value = esc_url_raw( $_POST[ $this->args['post_meta_key'] ] );
+                $value = esc_url_raw( wp_unslash( $_POST[ $this->args['post_meta_key'] ] ) );
 
 
             } elseif ($this->args['metabox_type'] == 'textarea') {
 
                 // textarea field
-                $value = sanitize_textarea_field( $_POST[ $this->args['post_meta_key'] ] );
+                $value = sanitize_textarea_field( wp_unslash( $_POST[ $this->args['post_meta_key'] ] ) );
 
             } elseif ($this->args['metabox_type'] == 'image') {
 
                 // image id
-                $value = sanitize_text_field( $_POST[ $this->args['post_meta_key'] ] );
+                $value = sanitize_text_field( wp_unslash( $_POST[ $this->args['post_meta_key'] ] ) );
 
             } elseif ($this->args['metabox_type'] == 'radio') {
 
                 // radio value
-                $value = sanitize_text_field( $_POST[ $this->args['post_meta_key'] ] );
+                $value = sanitize_text_field( wp_unslash( $_POST[ $this->args['post_meta_key'] ] ) );
 
             } elseif ($this->args['metabox_type'] == 'checkbox') {
 
@@ -121,7 +121,7 @@ class MXALFWPMetaboxesGenerator
                 foreach ($this->args['options'] as $key => $val) {
 
                     if (isset($_POST[ $val['name']])) {
-                        $_value = sanitize_text_field( $_POST[ $val['name'] ] );
+                        $_value = sanitize_text_field( wp_unslash( $_POST[ $val['name'] ] ) );
                     }
 
                     // save data
@@ -130,7 +130,7 @@ class MXALFWPMetaboxesGenerator
                 }
 
                 // checkbox marker
-                $value = sanitize_text_field( $_POST[ $this->args['post_meta_key'] ] );
+                $value = sanitize_text_field( wp_unslash( $_POST[ $this->args['post_meta_key'] ] ) );
 
             } else {
 
@@ -143,7 +143,7 @@ class MXALFWPMetaboxesGenerator
 
         // save data
         update_post_meta( $post_id, $this->args['post_meta_key'], $value );
-        
+
     }
 
     // metabox content
@@ -162,25 +162,25 @@ class MXALFWPMetaboxesGenerator
             <?php if ($this->args['metabox_type'] == 'input-email') : ?>
 
                 <!-- email field -->
-                <input 
+                <input
                     type="email" id="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
                     name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
-                    value="<?php echo $metaValue; ?>"
+                    value="<?php echo esc_attr( $metaValue ); ?>"
                 />
 
             <?php elseif ($this->args['metabox_type'] == 'input-url') : ?>
 
                 <!-- url field -->
-                <input 
+                <input
                     type="url" id="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
                     name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
-                    value="<?php echo $metaValue; ?>"
+                    value="<?php echo esc_attr( $metaValue ); ?>"
                 />
 
             <?php elseif ($this->args['metabox_type'] == 'textarea') : ?>
 
                 <!-- textarea field -->
-                <textarea name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>" id="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>" cols="30" rows="10"><?php echo $metaValue; ?></textarea>
+                <textarea name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>" id="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>" cols="30" rows="10"><?php echo esc_textarea( $metaValue ); ?></textarea>
 
             <?php elseif ($this->args['metabox_type'] == 'image') : ?>
 
@@ -208,12 +208,12 @@ class MXALFWPMetaboxesGenerator
                         id="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
                         type="hidden"
                         class="mxalfwp_upload_image_save"
-                        value="<?php echo $metaValue; ?>"
+                        value="<?php echo esc_attr( $metaValue ); ?>"
                     />
 
                     <!-- show an image -->
                     <img
-                        src="<?php echo $image_url !== '' ? $image_url : ''; ?>"
+                        src="<?php echo $image_url !== '' ? esc_url( $image_url ) : ''; ?>"
                         style="width: 300px;"
                         alt=""
                         class="mxalfwp_upload_image_show"
@@ -236,7 +236,7 @@ class MXALFWPMetaboxesGenerator
                     if (count($this->args['options']) == 0) {
                         echo '<p>You have to add some options to the "Options" array!</p>';
                     } else {
-                    
+
                         if (is_array($this->args['options'])) {
 
                             $i = 0;
@@ -245,12 +245,12 @@ class MXALFWPMetaboxesGenerator
 
                                 ?>
                                 <div>
-                                    <input 
+                                    <input
                                         type="radio"
                                         name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
-                                        id="<?php echo esc_attr( $this->args['post_meta_key'] ) . $i; ?>"
-                                        value="<?php echo $val['value']; ?>" 
-                                        
+                                        id="<?php echo esc_attr( $this->args['post_meta_key'] ) . absint( $i ); ?>"
+                                        value="<?php echo esc_attr( $val['value'] ); ?>"
+
                                         <?php if ($metaValue == '') : ?>
 
                                             <?php echo isset( $val['checked'] ) && $val['checked'] == true  ? 'checked' : ''; ?>
@@ -262,9 +262,9 @@ class MXALFWPMetaboxesGenerator
                                         <?php endif; ?>
 
                                     >
-                                    <label for="<?php echo esc_attr( $this->args['post_meta_key'] ) . $i; ?>"><?php echo $val['value']; ?></label>
+                                    <label for="<?php echo esc_attr( $this->args['post_meta_key'] ) . absint( $i ); ?>"><?php echo esc_html( $val['value'] ); ?></label>
                                 </div>
-                                
+
                                 <?php $i++;
 
                             }
@@ -281,7 +281,7 @@ class MXALFWPMetaboxesGenerator
                     if (count($this->args['options']) == 0) {
                         echo '<p>You have to add some options to the "Options" array!</p>';
                     } else {
-                    
+
                         if (is_array( $this->args['options'])) {
 
                             ?><input type="hidden" name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>" value="checkbox-type" /><?php
@@ -298,13 +298,13 @@ class MXALFWPMetaboxesGenerator
 
                                 ?>
                                 <div>
-                                    <input 
+                                    <input
                                         type="checkbox"
                                         name="<?php echo esc_attr( $val['name'] ); ?>"
                                         id="<?php echo esc_attr( $val['name'] ); ?>"
-                                        value="<?php echo $val['value']; ?>"
+                                        value="<?php echo esc_attr( $val['value'] ); ?>"
 
-                                        <?php 
+                                        <?php
                                         if (!$metaValue) {
 
                                             echo isset( $val['checked'] ) && $val['checked'] == true  ? 'checked' : '';
@@ -318,7 +318,7 @@ class MXALFWPMetaboxesGenerator
                                         ?>
 
                                     >
-                                    <label for="<?php echo esc_attr( $val['name'] ); ?>"><?php echo $val['value']; ?></label>
+                                    <label for="<?php echo esc_attr( $val['name'] ); ?>"><?php echo esc_html( $val['value'] ); ?></label>
                                 </div>
 
                                 <?php $i++;
@@ -329,14 +329,14 @@ class MXALFWPMetaboxesGenerator
 
                     }
                 ?>
-                
+
             <?php else : ?>
 
                 <!-- input text -->
-                <input 
+                <input
                     type="text" id="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
                     name="<?php echo esc_attr( $this->args['post_meta_key'] ); ?>"
-                    value="<?php echo $metaValue; ?>"
+                    value="<?php echo esc_attr( $metaValue ); ?>"
                 />
 
             <?php endif; ?>

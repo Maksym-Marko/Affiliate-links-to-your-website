@@ -37,7 +37,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_admin')) {
 
             self::blockPartner($_POST);
         }
@@ -58,7 +58,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         $responce = [
             'status' => 'success',
-            'message' => __('The Partner Unblocked!', 'mxalfwp-domain')
+            'message' => __('The Partner Unblocked!', 'affiliate-links-woocommerce')
         ];
 
         // user not found
@@ -66,7 +66,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('No partner found!', 'mxalfwp-domain')
+                'message' => __('No partner found!', 'affiliate-links-woocommerce')
             ];
 
             echo json_encode($responce);
@@ -82,7 +82,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'success',
-                'message' => __('The Partner Blocked!', 'mxalfwp-domain')
+                'message' => __('The Partner Blocked!', 'affiliate-links-woocommerce')
             ];
         }
 
@@ -103,7 +103,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('Something went wrong!', 'mxalfwp-domain')
+                'message' => __('Something went wrong!', 'affiliate-links-woocommerce')
             ];
 
             echo json_encode($responce);
@@ -154,7 +154,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_admin')) {
 
             self::payPartner($_POST);
         }
@@ -175,7 +175,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         $responce = [
             'status' => 'success',
-            'message' => __('Paid amount changed!', 'mxalfwp-domain')
+            'message' => __('Paid amount changed!', 'affiliate-links-woocommerce')
         ];
 
         // user not found
@@ -183,7 +183,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('No partner found!', 'mxalfwp-domain')
+                'message' => __('No partner found!', 'affiliate-links-woocommerce')
             ];
 
             echo json_encode($responce);
@@ -196,7 +196,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('The amount of the last payment is ', 'mxalfwp-domain') . floatval($userData->paid) . __('. You cannot pay the same amount or less!', 'mxalfwp-domain')
+                'message' => __('The amount of the last payment is ', 'affiliate-links-woocommerce') . floatval($userData->paid) . __('. You cannot pay the same amount or less!', 'affiliate-links-woocommerce')
             ];
 
             echo json_encode($responce);
@@ -211,7 +211,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('Something went wrong with links Data!', 'mxalfwp-domain')
+                'message' => __('Something went wrong with links Data!', 'affiliate-links-woocommerce')
             ];
 
             echo json_encode($responce);
@@ -225,7 +225,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('You cannot top up more than ', 'mxalfwp-domain') . $earned
+                'message' => __('You cannot top up more than ', 'affiliate-links-woocommerce') . $earned
             ];
 
             echo json_encode($responce);
@@ -250,7 +250,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
             $responce = [
                 'status' => 'failed',
-                'message' => __('Something went wrong. Paid amount not saved!', 'mxalfwp-domain') . $earned
+                'message' => __('Something went wrong. Paid amount not saved!', 'affiliate-links-woocommerce') . $earned
             ];
 
             echo json_encode($responce);
@@ -280,14 +280,14 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
-        if (wp_verify_nonce($_POST['nonce'], 'mxalfwp_nonce_request_admin')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'mxalfwp_nonce_request_admin')) {
 
-            $updatedPercent = update_option('mxalfwp_default_percent', floatval($_POST['percent']));
-            $updatedCurrency = update_option('mxalfwp_default_currency_sign', sanitize_text_field($_POST['currency']));
+            $updatedPercent = update_option('mxalfwp_default_percent', floatval( isset( $_POST['percent'] ) ? $_POST['percent'] : 0 ));
+            $updatedCurrency = update_option('mxalfwp_default_currency_sign', sanitize_text_field( wp_unslash( isset( $_POST['currency'] ) ? $_POST['currency'] : '' ) ));
 
             $responce = [
                 'status' => 'success',
-                'message' => __('Settings updated!', 'mxalfwp-domain')
+                'message' => __('Settings updated!', 'affiliate-links-woocommerce')
             ];
 
             echo json_encode($responce);
@@ -306,34 +306,37 @@ class MXALFWPMainAdminModel extends MXALFWPModel
         if (empty($_POST['nonce'])) wp_die('0');
 
         // Checked or nonce match
-        if (wp_verify_nonce($_POST['nonce'], 'bulk-mxalfwp_plural')) {
+        if (wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bulk-mxalfwp_plural')) {
+
+            $bulkAction = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
+            $ids = isset( $_POST['ids'] ) ? array_map( 'absint', wp_unslash( $_POST['ids'] ) ) : [];
 
             // delete
-            if ($_POST['bulk_action']  == 'delete') {
+            if ($bulkAction == 'delete') {
 
                 if (!current_user_can('edit_posts')) return;
 
-                self::actionDelete($_POST['ids']);
+                self::actionDelete($ids);
 
                 return;
             }
 
             // restore
-            if ($_POST['bulk_action']  == 'restore') {
+            if ($bulkAction == 'restore') {
 
                 if (!current_user_can('edit_posts')) return;
 
-                self::actionRestore($_POST['ids']);
+                self::actionRestore($ids);
 
                 return;
             }
 
             // move to trash
-            if ($_POST['bulk_action']  == 'trash') {
+            if ($bulkAction == 'trash') {
 
                 if (!current_user_can('edit_posts')) return;
 
-                self::actionTrash($_POST['ids']);
+                self::actionTrash($ids);
 
                 return;
             }
@@ -389,6 +392,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update() escapes values via the format array
         $wpdb->update(
 
             $tableName,
@@ -412,6 +416,7 @@ class MXALFWPMainAdminModel extends MXALFWPModel
 
         $tableName = $wpdb->prefix . MXALFWP_TABLE_SLUG;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update() escapes values via the format array
         $wpdb->update(
 
             $tableName,

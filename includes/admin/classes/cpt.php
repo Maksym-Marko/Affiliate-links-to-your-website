@@ -31,7 +31,7 @@ class MXALFWPCPTGenerator
     {
 
         if ($column === 'book_id') {
-            echo 'Book ID = ' . $post_id;
+            echo 'Book ID = ' . absint( $post_id );
         }
 
     }
@@ -106,7 +106,7 @@ class MXALFWPCPTGenerator
             [
                 'id'         => 'text-metabox',
                 'post_types' => 'mxalfwp_books',
-                'name'       => esc_html( 'Text field', 'mxalfwp-domain' )
+                'name'       => esc_html( 'Text field', 'affiliate-links-woocommerce' )
             ]
         );
 
@@ -115,7 +115,7 @@ class MXALFWPCPTGenerator
             [
                 'id'           => 'email-metabox',
                 'post_types'   => 'mxalfwp_books',
-                'name'         => esc_html( 'E-mail field', 'mxalfwp-domain' ),
+                'name'         => esc_html( 'E-mail field', 'affiliate-links-woocommerce' ),
                 'metabox_type' => 'input-email'
             ]
         );
@@ -125,7 +125,7 @@ class MXALFWPCPTGenerator
             [
                 'id'           => 'url-metabox',
                 'post_types'   => 'mxalfwp_books',
-                'name'         => esc_html( 'URL field', 'mxalfwp-domain' ),
+                'name'         => esc_html( 'URL field', 'affiliate-links-woocommerce' ),
                 'metabox_type' => 'input-url'
             ]
         );
@@ -135,7 +135,7 @@ class MXALFWPCPTGenerator
             [
                 'id'           => 'desc-metabox',
                 'post_types'   => 'mxalfwp_books',
-                'name'         => esc_html( 'Some Description', 'mxalfwp-domain' ),
+                'name'         => esc_html( 'Some Description', 'affiliate-links-woocommerce' ),
                 'metabox_type' => 'textarea'
             ]
         );
@@ -145,7 +145,7 @@ class MXALFWPCPTGenerator
             [
                 'id'           => 'checkboxes-metabox',
                 'post_types'   => 'mxalfwp_books',
-                'name'         => esc_html( 'Checkbox Buttons', 'mxalfwp-domain' ),
+                'name'         => esc_html( 'Checkbox Buttons', 'affiliate-links-woocommerce' ),
                 'metabox_type' => 'checkbox',
                 'options' => [
                     [
@@ -167,7 +167,7 @@ class MXALFWPCPTGenerator
             [
                 'id'           => 'radio-buttons-metabox',
                 'post_types'   => 'mxalfwp_books',
-                'name'         => esc_html( 'Radio Buttons', 'mxalfwp-domain' ),
+                'name'         => esc_html( 'Radio Buttons', 'affiliate-links-woocommerce' ),
                 'metabox_type' => 'radio',
                 'options' => [
                     [
@@ -189,7 +189,7 @@ class MXALFWPCPTGenerator
             [
                 'id'           => 'featured-image-metabox',
                 'post_types'   => 'mxalfwp_books',
-                'name'         => esc_html( 'Featured image', 'mxalfwp-domain' ),
+                'name'         => esc_html( 'Featured image', 'affiliate-links-woocommerce' ),
                 'metabox_type' => 'image'
             ]
         );

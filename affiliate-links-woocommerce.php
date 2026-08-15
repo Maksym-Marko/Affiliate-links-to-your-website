@@ -2,11 +2,13 @@
 
 /*
 Plugin Name: Affiliate Links Expert
-Plugin URI: https://github.com/Maxim-us/Affiliate-links-to-your-website
+Plugin URI: https://github.com/Maksym-Marko/Affiliate-links-to-your-website
 Description: As a website owner, you can easily manage all your affiliate data from the admin panel. Also it is useful for users who want to create affiliate links and share them through social media platforms or websites.
 Author: Maksym Marko
-Version: 2.3
+Version: 2.4
 Author URI: https://markomaksym.com.ua
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 // Exit if accessed directly
@@ -151,13 +153,4 @@ if (!class_exists('MXALFWPAffiliateLinksForWoocommercePlugin')) {
 	/*
 	* Translate plugin
 	*/
-	add_action( 'plugins_loaded', 'mxalfwp_translate' );
-
-	function mxalfwp_translate()
-	{
-
-		load_plugin_textdomain( 'mxalfwp-domain', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-	}
-
 }

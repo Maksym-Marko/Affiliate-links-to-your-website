@@ -122,9 +122,10 @@ class MXALFWPCreateTable
         if ($this->sqlContainer == NULL) return 0;
 
         // lets check if the table exists
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- SHOW TABLES cannot use placeholders; sqlContainer is internally constructed DDL
         if ($this->wpdb->get_var("SHOW TABLES LIKE '" . $this->table . "'") != $this->table) {
 
-            // create a table
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sqlContainer is internally constructed DDL (CREATE TABLE) which cannot use placeholders
             $this->wpdb->query($this->sqlContainer);
 
             return 1;

@@ -6,16 +6,15 @@ if (!defined('WP_UNINSTALL_PLUGIN')) die();
 global $wpdb;
 
 // table name
-$table_names   = [];
+$mxalfwp_table_names   = [];
 
-$table_names[] = $wpdb->prefix . 'mxalfwp_table_slug';
+$mxalfwp_table_names[] = $wpdb->prefix . 'mxalfwp_table_slug';
 
 // drop table(s);
-foreach ($table_names as $table_name) {
+foreach ($mxalfwp_table_names as $mxalfwp_table_name) {
 
-    $sql = 'DROP TABLE IF EXISTS ' . $table_name . ';';
-
-    $wpdb->query($sql);
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- one-time uninstall cleanup; DROP TABLE cannot use placeholders and the identifier is escaped with esc_sql()
+    $wpdb->query( 'DROP TABLE IF EXISTS ' . esc_sql( $mxalfwp_table_name ) );
 }
 
 // Delete posts CPT
